@@ -1,4 +1,4 @@
--- Cloud build proof-of-concept.
+-- Cloud build proof-of-concept. Automated CI test.
 -- This script is intentionally harmless and only proves that
 -- source code can be packaged into a Roblox place in GitHub Actions.
 
