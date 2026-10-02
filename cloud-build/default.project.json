@@ -2,25 +2,10 @@
   "name": "Grow a Verity Cloud Build Test",
   "tree": {
     "$className": "DataModel",
-
     "Workspace": {
       "$className": "Workspace",
-
       "CloudBuildTest": {
-        "$className": "Part",
-        "Anchored": true,
-        "CanCollide": true,
-        "Size": [8, 1, 8],
-        "Position": [0, 0.5, 0],
-        "Name": "CloudBuildTest"
-      }
-    },
-
-    "ServerScriptService": {
-      "$className": "ServerScriptService",
-
-      "CloudBuildTest": {
-        "$path": "src/ServerScriptService/CloudBuildTest.server.lua"
+        "$className": "Part"
       }
     }
   }
