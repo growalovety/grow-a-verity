@@ -6,7 +6,7 @@ local BattleDefinitions=require(ReplicatedStorage:WaitForChild("BattleDefinition
 local remotes=ReplicatedStorage:FindFirstChild("GameRemotes") or Instance.new("Folder")
 remotes.Name="GameRemotes" remotes.Parent=ReplicatedStorage
 local function remote(n) local r=remotes:FindFirstChild(n) or Instance.new("RemoteEvent") r.Name=n r.Parent=remotes return r end
-local startBattle=remote("StartBattle"); local battleAction=remote("BattleAction"); local battleUpdate=remote("BattleUpdate"); local battleEnd=remote("BattleEnd"); local switchCard=remote("SwitchBattleCard")
+local startBattle=remote("StartBattle"); local battleAction=remote("BattleAction"); local battleUpdate=remote("BattleUpdate"); local battleEnd=remote("BattleEnd"); local switchCard=remote("SwitchBattleCard"); local cancelBattle=remote("CancelBattle")
 local collectionStore=DataStoreService:GetDataStore("GrowAVerity_Collection_v1")
 local active={}
 local GuardianStats={
@@ -62,6 +62,7 @@ end
 ProximityPromptService.PromptTriggered:Connect(function(prompt,p)
  if prompt.Name=="BattlePrompt" then local g=prompt:FindFirstAncestorOfClass("Model") if g then beginBattle(p,g) end end
 end)
+cancelBattle.OnServerEvent:Connect(function(p) active[p]=nil end)
 switchCard.OnServerEvent:Connect(function(p,name)
  local s=active[p] if not s or not s.CanAct or type(name)~="string" or not BattleDefinitions[name] or not p:GetAttribute("Variety_"..name) then return end
  if s.CardName==name then return end
