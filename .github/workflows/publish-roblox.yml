@@ -27,8 +27,34 @@ jobs:
         env:
           ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
         run: |
-          curl --fail-with-body --location --request POST \
-            "https://apis.roblox.com/universes/v1/10768994585/places/103739066237284/versions?versionType=Published" \
-            --header "x-api-key: ${ROBLOX_API_KEY}" \
-            --header "Content-Type: application/octet-stream" \
-            --data-binary "@place/Robloxverity.rbxl"
+          set -u
+
+          URL="https://apis.roblox.com/universes/v1/10768994585/places/103739066237284/versions?versionType=Published"
+
+          for attempt in 1 2 3 4 5; do
+            echo "Roblox publish attempt $attempt/5"
+
+            response_file="$(mktemp)"
+            status="$(curl --silent --show-error --location --request POST               "$URL"               --header "x-api-key: ${ROBLOX_API_KEY}"               --header "Content-Type: application/octet-stream"               --data-binary "@place/Robloxverity.rbxl"               --output "$response_file"               --write-out "%{http_code}")" || status="000"
+
+            echo "HTTP status: $status"
+            cat "$response_file"
+            rm -f "$response_file"
+
+            if [[ "$status" =~ ^2[0-9][0-9]$ ]]; then
+              echo "Roblox publish succeeded."
+              exit 0
+            fi
+
+            if [[ "$status" == "409" || "$status" == "429" || "$status" =~ ^5[0-9][0-9]$ ]]; then
+              if [ "$attempt" -lt 5 ]; then
+                sleep_seconds=$((30 * attempt))
+                echo "Roblox is temporarily unavailable/busy. Retrying in $sleep_seconds seconds..."
+                sleep "$sleep_seconds"
+                continue
+              fi
+            fi
+
+            echo "Roblox publish failed with HTTP $status."
+            exit 1
+          done
