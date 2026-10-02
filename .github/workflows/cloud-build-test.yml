@@ -28,7 +28,10 @@ jobs:
       - name: Build Roblox place with Rojo
         run: |
           mkdir -p build
-          rojo build cloud-build/cloud-build.project.json -o build/cloud-build-test.rbxl
+          test -f cloud-build/cloud-build.project.json
+          cd cloud-build
+          rojo build cloud-build.project.json -o ../build/cloud-build-test.rbxl
+          cd ..
           test -s build/cloud-build-test.rbxl
           ls -lh build/cloud-build-test.rbxl
 
