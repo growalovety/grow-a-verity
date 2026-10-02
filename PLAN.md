@@ -2,98 +2,113 @@
 
 ## Goal
 
-Build Grow a Verity so that a natural-language request to ChatGPT becomes a game change without the user needing to run commands or keep a PC/Roblox Studio online.
+Build Grow a Verity so a natural-language request to ChatGPT becomes a game change without the user needing to run commands or keep a PC/Roblox Studio online.
 
-## Target pipeline
+## Pipeline
 
-ChatGPT
-→ GitHub source
-→ GitHub Actions
-→ Rojo
-→ Roblox .rbxl
-→ Roblox Open Cloud
-→ Live Place
+ChatGPT → GitHub source → GitHub Actions → Rojo → Roblox .rbxl → Roblox Open Cloud → Live Place
 
 GitHub is the source of truth.
 
 ## Current status
 
-- GitHub repository: growalovety/grow-a-verity
-- Universe ID: 10768994585
-- Place ID: 103739066237284
-- Roblox Open Cloud publishing: working
-- GitHub Actions: working
+- GitHub source: active
 - Rojo 7.7.1 cloud build: working
+- GitHub Actions: working
+- Roblox Open Cloud publishing: working
 - Automatic build + publish: working
-- Local bridge: working as an earlier prototype, but not required for the cloud pipeline
-- PC/Roblox Studio requirement for deployment: removed
+- PC/Roblox Studio required for deployment: no
 
-## Current game source
+## Implemented
 
-The cloud-build project currently creates:
-- 64x64 grass baseplate
-- SpawnLocation
-- Classic Verity
-- Yellow SmoothPlastic spherical Verity
-- Common rarity attribute
-- classic style attribute
+### Variant system v1
+The first four core variants are defined in source:
+- **Verity** — yellow, Common, helpful, income 1
+- **Falsity** — blue, Uncommon, deceptive, income 3
+- **Cruelty** — red/dark red, Rare, aggressive, income 6
+- **Lovity** — pink, Epic, affectionate, income 10
 
-## Development roadmap
+Each variant has a reusable definition containing:
+- Name
+- Color
+- Rarity
+- Personality
+- Income
 
-### 1. Core game foundation
-- Player spawning
-- Currency / cash system
-- Verity collection system
+The source also generates a simple face and floating name/rarity display.
+
+The color/name/personality concept is based on current web research into fan-created Verity variants. These variants are not treated as an official canonical franchise.
+
+## Next development steps
+
+### 1. Variant gameplay layer
+- Variant registry
+- Spawn/roll system
+- Rarity probabilities
+- Variant ownership
+- Collection entries
+- Variant-specific income
+- Clean model factory
+
+### 2. Player progression
+- Player cash
+- Passive income
+- Collection UI
 - Inventory
-- Basic UI
-- Save/load data
+- Basic save/load with DataStore
 
-### 2. Grow gameplay
-- Planting / spawning Verities
+### 3. Plot system
+- One plot per player
+- Place owned Verities on the plot
+- Plot boundaries
+- Repositioning
+- Upgrade slots
+
+### 4. Growth system
+- Plant/spawn a Verity
+- Growth timer
 - Growth stages
-- Rarity system
-- Mutations / variants
-- Collection progression
+- Final variant
+- Mutation chances
 
-### 3. Economy
+### 5. Economy
 - Shop
-- Buying and selling
-- Prices
-- Currency rewards
-- Upgrade systems
+- Buying variants
+- Selling variants
+- Upgrade costs
+- Rarity-based pricing
 
-### 4. World
-- Farm / plot system
+### 6. UI
+- Cash counter
+- Inventory/collection
+- Shop UI
+- Variant information
+- Notifications
+- Mobile layout
+
+### 7. World and content
 - NPCs
-- Interactive objects
-- Areas and progression
+- Areas
 - Decorations
+- Ambient effects
+- More variants
+- Events
 
-### 5. Multiplayer
-- Player-owned plots
-- Server-authoritative gameplay
-- Trading / player interaction where appropriate
-- Anti-exploit validation
+### 8. Multiplayer and security
+- Server-authoritative purchases
+- Server-authoritative spawning
+- RemoteEvent validation
+- Anti-exploit checks
+- Rate limits
 
-### 6. Polish
+### 9. Polish
 - Animations
-- Effects
+- VFX
 - Sounds
-- UI polish
-- Mobile-friendly controls
+- Better models/faces
 - Performance optimization
+- Mobile controls
 
-### 7. Automation
-Every approved source change should:
-1. Commit to GitHub.
-2. Trigger GitHub Actions.
-3. Build with Rojo.
-4. Produce the Roblox place.
-5. Publish through Roblox Open Cloud.
-6. Keep GitHub as the reproducible source of truth.
+## Automation rule
 
-## Rule for future changes
-
-Do not manually edit the live Roblox place as the primary workflow.
-
-Implement game changes in the GitHub source first, then let the automated build/publish pipeline deploy them.
+Future game changes are implemented in GitHub source first. A successful GitHub Actions build publishes the resulting place through Roblox Open Cloud. Do not use manual Studio edits as the primary source of truth.
