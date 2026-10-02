@@ -5,6 +5,12 @@
     "Workspace": {
       "$className": "Workspace"
     },
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "VariantDefinitions": {
+        "$path": "src/ReplicatedStorage/VariantDefinitions.lua"
+      }
+    },
     "ServerScriptService": {
       "$className": "ServerScriptService",
       "GameInit": {
