@@ -1,0 +1,11 @@
+{
+  "id": "classic-verity-20261002",
+  "command": "BUILD_VERITY",
+  "name": "Verity",
+  "rarity": "Common",
+  "size": 4,
+  "style": "classic",
+  "color": "yellow",
+  "stem": false,
+  "text": false
+}
