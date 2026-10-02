@@ -20,6 +20,9 @@
         "$className": "StarterPlayerScripts",
         "StarterSelection": {
           "$path": "src/StarterPlayer/StarterPlayerScripts/StarterSelection.client.lua"
+        },
+        "GuardianBattle": {
+          "$path": "src/StarterPlayer/StarterPlayerScripts/GuardianBattle.client.lua"
         }
       }
     },
@@ -30,6 +33,9 @@
       },
       "StarterSelection": {
         "$path": "src/ServerScriptService/StarterSelection.server.lua"
+      },
+      "GuardianBattle": {
+        "$path": "src/ServerScriptService/GuardianBattle.server.lua"
       }
     }
   }
