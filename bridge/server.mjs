@@ -73,7 +73,7 @@ async function pollGitHub() {
       if (file.type !== "file" || !file.name.endsWith(".json") || seen.has(file.sha)) continue;
 
       const payload = await githubJson(file.download_url);
-      const command = validate(payload.command || payload);
+      const command = validate(payload);
       const id = String(payload.id || file.name.replace(/\.json$/, ""));
 
       if (seen.has(id)) continue;
