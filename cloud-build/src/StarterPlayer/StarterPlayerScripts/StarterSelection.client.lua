@@ -238,7 +238,7 @@ local function createCard(name, index)
             end
         end
         task.wait(0.9)
-        TweenService:Create(screen, TweenInfo.new(0.35), {GroupTransparency = 1}):Play()
+        TweenService:Create(background, TweenInfo.new(0.35), {BackgroundTransparency = 1}):Play()
         task.wait(0.4)
         screen.Enabled = false
     end)
