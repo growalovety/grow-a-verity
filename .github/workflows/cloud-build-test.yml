@@ -25,12 +25,27 @@ jobs:
         with:
           version: v1.1.0
 
+      - name: Verify Rojo project
+        run: |
+          pwd
+          rojo --version
+          test -f cloud-build/cloud-build.project.json
+          ls -la cloud-build
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path("cloud-build/cloud-build.project.json")
+          data = json.loads(p.read_text())
+          assert data["name"]
+          assert "tree" in data
+          print("Project JSON parsed successfully:", p)
+          PY
+
       - name: Build Roblox place with Rojo
         run: |
           mkdir -p build
-          test -f cloud-build/cloud-build.project.json
           cd cloud-build
-          rojo build cloud-build.project.json -o ../build/cloud-build-test.rbxl
+          rojo build -o ../build/cloud-build-test.rbxl
           cd ..
           test -s build/cloud-build-test.rbxl
           ls -lh build/cloud-build-test.rbxl
