@@ -147,6 +147,12 @@ end
 
 local function buildVerity(command)
 	local generatedWorld = ensure(workspace, "Folder", "GeneratedWorld")
+
+	local old = generatedWorld:FindFirstChild(command.name or "Verity")
+	if old then
+		old:Destroy()
+	end
+
 	local model = Instance.new("Model")
 	model.Name = command.name or "Verity"
 	model.Parent = generatedWorld
@@ -160,50 +166,13 @@ local function buildVerity(command)
 	rootPart.Shape = Enum.PartType.Ball
 	rootPart.Size = Vector3.new(size, size, size)
 	rootPart.Position = Vector3.new(0, size / 2, 0)
-	rootPart.Color = Color3.fromRGB(100, 220, 120)
+	rootPart.Color = Color3.fromRGB(255, 221, 45)
+	rootPart.Material = Enum.Material.SmoothPlastic
+	rootPart.TopSurface = Enum.SurfaceType.Smooth
+	rootPart.BottomSurface = Enum.SurfaceType.Smooth
 	rootPart.Parent = model
 
-	local stem = Instance.new("Part")
-	stem.Name = "Stem"
-	stem.Anchored = true
-	stem.CanCollide = false
-	stem.Size = Vector3.new(0.35, size, 0.35)
-	stem.Position = rootPart.Position - Vector3.new(0, size * 0.7, 0)
-	stem.Color = Color3.fromRGB(65, 150, 75)
-	stem.Parent = model
-
-	local face = Instance.new("Folder")
-	face.Name = "Face"
-	face.Parent = model
-
-	for _, xOffset in ipairs({ -0.28, 0.28 }) do
-		local eye = Instance.new("Part")
-		eye.Shape = Enum.PartType.Ball
-		eye.Size = Vector3.new(0.3, 0.3, 0.3)
-		eye.Anchored = true
-		eye.CanCollide = false
-		eye.Color = Color3.new(0, 0, 0)
-		eye.Position = rootPart.Position
-			+ Vector3.new(xOffset, size * 0.08, -size * 0.48)
-		eye.Parent = face
-	end
-
-	local billboard = Instance.new("BillboardGui")
-	billboard.Size = UDim2.new(0, 220, 0, 50)
-	billboard.StudsOffset = Vector3.new(0, size * 0.8, 0)
-	billboard.AlwaysOnTop = true
-	billboard.Adornee = rootPart
-	billboard.Parent = model
-
-	local label = Instance.new("TextLabel")
-	label.BackgroundTransparency = 1
-	label.Size = UDim2.fromScale(1, 1)
-	label.Text = command.name or "Verity"
-	label.TextColor3 = Color3.new(1, 1, 1)
-	label.TextScaled = true
-	label.Font = Enum.Font.GothamBold
-	label.Parent = billboard
-
+	-- Classic Verity: clean yellow body, no stem and no floating stud-text label.
 	ChangeHistoryService:SetWaypoint("Verity Builder: BUILD_VERITY")
 	Selection:Set({ model })
 end
