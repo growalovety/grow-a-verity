@@ -65,4 +65,43 @@ jobs:
           ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
         run: |
           test -n "$ROBLOX_API_KEY"
-          curl --fail-with-body --location --request POST             "https://apis.roblox.com/universes/v1/$UNIVERSE_ID/places/$PLACE_ID/versions?versionType=Published"             --header "x-api-key: $ROBLOX_API_KEY"             --header "Content-Type: application/octet-stream"             --data-binary "@build/grow-a-verity.rbxl"
+
+          for attempt in 1 2 3 4 5; do
+            echo "Roblox publish attempt $attempt/5"
+
+            set +e
+            response=$(curl --silent --show-error --location \
+              --request POST \
+              --write-out "\\n%{http_code}" \
+              "https://apis.roblox.com/universes/v1/$UNIVERSE_ID/places/$PLACE_ID/versions?versionType=Published" \
+              --header "x-api-key: $ROBLOX_API_KEY" \
+              --header "Content-Type: application/octet-stream" \
+              --data-binary "@build/grow-a-verity.rbxl")
+            curl_exit=$?
+            set -e
+
+            http_code=$(printf '%s\\n' "$response" | tail -n 1)
+            body=$(printf '%s\\n' "$response" | sed '$d')
+
+            echo "Roblox HTTP status: $http_code"
+            if [ -n "$body" ]; then
+              echo "$body"
+            fi
+
+            if [ "$curl_exit" -eq 0 ] && [ "$http_code" -ge 200 ] && [ "$http_code" -lt 300 ]; then
+              echo "Roblox publish succeeded."
+              exit 0
+            fi
+
+            if [ "$http_code" = "409" ] && [ "$attempt" -lt 5 ]; then
+              sleep_seconds=$((attempt * 30))
+              echo "Roblox is busy. Retrying in ${sleep_seconds}s..."
+              sleep "$sleep_seconds"
+              continue
+            fi
+
+            echo "Roblox publish failed."
+            exit 1
+          done
+
+          exit 1
