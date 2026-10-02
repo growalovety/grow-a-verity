@@ -1,11 +1,56 @@
 {
-  "name": "Grow a Verity Cloud Build Test",
+  "name": "Grow a Verity",
   "tree": {
     "$className": "DataModel",
+
     "Workspace": {
       "$className": "Workspace",
-      "CloudBuildTest": {
-        "$className": "Part"
+
+      "Baseplate": {
+        "$className": "Part",
+        "Anchored": true,
+        "Size": [64, 1, 64],
+        "Position": [0, -0.5, 0],
+        "Material": "Grass",
+        "Color": [0.25, 0.55, 0.25]
+      },
+
+      "SpawnLocation": {
+        "$className": "SpawnLocation",
+        "Anchored": true,
+        "Size": [6, 1, 6],
+        "Position": [0, 0.5, 0],
+        "Neutral": true
+      },
+
+      "Verity": {
+        "$className": "Model",
+        "PrimaryPart": "Root",
+
+        "Root": {
+          "$className": "Part",
+          "Anchored": true,
+          "CanCollide": true,
+          "Shape": "Ball",
+          "Size": [4, 4, 4],
+          "Position": [0, 3, -8],
+          "Material": "SmoothPlastic",
+          "Color": [1, 0.867, 0.176],
+          "TopSurface": "Smooth",
+          "BottomSurface": "Smooth",
+          "LeftSurface": "Smooth",
+          "RightSurface": "Smooth",
+          "FrontSurface": "Smooth",
+          "BackSurface": "Smooth"
+        }
+      }
+    },
+
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+
+      "GameInit": {
+        "$path": "src/ServerScriptService/GameInit.server.lua"
       }
     }
   }
