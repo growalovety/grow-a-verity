@@ -16,7 +16,7 @@ screen.Parent = playerGui
 
 local background = Instance.new("Frame")
 background.Size = UDim2.fromScale(1, 1)
-background.BackgroundColor3 = Color3.fromRGB(8, 10, 16)
+background.BackgroundColor3 = Color3.fromRGB(12, 17, 13)
 background.BorderSizePixel = 0
 background.Parent = screen
 
@@ -31,77 +31,39 @@ local function stroke(parent, color, transparency, thickness)
     s.Color = color
     s.Transparency = transparency
     s.Thickness = thickness
-    s.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     s.Parent = parent
 end
 
-local function gradient(parent, colorA, colorB, rotation)
-    local g = Instance.new("UIGradient")
-    g.Color = ColorSequence.new(colorA, colorB)
-    g.Rotation = rotation or 90
-    g.Parent = parent
-end
-
-local glow = Instance.new("Frame")
-glow.Size = UDim2.fromScale(0.8, 0.8)
-glow.Position = UDim2.fromScale(0.1, 0.1)
-glow.BackgroundColor3 = Color3.fromRGB(35, 42, 68)
-glow.BackgroundTransparency = 0.86
-glow.BorderSizePixel = 0
-glow.Parent = background
-corner(glow, 100)
-
 local title = Instance.new("TextLabel")
-title.Size = UDim2.fromScale(0.8, 0.075)
-title.Position = UDim2.fromScale(0.1, 0.075)
+title.Size = UDim2.fromScale(0.8, 0.08)
+title.Position = UDim2.fromScale(0.1, 0.07)
 title.BackgroundTransparency = 1
-title.Text = "CHOOSE YOUR FIRST VERITY"
-title.TextColor3 = Color3.fromRGB(245, 246, 250)
+title.Text = "CHOOSE YOUR VARIETY"
+title.TextColor3 = Color3.fromRGB(250, 247, 235)
 title.TextScaled = true
 title.Font = Enum.Font.GothamBlack
 title.Parent = background
 
-local subtitle = Instance.new("TextLabel")
-subtitle.Size = UDim2.fromScale(0.72, 0.05)
-subtitle.Position = UDim2.fromScale(0.14, 0.15)
-subtitle.BackgroundTransparency = 1
-subtitle.Text = "Your first card defines how you enter the battle."
-subtitle.TextColor3 = Color3.fromRGB(150, 156, 173)
-subtitle.TextScaled = true
-subtitle.Font = Enum.Font.GothamMedium
-subtitle.Parent = background
-
 local cards = Instance.new("Frame")
-cards.Size = UDim2.fromScale(0.84, 0.59)
-cards.Position = UDim2.fromScale(0.08, 0.225)
+cards.Size = UDim2.fromScale(0.86, 0.67)
+cards.Position = UDim2.fromScale(0.07, 0.19)
 cards.BackgroundTransparency = 1
 cards.Parent = background
 
 local layout = Instance.new("UIGridLayout")
-layout.CellSize = UDim2.fromScale(0.31, 0.94)
-layout.CellPadding = UDim2.fromScale(0.035, 0)
+layout.CellSize = UDim2.fromScale(0.30, 0.94)
+layout.CellPadding = UDim2.fromScale(0.05, 0)
 layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
 layout.VerticalAlignment = Enum.VerticalAlignment.Center
 layout.Parent = cards
 
 local order = {"Verity", "Falsity", "Lovity"}
 
-local function addStat(parent, labelText, value, maxValue, accent, y)
-    local label = Instance.new("TextLabel")
-    label.Size = UDim2.fromScale(0.25, 0.055)
-    label.Position = UDim2.fromScale(0.08, y)
-    label.BackgroundTransparency = 1
-    label.Text = labelText
-    label.TextColor3 = Color3.fromRGB(142, 148, 164)
-    label.TextScaled = true
-    label.Font = Enum.Font.GothamBold
-    label.TextXAlignment = Enum.TextXAlignment.Left
-    label.Parent = parent
-
+local function addBar(parent, value, maxValue, accent, y)
     local track = Instance.new("Frame")
-    track.Size = UDim2.fromScale(0.56, 0.022)
-    track.Position = UDim2.fromScale(0.34, y + 0.017)
-    track.BackgroundColor3 = Color3.fromRGB(31, 34, 44)
+    track.Size = UDim2.fromScale(0.74, 0.022)
+    track.Position = UDim2.fromScale(0.13, y)
+    track.BackgroundColor3 = Color3.fromRGB(42, 48, 40)
     track.BorderSizePixel = 0
     track.Parent = parent
     corner(track, 8)
@@ -114,138 +76,123 @@ local function addStat(parent, labelText, value, maxValue, accent, y)
     corner(fill, 8)
 end
 
-local function createCard(name, index)
+local function buildModel(viewport, name)
+    local def = BattleDefinitions[name]
+    local worldModel = Instance.new("WorldModel")
+    worldModel.Parent = viewport
+
+    local model = Instance.new("Model")
+    model.Name = name
+    model.Parent = worldModel
+
+    local body = Instance.new("Part")
+    body.Name = "Body"
+    body.Shape = Enum.PartType.Ball
+    body.Size = Vector3.new(5, 5, 5)
+    body.Anchored = true
+    body.CanCollide = false
+    body.Material = Enum.Material.SmoothPlastic
+    body.Color = def.Accent
+    body.Parent = model
+
+    local function feature(size, position, color, shape)
+        local p = Instance.new("Part")
+        p.Shape = shape or Enum.PartType.Ball
+        p.Size = size
+        p.Position = position
+        p.Anchored = true
+        p.CanCollide = false
+        p.Material = Enum.Material.SmoothPlastic
+        p.Color = color
+        p.Parent = model
+    end
+
+    feature(Vector3.new(0.62, 0.62, 0.62), Vector3.new(-0.9, 0.45, -2.3), Color3.fromRGB(25, 26, 30))
+    feature(Vector3.new(0.62, 0.62, 0.62), Vector3.new(0.9, 0.45, -2.3), Color3.fromRGB(25, 26, 30))
+    feature(Vector3.new(1.35, 0.22, 0.25), Vector3.new(0, -0.8, -2.28), Color3.fromRGB(25, 26, 30), Enum.PartType.Block)
+
+    if name == "Verity" then
+        feature(Vector3.new(1.4, 2.2, 0.45), Vector3.new(0, 0, 2.35), def.Accent, Enum.PartType.Block)
+    elseif name == "Falsity" then
+        feature(Vector3.new(1.2, 0.5, 1.8), Vector3.new(-2.2, 0.2, 0), def.Accent, Enum.PartType.Wedge)
+        feature(Vector3.new(1.2, 0.5, 1.8), Vector3.new(2.2, 0.2, 0), def.Accent, Enum.PartType.Wedge)
+    else
+        feature(Vector3.new(1.5, 1.5, 1.5), Vector3.new(-1.35, 2.0, 0), def.Accent)
+        feature(Vector3.new(1.5, 1.5, 1.5), Vector3.new(1.35, 2.0, 0), def.Accent)
+    end
+
+    local camera = Instance.new("Camera")
+    camera.CFrame = CFrame.new(Vector3.new(0, 1, 11), Vector3.new(0, 0, 0))
+    camera.Parent = viewport
+    viewport.CurrentCamera = camera
+end
+
+local function createCard(name)
     local def = BattleDefinitions[name]
 
     local card = Instance.new("Frame")
     card.Name = name
-    card.BackgroundColor3 = Color3.fromRGB(18, 21, 30)
+    card.BackgroundColor3 = Color3.fromRGB(24, 31, 24)
     card.BorderSizePixel = 0
     card.Parent = cards
-    corner(card, 18)
-    stroke(card, Color3.fromRGB(55, 60, 76), 0.15, 1)
-    gradient(card, Color3.fromRGB(25, 28, 40), Color3.fromRGB(13, 15, 22), 90)
+    corner(card, 20)
+    stroke(card, def.Accent, 0.55, 1)
 
-    local accent = Instance.new("Frame")
-    accent.Size = UDim2.fromScale(1, 0.012)
-    accent.BackgroundColor3 = def.Accent
-    accent.BorderSizePixel = 0
-    accent.Parent = card
-    corner(accent, 8)
-
-    local role = Instance.new("TextLabel")
-    role.Size = UDim2.fromScale(0.82, 0.05)
-    role.Position = UDim2.fromScale(0.09, 0.065)
-    role.BackgroundTransparency = 1
-    role.Text = string.upper(def.Role) .. "  •  " .. string.upper(def.Rarity)
-    role.TextColor3 = def.Accent
-    role.TextScaled = true
-    role.Font = Enum.Font.GothamBold
-    role.TextXAlignment = Enum.TextXAlignment.Left
-    role.Parent = card
-
-    local orb = Instance.new("Frame")
-    orb.Size = UDim2.fromScale(0.39, 0.30)
-    orb.Position = UDim2.fromScale(0.305, 0.13)
-    orb.BackgroundColor3 = def.Accent
-    orb.BackgroundTransparency = 0.08
-    orb.BorderSizePixel = 0
-    orb.Parent = card
-    corner(orb, 999)
-
-    local inner = Instance.new("Frame")
-    inner.Size = UDim2.fromScale(0.82, 0.82)
-    inner.Position = UDim2.fromScale(0.09, 0.09)
-    inner.BackgroundColor3 = Color3.fromRGB(245, 245, 245)
-    inner.BackgroundTransparency = 0.15
-    inner.BorderSizePixel = 0
-    inner.Parent = orb
-    corner(inner, 999)
-
-    local face = Instance.new("TextLabel")
-    face.Size = UDim2.fromScale(0.8, 0.65)
-    face.Position = UDim2.fromScale(0.1, 0.18)
-    face.BackgroundTransparency = 1
-    face.Text = "●  ●\n  ◡"
-    face.TextColor3 = Color3.fromRGB(20, 22, 28)
-    face.TextScaled = true
-    face.Font = Enum.Font.GothamBlack
-    face.Parent = inner
+    local viewport = Instance.new("ViewportFrame")
+    viewport.Size = UDim2.fromScale(0.9, 0.52)
+    viewport.Position = UDim2.fromScale(0.05, 0.08)
+    viewport.BackgroundTransparency = 1
+    viewport.Ambient = Color3.fromRGB(210, 210, 210)
+    viewport.LightColor = Color3.fromRGB(255, 255, 255)
+    viewport.Parent = card
+    buildModel(viewport, name)
 
     local nameLabel = Instance.new("TextLabel")
-    nameLabel.Size = UDim2.fromScale(0.84, 0.075)
-    nameLabel.Position = UDim2.fromScale(0.08, 0.455)
+    nameLabel.Size = UDim2.fromScale(0.82, 0.08)
+    nameLabel.Position = UDim2.fromScale(0.09, 0.57)
     nameLabel.BackgroundTransparency = 1
     nameLabel.Text = name
-    nameLabel.TextColor3 = Color3.fromRGB(245, 246, 250)
+    nameLabel.TextColor3 = Color3.fromRGB(248, 246, 235)
     nameLabel.TextScaled = true
     nameLabel.Font = Enum.Font.GothamBlack
     nameLabel.Parent = card
 
-    local tagText = table.concat(def.Tags, "   ")
-    local tags = Instance.new("TextLabel")
-    tags.Size = UDim2.fromScale(0.84, 0.055)
-    tags.Position = UDim2.fromScale(0.08, 0.53)
-    tags.BackgroundTransparency = 1
-    tags.Text = tagText
-    tags.TextColor3 = Color3.fromRGB(128, 135, 151)
-    tags.TextScaled = true
-    tags.Font = Enum.Font.GothamBold
-    tags.Parent = card
-
-    addStat(card, "HP", def.HP, 140, def.Accent, 0.61)
-    addStat(card, "ATK", def.Attack, 35, def.Accent, 0.675)
-    addStat(card, "DEF", def.Defense, 35, def.Accent, 0.74)
+    addBar(card, def.HP, 110, def.Accent, 0.68)
+    addBar(card, def.Attack, 25, def.Accent, 0.735)
+    addBar(card, def.Defense, 25, def.Accent, 0.79)
 
     local button = Instance.new("TextButton")
-    button.Size = UDim2.fromScale(0.84, 0.095)
-    button.Position = UDim2.fromScale(0.08, 0.855)
+    button.Size = UDim2.fromScale(0.82, 0.10)
+    button.Position = UDim2.fromScale(0.09, 0.86)
     button.BackgroundColor3 = def.Accent
-    button.Text = "CHOOSE " .. string.upper(name)
-    button.TextColor3 = Color3.fromRGB(12, 14, 18)
+    button.Text = "CHOOSE"
+    button.TextColor3 = Color3.fromRGB(18, 20, 17)
     button.TextScaled = true
     button.Font = Enum.Font.GothamBlack
     button.AutoButtonColor = false
     button.Parent = card
-    corner(button, 11)
+    corner(button, 12)
 
     button.MouseEnter:Connect(function()
-        TweenService:Create(card, TweenInfo.new(0.14), {
-            Position = UDim2.new(card.Position.X.Scale, 0, card.Position.Y.Scale - 0.015, 0)
-        }):Play()
-        TweenService:Create(button, TweenInfo.new(0.14), {
-            BackgroundTransparency = 0.08
-        }):Play()
+        TweenService:Create(card, TweenInfo.new(0.12), {Size = UDim2.fromScale(1.02, 1.02)}):Play()
     end)
 
     button.MouseLeave:Connect(function()
-        TweenService:Create(card, TweenInfo.new(0.14), {
-            Position = UDim2.new(card.Position.X.Scale, 0, card.Position.Y.Scale + 0.015, 0)
-        }):Play()
-        TweenService:Create(button, TweenInfo.new(0.14), {
-            BackgroundTransparency = 0
-        }):Play()
+        TweenService:Create(card, TweenInfo.new(0.12), {Size = UDim2.fromScale(1, 1)}):Play()
     end)
 
     button.Activated:Connect(function()
         selectStarter:FireServer(name)
-        title.Text = "YOUR VERITY AWAITS"
-        subtitle.Text = name .. " has joined your collection."
         button.Text = "SELECTED"
-        for _, other in ipairs(cards:GetChildren()) do
-            if other:IsA("Frame") and other ~= card then
-                TweenService:Create(other, TweenInfo.new(0.2), {BackgroundTransparency = 0.45}):Play()
-            end
-        end
-        task.wait(0.9)
-        TweenService:Create(background, TweenInfo.new(0.35), {BackgroundTransparency = 1}):Play()
-        task.wait(0.4)
+        task.wait(0.35)
+        TweenService:Create(background, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
+        task.wait(0.35)
         screen.Enabled = false
     end)
 end
 
-for index, name in ipairs(order) do
-    createCard(name, index)
+for _, name in ipairs(order) do
+    createCard(name)
 end
 
 local function updateVisibility()
