@@ -9,12 +9,27 @@
       "$className": "ReplicatedStorage",
       "VariantDefinitions": {
         "$path": "src/ReplicatedStorage/VariantDefinitions.lua"
+      },
+      "BattleDefinitions": {
+        "$path": "src/ReplicatedStorage/BattleDefinitions.lua"
+      }
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "StarterSelection": {
+          "$path": "src/StarterPlayer/StarterPlayerScripts/StarterSelection.client.lua"
+        }
       }
     },
     "ServerScriptService": {
       "$className": "ServerScriptService",
       "GameInit": {
         "$path": "src/ServerScriptService/GameInit.server.lua"
+      },
+      "StarterSelection": {
+        "$path": "src/ServerScriptService/StarterSelection.server.lua"
       }
     }
   }
