@@ -8,6 +8,7 @@ end
 
 local world = Instance.new("Folder")
 world.Name = "World"
+world:SetAttribute("BuildId", "cloud-live-31")
 world.Parent = workspace
 
 local function part(name, size, position, color, material, parent)
