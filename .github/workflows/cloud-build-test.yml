@@ -29,12 +29,12 @@ jobs:
         run: |
           pwd
           rojo --version
-          test -f cloud-build/cloud-build.project.json
+          test -f cloud-build/default.project.json
           ls -la cloud-build
           python - <<'PY'
           import json
           from pathlib import Path
-          p = Path("cloud-build/cloud-build.project.json")
+          p = Path("cloud-build/default.project.json")
           data = json.loads(p.read_text())
           assert data["name"]
           assert "tree" in data
