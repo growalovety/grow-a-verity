@@ -1,0 +1,7 @@
+{
+  "id": "example-command",
+  "command": "BUILD_VERITY",
+  "name": "Exampleity",
+  "rarity": "Common",
+  "size": 4
+}
