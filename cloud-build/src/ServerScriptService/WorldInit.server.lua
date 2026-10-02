@@ -2,13 +2,11 @@ local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local existing = workspace:FindFirstChild("World")
-if existing then
-    existing:Destroy()
-end
+if existing then existing:Destroy() end
 
 local world = Instance.new("Folder")
 world.Name = "World"
-world:SetAttribute("BuildId", "cloud-live-31")
+world:SetAttribute("BuildId", "cloud-live-32")
 world.Parent = workspace
 
 local function part(name, size, position, color, material, parent)
@@ -31,7 +29,7 @@ local function label(parent, text, size, position, color)
     gui.Size = size
     gui.StudsOffset = position
     gui.AlwaysOnTop = true
-    gui.MaxDistance = 90
+    gui.MaxDistance = 70
     gui.Parent = parent
 
     local t = Instance.new("TextLabel")
@@ -39,35 +37,24 @@ local function label(parent, text, size, position, color)
     t.BackgroundTransparency = 1
     t.Text = text
     t.TextColor3 = color or Color3.new(1, 1, 1)
-    t.TextStrokeTransparency = 0.45
+    t.TextStrokeTransparency = 0.55
     t.Font = Enum.Font.GothamBold
     t.TextScaled = true
     t.Parent = gui
-    return gui
 end
 
-local function makeFence(plot, center, width, depth)
-    local wood = Color3.fromRGB(124, 86, 52)
-    local rail = Color3.fromRGB(151, 104, 62)
-    local function post(x, z)
-        part("FencePost", Vector3.new(0.7, 2.2, 0.7), center + Vector3.new(x, 1.1, z), wood, Enum.Material.Wood, plot)
+local function fence(plot, center, width, depth)
+    local wood = Color3.fromRGB(139, 92, 53)
+    local rail = Color3.fromRGB(176, 119, 66)
+    for _, x in ipairs({-width / 2, width / 2}) do
+        for _, z in ipairs({-depth / 2, depth / 2}) do
+            part("FencePost", Vector3.new(0.65, 1.8, 0.65), center + Vector3.new(x, 0.9, z), wood, Enum.Material.Wood, plot)
+        end
     end
-    local function bar(size, pos)
-        part("FenceRail", size, center + pos, rail, Enum.Material.Wood, plot)
-    end
-
-    for _, x in ipairs({-width / 2, 0, width / 2}) do
-        post(x, -depth / 2)
-        post(x, depth / 2)
-    end
-    for _, z in ipairs({-depth / 2, 0, depth / 2}) do
-        post(-width / 2, z)
-        post(width / 2, z)
-    end
-    bar(Vector3.new(width, 0.35, 0.35), Vector3.new(0, 1.0, -depth / 2))
-    bar(Vector3.new(width, 0.35, 0.35), Vector3.new(0, 1.0, depth / 2))
-    bar(Vector3.new(0.35, 0.35, depth), Vector3.new(-width / 2, 1.0, 0))
-    bar(Vector3.new(0.35, 0.35, depth), Vector3.new(width / 2, 1.0, 0))
+    part("FenceRail", Vector3.new(width, 0.28, 0.28), center + Vector3.new(0, 0.8, -depth / 2), rail, Enum.Material.Wood, plot)
+    part("FenceRail", Vector3.new(width, 0.28, 0.28), center + Vector3.new(0, 0.8, depth / 2), rail, Enum.Material.Wood, plot)
+    part("FenceRail", Vector3.new(0.28, 0.28, depth), center + Vector3.new(-width / 2, 0.8, 0), rail, Enum.Material.Wood, plot)
+    part("FenceRail", Vector3.new(0.28, 0.28, depth), center + Vector3.new(width / 2, 0.8, 0), rail, Enum.Material.Wood, plot)
 end
 
 local function makePortal(name, position, accent, titleText)
@@ -75,16 +62,15 @@ local function makePortal(name, position, accent, titleText)
     model.Name = name
     model.Parent = world
 
-    part("PortalBase", Vector3.new(12, 0.5, 8), position, Color3.fromRGB(53, 67, 55), Enum.Material.Slate, model)
+    part("Base", Vector3.new(12, 0.5, 8), position + Vector3.new(0, 0.25, 0), Color3.fromRGB(72, 112, 70), Enum.Material.SmoothPlastic, model)
     for _, x in ipairs({-4.5, 4.5}) do
-        part("PortalPost", Vector3.new(1.2, 8, 1.2), position + Vector3.new(x, 4, 0), accent, Enum.Material.SmoothPlastic, model)
+        part("Post", Vector3.new(1.0, 6, 1.0), position + Vector3.new(x, 3.25, 0), accent, Enum.Material.SmoothPlastic, model)
     end
-    part("PortalTop", Vector3.new(10, 1.2, 1.2), position + Vector3.new(0, 7.4, 0), accent, Enum.Material.SmoothPlastic, model)
+    part("Top", Vector3.new(10, 1.0, 1.0), position + Vector3.new(0, 6.0, 0), accent, Enum.Material.SmoothPlastic, model)
 
-    local core = part("PortalCore", Vector3.new(7, 5.5, 0.6), position + Vector3.new(0, 3.7, 0), accent, Enum.Material.Neon, model)
-    core.Transparency = 0.45
+    local core = part("Core", Vector3.new(7, 4.5, 0.5), position + Vector3.new(0, 3.0, 0), accent, Enum.Material.Neon, model)
+    core.Transparency = 0.35
     core.CanCollide = false
-    label(core, titleText, UDim2.fromOffset(210, 42), Vector3.new(0, 0, 0), Color3.new(1, 1, 1))
 
     local prompt = Instance.new("ProximityPrompt")
     prompt.Name = "PortalPrompt"
@@ -96,89 +82,104 @@ local function makePortal(name, position, accent, titleText)
     prompt.Parent = core
 end
 
-part("SafetyGround", Vector3.new(520, 2, 520), Vector3.new(0, 120, 0), Color3.fromRGB(74, 105, 66), Enum.Material.Grass)
-
--- STARTER GROVE
+-- STARTER GROVE: straight central boulevard, conveyor lanes, gardens left/right.
 local starter = Instance.new("Folder")
 starter.Name = "StarterGrove"
 starter.Parent = world
-part("GroveGround", Vector3.new(180, 1, 150), Vector3.new(0, 0, 0), Color3.fromRGB(83, 125, 70), Enum.Material.Grass, starter)
-part("GroveHub", Vector3.new(38, 0.35, 38), Vector3.new(0, 0.65, 0), Color3.fromRGB(145, 122, 82), Enum.Material.Ground, starter)
 
-local pathColor = Color3.fromRGB(177, 153, 106)
-part("PathNorth", Vector3.new(10, 0.25, 48), Vector3.new(0, 0.72, 40), pathColor, Enum.Material.Ground, starter)
-part("PathSouth", Vector3.new(10, 0.25, 48), Vector3.new(0, 0.72, -40), pathColor, Enum.Material.Ground, starter)
-part("PathEast", Vector3.new(48, 0.25, 10), Vector3.new(40, 0.72, 0), pathColor, Enum.Material.Ground, starter)
-part("PathWest", Vector3.new(48, 0.25, 10), Vector3.new(-40, 0.72, 0), pathColor, Enum.Material.Ground, starter)
+part("GroveGround", Vector3.new(170, 1, 180), Vector3.new(0, 0, 0), Color3.fromRGB(104, 158, 82), Enum.Material.Grass, starter)
+part("MainPath", Vector3.new(16, 0.2, 150), Vector3.new(0, 0.6, 0), Color3.fromRGB(220, 187, 112), Enum.Material.SmoothPlastic, starter)
+
+local function conveyor(x)
+    local belt = part("Conveyor", Vector3.new(7, 0.25, 150), Vector3.new(x, 0.73, 0), Color3.fromRGB(74, 93, 68), Enum.Material.SmoothPlastic, starter)
+    for z = -65, 65, 13 do
+        local arrow = part("ConveyorMarker", Vector3.new(3.2, 0.05, 1.2), Vector3.new(x, 0.9, z), Color3.fromRGB(232, 205, 107), Enum.Material.Neon, starter)
+        arrow.CanCollide = false
+    end
+    return belt
+end
+conveyor(-20)
+conveyor(20)
 
 local spawn = workspace:FindFirstChild("SpawnLocation")
-if spawn then
-    spawn:Destroy()
-end
+if spawn then spawn:Destroy() end
 spawn = Instance.new("SpawnLocation")
 spawn.Name = "SpawnLocation"
 spawn.Size = Vector3.new(7, 1, 7)
-spawn.Position = Vector3.new(0, 2, 0)
+spawn.Position = Vector3.new(0, 1.0, -70)
 spawn.Anchored = true
 spawn.Neutral = true
 spawn.Material = Enum.Material.SmoothPlastic
 spawn.Color = Color3.fromRGB(255, 221, 45)
-spawn.Transparency = 0.08
+spawn.Transparency = 0.05
 spawn.Parent = starter
 
-local titleAnchor = part("GroveTitle", Vector3.new(1, 1, 1), Vector3.new(0, 5.5, -13), Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, starter)
+local titleAnchor = part("TitleAnchor", Vector3.new(1,1,1), Vector3.new(0, 4.5, -55), Color3.new(1,1,1), Enum.Material.SmoothPlastic, starter)
 titleAnchor.Transparency = 1
 titleAnchor.CanCollide = false
-label(titleAnchor, "GROW A VERITY", UDim2.fromOffset(300, 65), Vector3.new(0, 0, 0), Color3.new(1, 1, 1))
+label(titleAnchor, "GROW A VERITY", UDim2.fromOffset(270, 52), Vector3.new(0,0,0), Color3.new(1,1,1))
 
 local plotPositions = {
-    Vector3.new(-58, 0.55, 43),
-    Vector3.new(-58, 0.55, -43),
-    Vector3.new(58, 0.55, 43),
-    Vector3.new(58, 0.55, -43),
-    Vector3.new(-24, 0.55, 61),
-    Vector3.new(24, 0.55, 61),
+    Vector3.new(-50, 0.55, -42),
+    Vector3.new(50, 0.55, -42),
+    Vector3.new(-50, 0.55, 0),
+    Vector3.new(50, 0.55, 0),
+    Vector3.new(-50, 0.55, 42),
+    Vector3.new(50, 0.55, 42),
 }
-
 for i, pos in ipairs(plotPositions) do
     local plot = Instance.new("Folder")
     plot.Name = "Plot_" .. i
     plot:SetAttribute("FreePlacement", true)
     plot.Parent = starter
 
-    part("Soil", Vector3.new(28, 0.35, 24), pos, Color3.fromRGB(112, 77, 48), Enum.Material.Ground, plot)
-    part("GrassEdge", Vector3.new(30, 0.18, 26), pos + Vector3.new(0, 0.28, 0), Color3.fromRGB(92, 133, 73), Enum.Material.Grass, plot)
-    makeFence(plot, pos + Vector3.new(0, 0.1, 0), 30, 26)
+    part("GardenSurface", Vector3.new(28, 0.3, 22), pos, Color3.fromRGB(126, 91, 56), Enum.Material.SmoothPlastic, plot)
+    part("GardenGrass", Vector3.new(25.5, 0.12, 19.5), pos + Vector3.new(0, 0.22, 0), Color3.fromRGB(121, 177, 91), Enum.Material.Grass, plot)
+    fence(plot, pos, 30, 24)
 
-    local marker = part("PlotMarker", Vector3.new(1, 1, 1), pos + Vector3.new(0, 3.3, -14), Color3.new(1, 1, 1), Enum.Material.SmoothPlastic, plot)
+    local marker = part("PlotMarker", Vector3.new(1,1,1), pos + Vector3.new(0, 2.8, -13), Color3.new(1,1,1), Enum.Material.SmoothPlastic, plot)
     marker.Transparency = 1
     marker.CanCollide = false
-    label(marker, "GARDEN", UDim2.fromOffset(150, 32), Vector3.new(0, 0, 0), Color3.fromRGB(246, 226, 180))
+    label(marker, "GARDEN " .. i, UDim2.fromOffset(130, 28), Vector3.new(0,0,0), Color3.fromRGB(255,240,190))
 end
 
-makePortal("ExplorePortal", Vector3.new(0, 67, 0), Color3.fromRGB(83, 171, 255), "EXPLORE")
+-- Explore entrance sits on the ground at the far end of the boulevard.
+makePortal("ExplorePortal", Vector3.new(0, 0.75, 82), Color3.fromRGB(88, 184, 255), "EXPLORE")
 
--- GUARDIAN WILDS
+-- EXPLORE WORLD: far away, so the starter grove cannot be seen.
 local wilds = Instance.new("Folder")
 wilds.Name = "GuardianWilds"
 wilds.Parent = world
-part("WildsGround", Vector3.new(160, 1, 120), Vector3.new(0, 235, 0), Color3.fromRGB(61, 101, 60), Enum.Material.Grass, wilds)
 
-for _, p in ipairs({
-    Vector3.new(-70, 5, 195), Vector3.new(70, 5, 195),
-    Vector3.new(-70, 5, 275), Vector3.new(70, 5, 275),
+local exploreOrigin = Vector3.new(0, 0, 900)
+part("WildsGround", Vector3.new(220, 1, 190), exploreOrigin, Color3.fromRGB(106, 161, 84), Enum.Material.Grass, wilds)
+
+-- Stylized low-poly hills.
+local hillColor = Color3.fromRGB(87, 139, 76)
+local rockColor = Color3.fromRGB(126, 124, 103)
+for _, h in ipairs({
+    {Vector3.new(-80, 18, 850), Vector3.new(45, 36, 55)},
+    {Vector3.new(78, 24, 870), Vector3.new(55, 48, 60)},
+    {Vector3.new(-82, 14, 965), Vector3.new(50, 28, 50)},
+    {Vector3.new(82, 18, 970), Vector3.new(48, 36, 55)},
 }) do
-    part("Rock", Vector3.new(10, 10, 10), p, Color3.fromRGB(91, 86, 75), Enum.Material.Rock, wilds)
+    local p = part("LowPolyHill", h[2], h[1], hillColor, Enum.Material.Grass, wilds)
+    p.Shape = Enum.PartType.Wedge
+end
+for _, p in ipairs({
+    Vector3.new(-60, 5, 850), Vector3.new(65, 5, 850),
+    Vector3.new(-72, 5, 970), Vector3.new(70, 5, 970),
+}) do
+    part("Rock", Vector3.new(9, 9, 9), p, rockColor, Enum.Material.Rock, wilds)
 end
 
 local arena = Instance.new("Folder")
 arena.Name = "GuardianArena"
 arena.Parent = wilds
-part("ArenaFloor", Vector3.new(62, 0.5, 50), Vector3.new(0, 0.9, 235), Color3.fromRGB(92, 72, 48), Enum.Material.Ground, arena)
-part("ArenaRing", Vector3.new(48, 0.3, 36), Vector3.new(0, 1.35, 235), Color3.fromRGB(168, 132, 67), Enum.Material.Metal, arena)
+part("ArenaFloor", Vector3.new(66, 0.4, 54), exploreOrigin + Vector3.new(0, 0.7, 0), Color3.fromRGB(184, 145, 75), Enum.Material.SmoothPlastic, arena)
+part("ArenaRing", Vector3.new(54, 0.25, 42), exploreOrigin + Vector3.new(0, 1.05, 0), Color3.fromRGB(238, 204, 98), Enum.Material.Neon, arena)
 
 local BattleDefinitions = require(ReplicatedStorage:WaitForChild("BattleDefinitions"))
-
 local function makeVarietyModel(name, position, scale)
     local def = BattleDefinitions[name]
     local model = Instance.new("Model")
@@ -189,8 +190,8 @@ local function makeVarietyModel(name, position, scale)
     local root = Instance.new("Part")
     root.Name = "Body"
     root.Shape = Enum.PartType.Ball
-    root.Size = Vector3.new(4, 4, 4) * scale
-    root.Position = position + Vector3.new(0, 2.2 * scale, 0)
+    root.Size = Vector3.new(4,4,4) * scale
+    root.Position = position
     root.Anchored = true
     root.CanCollide = false
     root.Material = Enum.Material.SmoothPlastic
@@ -198,11 +199,11 @@ local function makeVarietyModel(name, position, scale)
     root.Parent = model
     model.PrimaryPart = root
 
-    local function feature(size, positionOffset, color, shape)
+    local function feature(size, offset, color, shape)
         local p = Instance.new("Part")
         p.Shape = shape or Enum.PartType.Ball
         p.Size = size * scale
-        p.Position = root.Position + positionOffset * scale
+        p.Position = root.Position + offset * scale
         p.Anchored = true
         p.CanCollide = false
         p.Material = Enum.Material.SmoothPlastic
@@ -210,18 +211,18 @@ local function makeVarietyModel(name, position, scale)
         p.Parent = model
     end
 
-    feature(Vector3.new(0.55, 0.55, 0.55), Vector3.new(-0.8, 0.35, -1.82), Color3.fromRGB(24, 25, 29))
-    feature(Vector3.new(0.55, 0.55, 0.55), Vector3.new(0.8, 0.35, -1.82), Color3.fromRGB(24, 25, 29))
-    feature(Vector3.new(1.2, 0.2, 0.22), Vector3.new(0, -0.65, -1.8), Color3.fromRGB(24, 25, 29), Enum.PartType.Block)
+    feature(Vector3.new(.55,.55,.55), Vector3.new(-.8,.35,-1.82), Color3.fromRGB(24,25,29))
+    feature(Vector3.new(.55,.55,.55), Vector3.new(.8,.35,-1.82), Color3.fromRGB(24,25,29))
+    feature(Vector3.new(1.2,.2,.22), Vector3.new(0,-.65,-1.8), Color3.fromRGB(24,25,29), Enum.PartType.Block)
 
     if name == "Verity" then
-        feature(Vector3.new(1.5, 2.2, 0.45), Vector3.new(0, 0, 1.95), def.Accent, Enum.PartType.Block)
+        feature(Vector3.new(1.5,2.2,.45), Vector3.new(0,0,1.95), def.Accent, Enum.PartType.Block)
     elseif name == "Falsity" then
-        feature(Vector3.new(1.2, 0.5, 1.8), Vector3.new(-2.0, 0.1, 0), def.Accent, Enum.PartType.Wedge)
-        feature(Vector3.new(1.2, 0.5, 1.8), Vector3.new(2.0, 0.1, 0), def.Accent, Enum.PartType.Wedge)
+        feature(Vector3.new(1.2,.5,1.8), Vector3.new(-2,.1,0), def.Accent, Enum.PartType.Wedge)
+        feature(Vector3.new(1.2,.5,1.8), Vector3.new(2,.1,0), def.Accent, Enum.PartType.Wedge)
     else
-        feature(Vector3.new(1.35, 1.35, 1.35), Vector3.new(-1.25, 1.8, 0), def.Accent)
-        feature(Vector3.new(1.35, 1.35, 1.35), Vector3.new(1.25, 1.8, 0), def.Accent)
+        feature(Vector3.new(1.35,1.35,1.35), Vector3.new(-1.25,1.8,0), def.Accent)
+        feature(Vector3.new(1.35,1.35,1.35), Vector3.new(1.25,1.8,0), def.Accent)
     end
 
     local prompt = Instance.new("ProximityPrompt")
@@ -232,68 +233,49 @@ local function makeVarietyModel(name, position, scale)
     prompt.MaxActivationDistance = 12
     prompt.RequiresLineOfSight = false
     prompt.Parent = root
-
-    label(root, name, UDim2.fromOffset(150, 32), Vector3.new(0, 3.0, 0), Color3.new(1, 1, 1))
+    label(root, name, UDim2.fromOffset(140,30), Vector3.new(0,3,0), Color3.new(1,1,1))
 end
 
-makeVarietyModel("Verity", Vector3.new(-17, 1.5, 235), 1.1)
-makeVarietyModel("Falsity", Vector3.new(0, 1.5, 235), 1.1)
-makeVarietyModel("Lovity", Vector3.new(17, 1.5, 235), 1.1)
+makeVarietyModel("Verity", exploreOrigin + Vector3.new(-18, 3.8, 0), 1.1)
+makeVarietyModel("Falsity", exploreOrigin + Vector3.new(0, 3.8, 0), 1.1)
+makeVarietyModel("Lovity", exploreOrigin + Vector3.new(18, 3.8, 0), 1.1)
 
-local seedGarden = Instance.new("Folder")
-seedGarden.Name = "SeedGarden"
-seedGarden.Parent = wilds
-for _, x in ipairs({-32, 32}) do
-    part("SeedPad", Vector3.new(14, 0.4, 10), Vector3.new(x, 1, 215), Color3.fromRGB(113, 77, 48), Enum.Material.Ground, seedGarden)
-end
-
-makePortal("ReturnPortal", Vector3.new(0, 197, 0), Color3.fromRGB(255, 221, 45), "RETURN")
+local returnPosition = exploreOrigin + Vector3.new(0, 0.75, 72)
+makePortal("ReturnPortal", returnPosition, Color3.fromRGB(255, 221, 45), "RETURN")
 
 local portalConnections = {
-    {Vector3.new(0, 67, 0), Vector3.new(0, 235, 18)},
-    {Vector3.new(0, 197, 0), Vector3.new(0, 3, 52)},
+    {Vector3.new(0, 0.75, 82), exploreOrigin + Vector3.new(0, 0, 12)},
+    {returnPosition, Vector3.new(0, 1, -70)},
 }
-
 local function nearestPortal(position)
-    local best, bestDistance
+    local best, distance
     for _, entry in ipairs(portalConnections) do
-        local distance = (position - entry[1]).Magnitude
-        if not bestDistance or distance < bestDistance then
-            best = entry
-            bestDistance = distance
-        end
+        local d = (position - entry[1]).Magnitude
+        if not distance or d < distance then best, distance = entry, d end
     end
     return best
 end
-
-for _, prompt in ipairs(workspace:GetDescendants()) do
+for _, prompt in ipairs(world:GetDescendants()) do
     if prompt:IsA("ProximityPrompt") and prompt.Name == "PortalPrompt" then
         prompt.Triggered:Connect(function(player)
             local character = player.Character
             local root = character and character:FindFirstChild("HumanoidRootPart")
-            if not root then
-                return
-            end
+            if not root then return end
             local entry = nearestPortal(root.Position)
-            if entry and (root.Position - entry[1]).Magnitude < 16 then
-                root.CFrame = CFrame.new(entry[2] + Vector3.new(0, 2.5, 0))
+            if entry and (root.Position - entry[1]).Magnitude < 18 then
+                root.CFrame = CFrame.new(entry[2] + Vector3.new(0, 3, 0))
             end
         end)
     end
 end
 
-Lighting.ClockTime = 13.5
-Lighting.Brightness = 2.2
-Lighting.Ambient = Color3.fromRGB(165, 177, 156)
-Lighting.OutdoorAmbient = Color3.fromRGB(185, 198, 175)
-Lighting.FogColor = Color3.fromRGB(178, 205, 177)
-Lighting.FogEnd = 420
+Lighting.ClockTime = 14
+Lighting.Brightness = 3
+Lighting.Ambient = Color3.fromRGB(205, 215, 190)
+Lighting.OutdoorAmbient = Color3.fromRGB(210, 220, 195)
+Lighting.FogColor = Color3.fromRGB(170, 205, 230)
+Lighting.FogEnd = 520
+Lighting.GlobalShadows = true
 
-local atmosphere = Lighting:FindFirstChildOfClass("Atmosphere") or Instance.new("Atmosphere")
-atmosphere.Density = 0.22
-atmosphere.Offset = 0.1
-atmosphere.Color = Color3.fromRGB(194, 218, 193)
-atmosphere.Decay = Color3.fromRGB(112, 137, 108)
-atmosphere.Glare = 0.1
-atmosphere.Haze = 0.5
-atmosphere.Parent = Lighting
+local atmosphere = Lighting:FindFirstChildOfClass("Atmosphere")
+if atmosphere then atmosphere:Destroy() end
