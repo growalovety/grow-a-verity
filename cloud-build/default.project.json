@@ -23,6 +23,12 @@
         },
         "GuardianBattle": {
           "$path": "src/StarterPlayer/StarterPlayerScripts/GuardianBattle.client.lua"
+        },
+        "GameHUD": {
+          "$path": "src/StarterPlayer/StarterPlayerScripts/GameHUD.client.lua"
+        },
+        "MusicPlayer": {
+          "$path": "src/StarterPlayer/StarterPlayerScripts/MusicPlayer.client.lua"
         }
       }
     },
@@ -36,6 +42,9 @@
       },
       "GuardianBattle": {
         "$path": "src/ServerScriptService/GuardianBattle.server.lua"
+      },
+      "WorldNavigation": {
+        "$path": "src/ServerScriptService/WorldNavigation.server.lua"
       }
     }
   }
