@@ -6,6 +6,8 @@ const PORT = Number(process.env.PORT || 47821);
 const REPO = process.env.VERITY_COMMAND_REPO || "growalovety/grow-a-verity";
 const BRANCH = process.env.VERITY_COMMAND_BRANCH || "main";
 const POLL_MS = Number(process.env.VERITY_GITHUB_POLL_MS || 2000);
+const RAW_BASE = `https://raw.githubusercontent.com/${REPO}/${BRANCH}`;
+const QUEUE_INDEX = process.env.VERITY_QUEUE_INDEX || "commands/pending/index.json";
 const MAX_BODY = 16 * 1024;
 
 const ALLOWED = new Set([
@@ -47,14 +49,17 @@ function validate(command) {
   return command;
 }
 
-async function githubJson(url) {
+async function rawJson(path) {
+  const cleanPath = path.replace(/^\/+/, "");
+  const url = RAW_BASE + "/" + cleanPath.split("/").map(encodeURIComponent).join("/") + "?t=" + Date.now();
   const response = await fetch(url, {
     headers: {
-      "Accept": "application/vnd.github+json",
+      "Accept": "application/json",
       "User-Agent": "verity-builder-bridge",
+      "Cache-Control": "no-cache",
     },
   });
-  if (!response.ok) throw new Error(`GitHub HTTP ${response.status}`);
+  if (!response.ok) throw new Error("raw GitHub HTTP " + response.status);
   return response.json();
 }
 
@@ -63,24 +68,26 @@ async function pollGitHub() {
   if (now - lastPoll < POLL_MS) return;
   lastPoll = now;
 
-  const api = `https://api.github.com/repos/${REPO}/contents/commands/pending?ref=${encodeURIComponent(BRANCH)}`;
-
   try {
-    const files = await githubJson(api);
-    if (!Array.isArray(files)) return;
+    const index = await rawJson(QUEUE_INDEX);
+    const files = Array.isArray(index) ? index : (Array.isArray(index.commands) ? index.commands : []);
 
-    for (const file of files) {
-      if (file.type !== "file" || !file.name.endsWith(".json") || seen.has(file.sha)) continue;
+    for (const entry of files) {
+      const fileName = typeof entry === "string" ? entry : entry.file;
+      if (!fileName || !fileName.endsWith(".json") || fileName.endsWith("/index.json")) continue;
 
-      const payload = await githubJson(file.download_url);
+      const key = typeof entry === "string" ? fileName : (entry.sha || entry.id || fileName);
+      if (seen.has(key)) continue;
+
+      const payload = await rawJson(fileName);
       const command = validate(payload);
-      const id = String(payload.id || file.name.replace(/\.json$/, ""));
+      const id = String(payload.id || fileName.split("/").pop().replace(/\.json$/, ""));
 
       if (seen.has(id)) continue;
 
-      seen.add(file.sha);
+      seen.add(key);
       seen.add(id);
-      queue.push({ id, command, source: file.name, receivedAt: new Date().toISOString() });
+      queue.push({ id, command, source: fileName, receivedAt: new Date().toISOString() });
     }
   } catch (error) {
     console.error("[github poll]", error.message);
