@@ -69,10 +69,12 @@ jobs:
           for attempt in 1 2 3 4 5; do
             echo "Roblox publish attempt $attempt/5"
 
+            response_file="$(mktemp)"
             set +e
-            response=$(curl --silent --show-error --location \
+            http_code=$(curl --silent --show-error --location \
               --request POST \
-              --write-out "\\n%{http_code}" \
+              --output "$response_file" \
+              --write-out "%{http_code}" \
               "https://apis.roblox.com/universes/v1/$UNIVERSE_ID/places/$PLACE_ID/versions?versionType=Published" \
               --header "x-api-key: $ROBLOX_API_KEY" \
               --header "Content-Type: application/octet-stream" \
@@ -80,8 +82,8 @@ jobs:
             curl_exit=$?
             set -e
 
-            http_code=$(printf '%s\\n' "$response" | tail -n 1)
-            body=$(printf '%s\\n' "$response" | sed '$d')
+            body=$(cat "$response_file")
+            rm -f "$response_file"
 
             echo "Roblox HTTP status: $http_code"
             if [ -n "$body" ]; then
