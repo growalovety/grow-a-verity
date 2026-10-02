@@ -1,4 +1,4 @@
-name: Cloud Roblox Build Test
+name: Build and Publish Grow a Verity
 
 on:
   workflow_dispatch:
@@ -11,6 +11,10 @@ on:
 
 permissions:
   contents: read
+
+env:
+  UNIVERSE_ID: "10768994585"
+  PLACE_ID: "103739066237284"
 
 jobs:
   build:
@@ -30,7 +34,7 @@ jobs:
           pwd
           rojo --version
           test -f cloud-build/default.project.json
-          ls -la cloud-build
+          test -f cloud-build/src/ServerScriptService/GameInit.server.lua
           python - <<'PY'
           import json
           from pathlib import Path
@@ -45,13 +49,20 @@ jobs:
         run: |
           mkdir -p build
           cd cloud-build
-          rojo build -o ../build/cloud-build-test.rbxl
+          rojo build -o ../build/grow-a-verity.rbxl
           cd ..
-          test -s build/cloud-build-test.rbxl
-          ls -lh build/cloud-build-test.rbxl
+          test -s build/grow-a-verity.rbxl
+          ls -lh build/grow-a-verity.rbxl
 
       - name: Upload built place
         uses: actions/upload-artifact@v4
         with:
-          name: cloud-build-test-place
-          path: build/cloud-build-test.rbxl
+          name: grow-a-verity-place
+          path: build/grow-a-verity.rbxl
+
+      - name: Publish place to Roblox
+        env:
+          ROBLOX_API_KEY: ${{ secrets.ROBLOX_API_KEY }}
+        run: |
+          test -n "$ROBLOX_API_KEY"
+          curl --fail-with-body --location --request POST             "https://apis.roblox.com/universes/v1/$UNIVERSE_ID/places/$PLACE_ID/versions?versionType=Published"             --header "x-api-key: $ROBLOX_API_KEY"             --header "Content-Type: application/octet-stream"             --data-binary "@build/grow-a-verity.rbxl"
