@@ -2,6 +2,12 @@ name: Cloud Roblox Build Test
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "cloud-build/**"
+      - ".github/workflows/cloud-build-test.yml"
 
 permissions:
   contents: read
