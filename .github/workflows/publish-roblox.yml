@@ -20,8 +20,39 @@ jobs:
 
       - name: Verify place file
         run: |
+          set -euo pipefail
           test -f place/Robloxverity.rbxl
           test -s place/Robloxverity.rbxl
+          echo "Place file size: $(stat -c%s place/Robloxverity.rbxl) bytes"
+
+      - name: Verify Roblox Universe and Place relationship
+        run: |
+          set -euo pipefail
+
+          UNIVERSE_ID="10768994585"
+          PLACE_ID="103739066237284"
+
+          echo "Checking public Roblox place list for Universe ${UNIVERSE_ID}..."
+          response_file="$(mktemp)"
+          status="$(curl --silent --show-error --location             --output "$response_file"             --write-out "%{http_code}"             "https://develop.roblox.com/v1/universes/${UNIVERSE_ID}/places?sortOrder=Asc&limit=100")"
+
+          echo "HTTP status: $status"
+          cat "$response_file"
+
+          if [[ "$status" != "200" ]]; then
+            echo "Could not verify the Universe/Place relationship."
+            rm -f "$response_file"
+            exit 1
+          fi
+
+          if ! grep -q "\"id\":${PLACE_ID}" "$response_file"; then
+            echo "Place ${PLACE_ID} was NOT found in Universe ${UNIVERSE_ID}."
+            rm -f "$response_file"
+            exit 1
+          fi
+
+          echo "Confirmed: Place ${PLACE_ID} belongs to Universe ${UNIVERSE_ID}."
+          rm -f "$response_file"
 
       - name: Publish place to Roblox
         env:
