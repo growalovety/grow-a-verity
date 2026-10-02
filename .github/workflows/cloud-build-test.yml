@@ -45,7 +45,7 @@ jobs:
         run: |
           mkdir -p build
           cd cloud-build
-          rojo build -o ../build/cloud-build-test.rbxl
+          rojo build default.project.json -o ../build/cloud-build-test.rbxl
           cd ..
           test -s build/cloud-build-test.rbxl
           ls -lh build/cloud-build-test.rbxl
