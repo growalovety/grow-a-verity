@@ -22,12 +22,12 @@ gui.IgnoreGuiInset=true
 gui.DisplayOrder=25
 gui.Parent=player:WaitForChild("PlayerGui")
 
-local BG=Color3.fromRGB(247,242,220)
-local PANEL=Color3.fromRGB(255,250,235)
-local GREEN=Color3.fromRGB(67,137,79)
-local DARK=Color3.fromRGB(43,58,42)
-local MUTED=Color3.fromRGB(108,116,94)
-local LINE=Color3.fromRGB(183,161,108)
+local BG=Color3.fromRGB(17,23,31)
+local PANEL=Color3.fromRGB(25,33,44)
+local GREEN=Color3.fromRGB(76,199,139)
+local DARK=Color3.fromRGB(238,244,252)
+local MUTED=Color3.fromRGB(154,170,193)
+local LINE=Color3.fromRGB(90,112,139)
 
 local function corner(o,r) local c=Instance.new("UICorner"); c.CornerRadius=UDim.new(0,r); c.Parent=o end
 local function stroke(o,c,t,w) local s=Instance.new("UIStroke"); s.Color=c; s.Transparency=t or 0; s.Thickness=w or 1; s.Parent=o end
@@ -48,7 +48,7 @@ corner(panel,18)
 stroke(panel,GREEN,.15,2)
 
 label(panel,"SETTINGS",UDim2.new(.7,0,0,48),UDim2.fromOffset(24,18),DARK,Enum.Font.GothamBlack)
-local close=button(panel,"×",UDim2.fromOffset(42,42),UDim2.new(1,-58,0,18),Color3.fromRGB(235,226,199))
+local close=button(panel,"×",UDim2.fromOffset(42,42),UDim2.new(1,-58,0,18),Color3.fromRGB(34,44,58))
 
 local musicValue=label(panel,"25%",UDim2.fromOffset(72,34),UDim2.fromOffset(500,86),DARK,Enum.Font.GothamBlack)
 local sfxValue=label(panel,"80%",UDim2.fromOffset(72,34),UDim2.fromOffset(500,146),DARK,Enum.Font.GothamBlack)
@@ -56,7 +56,7 @@ label(panel,"MUSIC",UDim2.fromOffset(180,34),UDim2.fromOffset(28,86),DARK,Enum.F
 label(panel,"SOUND EFFECTS",UDim2.fromOffset(220,34),UDim2.fromOffset(28,146),DARK,Enum.Font.GothamBlack)
 
 local musicMinus=button(panel,"−",UDim2.fromOffset(42,34),UDim2.fromOffset(390,86),Color3.fromRGB(235,226,199))
-local musicPlus=button(panel,"+",UDim2.fromOffset(42,34),UDim2.fromOffset(560,86),Color3.fromRGB(222,239,218))
+local musicPlus=button(panel,"+",UDim2.fromOffset(42,34),UDim2.fromOffset(560,86),Color3.fromRGB(48,76,58))
 local sfxMinus=button(panel,"−",UDim2.fromOffset(42,34),UDim2.fromOffset(390,146),Color3.fromRGB(235,226,199))
 local sfxPlus=button(panel,"+",UDim2.fromOffset(42,34),UDim2.fromOffset(560,146),Color3.fromRGB(222,239,218))
 
@@ -94,7 +94,7 @@ claim.Activated:Connect(function()
 end)
 redeem.OnClientEvent:Connect(function(ok,msg)
  result.Text=msg
- result.TextColor3=ok and GREEN or Color3.fromRGB(178,70,70)
+ result.TextColor3=ok and GREEN or Color3.fromRGB(245,103,112)
  if ok then codeBox.Text="" end
 end)
 
