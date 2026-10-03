@@ -1,5 +1,7 @@
 name: Build and Publish Grow a Verity
 
+# Force-trigger marker for cloud publishing.
+
 on:
   workflow_dispatch:
   push:
