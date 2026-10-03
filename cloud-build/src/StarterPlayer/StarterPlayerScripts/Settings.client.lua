@@ -1,6 +1,15 @@
 local Players=game:GetService("Players")
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
 local SoundService=game:GetService("SoundService")
+local sfxGroup=SoundService:FindFirstChild("GrowAVeritySFX") or Instance.new("SoundGroup")
+sfxGroup.Name="GrowAVeritySFX"
+sfxGroup.Parent=SoundService
+local clickSound=SoundService:FindFirstChild("GrowAVerityClick") or Instance.new("Sound")
+clickSound.Name="GrowAVerityClick"
+clickSound.SoundId="rbxassetid://9120386436"
+clickSound.Volume=.18
+clickSound.SoundGroup=sfxGroup
+clickSound.Parent=SoundService
 local player=Players.LocalPlayer
 local remotes=ReplicatedStorage:WaitForChild("GameRemotes")
 local redeem=remotes:WaitForChild("RedeemCode")
@@ -65,7 +74,7 @@ local function apply()
  musicValue.Text=math.floor(music*100+0.5).."%"
  sfxValue.Text=math.floor(sfx*100+0.5).."%"
  SoundService:SetAttribute("MusicVolume",music)
- SoundService:SetAttribute("SFXVolume",sfx)
+ SoundService:SetAttribute("SFXVolume",sfx)\n sfxGroup.Volume=sfx
 end
 local function setVolume(attr,delta)
  local value=math.clamp(get(attr,0)+delta,0,1)
@@ -96,3 +105,16 @@ apply()
 _G.GrowAVerityOpenSettings=function()
  panel.Visible=true
 end
+
+
+local wired={}
+local function wireButton(obj)
+ if not obj:IsA("GuiButton") or wired[obj] then return end
+ wired[obj]=true
+ obj.Activated:Connect(function()
+  if sfxGroup.Volume<=0 then return end
+  clickSound:Play()
+ end)
+end
+for _,obj in ipairs(player:WaitForChild("PlayerGui"):GetDescendants()) do wireButton(obj) end
+player.PlayerGui.DescendantAdded:Connect(wireButton)
