@@ -44,7 +44,7 @@ local function spawnAt(i)
         if live[i]~=model then return end
         collect(p,data[2],data[4]); live[i]=nil; model:Destroy()
     end)
-    task.delay(80,function() if live[i]==model then live[i]=nil; model:Destroy() end end)
+    task.delay(60,function() if live[i]==model then live[i]=nil; model:Destroy() end end)
 end
 local padsFolder=workspace.World.GuardianWilds:FindFirstChild("SeedSpawnPads") or Instance.new("Folder"); padsFolder.Name="SeedSpawnPads"; padsFolder.Parent=workspace.World.GuardianWilds
 for i,data in ipairs(pads) do
@@ -52,13 +52,13 @@ for i,data in ipairs(pads) do
 end
 task.spawn(function()
     while true do
-        task.wait(12)
+        task.wait(5)
         for i=1,#pads do spawnAt(i) end
     end
 end)
 task.spawn(function()
     while true do
-        task.wait(90)
+        task.wait(60)
         local rare={6,9,12}; local i=rare[math.random(1,#rare)]; if not live[i] then spawnAt(i) end
         exploreEvent:FireAllClients("RARE SEED SURGE","A rare Guardian seed has appeared somewhere in the Wilds.")
     end
