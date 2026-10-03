@@ -10,7 +10,8 @@ local startBattle=remote("StartBattle"); local battleAction=remote("BattleAction
 local collectionStore=DataStoreService:GetDataStore("GrowAVerity_Collection_v1")
 local deckStore=DataStoreService:GetDataStore("GrowAVerity_Deck_v1")
 local active={}; local decks={}
-local progression=ReplicatedStorage:FindFirstChild("ProgressionAward")
+local progression=ReplicatedStorage:FindFirstChild("ProgressionAward") or Instance.new("BindableEvent")
+progression.Name="ProgressionAward"; progression.Parent=ReplicatedStorage
 local GuardianStats={
  Verity={HP=105,Attack=18,Defense=18}, Falsity={HP=105,Attack=21,Defense=15},
  Lovity={HP=110,Attack=17,Defense=19}, Cruelty={HP=125,Attack=24,Defense=17},
