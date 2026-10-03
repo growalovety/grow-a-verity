@@ -43,12 +43,13 @@ end
 local starter=Instance.new("Folder") starter.Name="StarterGrove" starter.Parent=world
 part("GroveGround",Vector3.new(220,1,220),Vector3.new(0,0,0),Color3.fromRGB(104,158,82),Enum.Material.Grass,starter)
 local borderColor=Color3.fromRGB(31,45,38)
-for name,size,pos in {
+for _,data in ipairs({
     {"North",Vector3.new(228,18,8),Vector3.new(0,9,114)},
     {"South",Vector3.new(228,18,8),Vector3.new(0,9,-114)},
     {"West",Vector3.new(8,18,228),Vector3.new(-114,9,0)},
     {"East",Vector3.new(8,18,228),Vector3.new(114,9,0)}
-} do
+}) do
+    local name,size,pos=data[1],data[2],data[3]
     local b=part("MapBorder_"..name,size,pos,borderColor,Enum.Material.Slate,starter)
     b:SetAttribute("AntiExploitBorder",true)
 end
@@ -82,12 +83,13 @@ portal("ExplorePortal",Vector3.new(0,.75,108),Color3.fromRGB(88,184,255),"EXPLOR
 local wilds=Instance.new("Folder") wilds.Name="GuardianWilds" wilds.Parent=world
 local o=Vector3.new(0,0,900)
 part("WildsGround",Vector3.new(260,1,220),o,Color3.fromRGB(106,161,84),Enum.Material.Grass,wilds)
-for name,size,pos in {
+for _,data in ipairs({
     {"North",Vector3.new(268,18,8),o+Vector3.new(0,9,114)},
     {"South",Vector3.new(268,18,8),o+Vector3.new(0,9,-114)},
     {"West",Vector3.new(8,18,268),o+Vector3.new(-134,9,0)},
     {"East",Vector3.new(8,18,268),o+Vector3.new(134,9,0)}
-} do
+}) do
+    local name,size,pos=data[1],data[2],data[3]
     local b=part("MapBorder_"..name,size,pos,borderColor,Enum.Material.Slate,wilds)
     b:SetAttribute("AntiExploitBorder",true)
 end
