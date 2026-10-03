@@ -181,24 +181,14 @@ guardian("Cruelty",o+Vector3.new(82,4.2,970),1.55)
 guardian("Hopeity",o+Vector3.new(92,4.2,925),1.35)
 guardian("Nullity",o+Vector3.new(92,4.8,1000),1.75)
 
--- Final cleanup for the three main boss pads.
--- Old builds left one thin vertical pole at each boss. Remove only tall,
--- narrow parts physically near those three boss positions; portal posts are
--- far away and are therefore untouched.
-local mainBossPositions={
-    o+Vector3.new(-18,3.8,0),
-    o+Vector3.new(0,3.8,0),
-    o+Vector3.new(18,3.8,0),
-}
-for _,bossPos in ipairs(mainBossPositions) do
-    for _,obj in ipairs(arena:GetDescendants()) do
-        if obj:IsA("BasePart") and obj.Name~="Body" then
-            local near=(obj.Position-bossPos).Magnitude<=7
-            local tall=obj.Size.Y>=4
-            local narrow=obj.Size.X<=1.5 and obj.Size.Z<=1.5
-            if near and tall and narrow then
-                obj:Destroy()
-            end
+-- Final cleanup: the guardian arena must contain no legacy vertical poles.
+-- There are no intended tall/narrow standalone posts inside the arena.
+for _,obj in ipairs(arena:GetDescendants()) do
+    if obj:IsA("BasePart") and obj.Name~="Body" then
+        local tall=obj.Size.Y>=4
+        local narrow=obj.Size.X<=1.5 and obj.Size.Z<=1.5
+        if tall and narrow then
+            obj:Destroy()
         end
     end
 end
