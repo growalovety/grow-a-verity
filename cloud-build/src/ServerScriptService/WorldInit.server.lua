@@ -140,6 +140,12 @@ local function guardian(name,pos,scale)
     label(root,name,UDim2.fromOffset(140,30),Vector3.new(0,3,0),Color3.new(1,1,1))
 end
 guardian("Verity",o+Vector3.new(-18,3.8,0),1.1) guardian("Falsity",o+Vector3.new(0,3.8,0),1.1) guardian("Lovity",o+Vector3.new(18,3.8,0),1.1)
+-- Remove any legacy thin antenna/pole parts from guardian models.
+for _,obj in ipairs(arena:GetDescendants()) do
+    if obj:IsA("BasePart") and obj.Name~="Body" and obj.Size.Y>4 and obj.Size.X<1 and obj.Size.Z<1 then
+        obj:Destroy()
+    end
+end
 local returnPos=o+Vector3.new(0,.75,72) portal("ReturnPortal",returnPos,Color3.fromRGB(255,221,45),"RETURN")
 local links={{Vector3.new(0,.75,108),o+Vector3.new(0,0,12)},{returnPos,Vector3.new(0,1,-100)}}
 for _,pr in ipairs(world:GetDescendants()) do
