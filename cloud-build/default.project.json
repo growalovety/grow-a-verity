@@ -39,10 +39,7 @@
           "Settings":{"$className":"TextButton","$properties":{"Size":{"UDim2":[[0,46],[0,46]]},"Position":{"UDim2":[[1,-62],[0,42]]},"BackgroundTransparency":1,"Text":"⚙","TextColor3":{"Color3":[0.933,0.957,0.988]},"TextScaled":true,"Font":"GothamBold","ZIndex":200}}
         }
       },
-      "HUDController": {
-        "$className": "LocalScript",
-        "$path": "src/StarterPlayer/StarterPlayerScripts/GameHUD.client.lua"
-      }
+      "HUDController": {"$path": "src/StarterPlayer/StarterPlayerScripts/GameHUD.client.lua"}
     },
     "StarterPlayer": {
       "$className": "StarterPlayer",
