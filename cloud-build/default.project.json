@@ -445,9 +445,6 @@
               "ZIndex": 200
             }
           }
-        },
-        "HUDController": {
-          "$path": "src/StarterPlayer/StarterPlayerScripts/GameHUD.client.lua"
         }
       }
     },
@@ -472,6 +469,9 @@
         },
         "MusicPlayer": {
           "$path": "src/StarterPlayer/StarterPlayerScripts/MusicPlayer.client.lua"
+        },
+        "HUDController": {
+          "$path": "src/StarterPlayer/StarterPlayerScripts/GameHUD.client.lua"
         }
       }
     },
