@@ -181,12 +181,22 @@ guardian("Cruelty",o+Vector3.new(82,4.2,970),1.55)
 guardian("Hopeity",o+Vector3.new(92,4.2,925),1.35)
 guardian("Nullity",o+Vector3.new(92,4.8,1000),1.75)
 
--- Final guardian-only cleanup. The old game generated thin poles inside the
--- guardian models; remove only those parts, never portal posts.
-for _,guardianModel in ipairs(arena:GetChildren()) do
-    if guardianModel:IsA("Model") and guardianModel:GetAttribute("VarietyName") then
-        for _,obj in ipairs(guardianModel:GetDescendants()) do
-            if obj:IsA("BasePart") and obj.Name~="Body" and obj.Size.Y>4 and obj.Size.X<1 and obj.Size.Z<1 then
+-- Final cleanup for the three main boss pads.
+-- Old builds left one thin vertical pole at each boss. Remove only tall,
+-- narrow parts physically near those three boss positions; portal posts are
+-- far away and are therefore untouched.
+local mainBossPositions={
+    o+Vector3.new(-18,3.8,0),
+    o+Vector3.new(0,3.8,0),
+    o+Vector3.new(18,3.8,0),
+}
+for _,bossPos in ipairs(mainBossPositions) do
+    for _,obj in ipairs(arena:GetDescendants()) do
+        if obj:IsA("BasePart") and obj.Name~="Body" then
+            local near=(obj.Position-bossPos).Magnitude<=7
+            local tall=obj.Size.Y>=4
+            local narrow=obj.Size.X<=1.5 and obj.Size.Z<=1.5
+            if near and tall and narrow then
                 obj:Destroy()
             end
         end
