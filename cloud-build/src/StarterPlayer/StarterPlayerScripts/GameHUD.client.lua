@@ -77,6 +77,7 @@ local detailArt=Instance.new("ViewportFrame"); detailArt.Size=UDim2.fromOffset(1
 local detailText=label(detail,"",UDim2.new(1,-28,0,205),UDim2.fromOffset(14,220),MUTED,Enum.Font.GothamBold); detailText.TextWrapped=true; detailText.TextXAlignment=Enum.TextXAlignment.Left; detailText.TextYAlignment=Enum.TextYAlignment.Top; detailText.TextSize=17
 
 local mode="Cards"; local currentDeck={}; local searchText=""; local sortMode="Name"
+local function safeRebuild() local ok,err=pcall(rebuild); if not ok then warn("[GameHUD] rebuild error:",err); detailTitle.Text="ERROR"; detailText.Text="HUD error: "..tostring(err) end end
 local order={}
 for n in pairs(Variants) do table.insert(order,n) end
 table.sort(order,function(a,b)
@@ -179,12 +180,15 @@ local function rebuild()
 end
 local function open(m)
     mode=m; title.Text=m=="Deck" and "BUILD DECK" or (m=="Seeds" and "SEED INDEX" or "CARD INDEX")
-    search.Text=""; searchText=""; sortMode="Name"; sort.Text="SORT: NAME"; panel.Visible=true; overlay.Visible=true; rebuild()
+    search.Text=""; searchText=""; sortMode="Name"; sort.Text="SORT: NAME"; panel.Visible=true; overlay.Visible=true; safeRebuild()
 end
-search:GetPropertyChangedSignal("Text"):Connect(function() searchText=search.Text; rebuild() end)
+_G.GrowAVerityOpenCards=function() open("Cards") end
+_G.GrowAVerityOpenSeeds=function() open("Seeds") end
+_G.GrowAVerityOpenDeck=function() open("Deck") end
+search:GetPropertyChangedSignal("Text"):Connect(function() searchText=search.Text; safeRebuild() end)
 sort.MouseButton1Click:Connect(function()
     sortMode=sortMode=="Name" and "Rarity" or (sortMode=="Rarity" and "Collected" or "Name")
-    sort.Text="SORT: "..string.upper(sortMode); rebuild()
+    sort.Text="SORT: "..string.upper(sortMode); safeRebuild()
 end)
 close.MouseButton1Click:Connect(function() overlay.Visible=false; panel.Visible=false end)
 local function fireTeleport(destination)
@@ -200,7 +204,7 @@ settings.MouseButton1Click:Connect(function() if _G.GrowAVerityOpenSettings then
 local function bindDeckRemote(r)
     deckUpdate=r
     r.OnClientEvent:Connect(function(d)
-        if type(d)=="table" then currentDeck=d; if mode=="Deck" then rebuild() end end
+        if type(d)=="table" then currentDeck=d; if mode=="Deck" then safeRebuild() end end
     end)
 end
 if deckUpdate then
