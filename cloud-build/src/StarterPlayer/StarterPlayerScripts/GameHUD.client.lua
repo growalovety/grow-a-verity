@@ -16,8 +16,8 @@ local function stroke(o,c,t,w) local s=Instance.new("UIStroke"); s.Color=c; s.Tr
 local function label(p,txt,size,pos,color,font) local l=Instance.new("TextLabel"); l.Size=size; l.Position=pos; l.BackgroundTransparency=1; l.Text=txt; l.TextColor3=color; l.Font=font or Enum.Font.GothamBold; l.TextScaled=true; l.Parent=p; return l end
 local function button(p,txt,size,pos,bg,tc) local b=Instance.new("TextButton"); b.Size=size; b.Position=pos; b.BackgroundColor3=bg or PANEL; b.TextColor3=tc or TEXT; b.Text=txt; b.Font=Enum.Font.GothamBold; b.TextScaled=true; b.AutoButtonColor=true; b.Parent=p; corner(b,10); stroke(b,Color3.fromRGB(90,112,139),.55,1); return b end
 
-local cash=button(gui,"$ 0",UDim2.fromOffset(142,46),UDim2.fromOffset(16,42),PANEL,GREEN); cash.Font=Enum.Font.GothamBlack; stroke(cash,Color3.fromRGB(76,199,139),.5,1.5)
-local nav=Instance.new("Frame"); nav.Size=UDim2.fromOffset(590,50); nav.Position=UDim2.new(.5,-295,0,42); nav.BackgroundTransparency=1; nav.Parent=gui
+local cash=button(gui,"$ 0",UDim2.fromOffset(132,46),UDim2.fromOffset(16,42),PANEL,GREEN); cash.Font=Enum.Font.GothamBlack; stroke(cash,Color3.fromRGB(76,199,139),.5,1.5)
+local nav=Instance.new("Frame"); nav.Size=UDim2.fromOffset(500,50); nav.Position=UDim2.new(.5,-250,0,42); nav.BackgroundTransparency=1; nav.Parent=gui
 local garden=button(nav,"GARDEN",UDim2.fromOffset(96,42),UDim2.fromOffset(0,4),PANEL,TEXT)
 local explore=button(nav,"EXPLORE",UDim2.fromOffset(96,42),UDim2.fromOffset(102,4),PANEL,TEXT)
 local cards=button(nav,"CARDS",UDim2.fromOffset(88,42),UDim2.fromOffset(204,4),PANEL,TEXT)
@@ -107,7 +107,9 @@ local function rebuild()
     local arr=sortedNames()
     local collected=0
     for _,n in ipairs(order) do if owned(n) then collected+=1 end end
-    progress.Text=collected.." / "..#order.." CARDS • "..math.floor(collected/#order*100).."%"
+    if mode=="Seeds" then local seedCollected=0; for _,n in ipairs(order) do if seedOwned(n) then seedCollected+=1 end end; progress.Text=seedCollected.." / "..#order.." SEEDS • "..math.floor(seedCollected/#order*100).."%"
+    elseif mode=="Deck" then progress.Text=#currentDeck.." / 6 SLOTS USED"
+    else progress.Text=collected.." / "..#order.." CARDS • "..math.floor(collected/#order*100).."%" end
     for _,n in ipairs(arr) do
         local v=Variants[n]; local b=BattleDefinitions[n]
         local has=mode=="Seeds" and seedOwned(n) or owned(n)
@@ -144,7 +146,7 @@ sort.Activated:Connect(function()
     sort.Text="SORT: "..string.upper(sortMode); rebuild()
 end)
 close.Activated:Connect(function() overlay.Visible=false; panel.Visible=false end)
-garden.Activated:Connect(function() if _G.GrowAVerityOpenGarden then _G.GrowAVerityOpenGarden() end end)
+garden.Activated:Connect(function() remotes.WorldTeleport:FireServer("Garden"); if _G.GrowAVerityOpenGarden then task.delay(.2,_G.GrowAVerityOpenGarden) end end)
 explore.Activated:Connect(function() remotes.WorldTeleport:FireServer("Explore") end)
 cards.Activated:Connect(function() open("Cards") end)
 seeds.Activated:Connect(function() open("Seeds") end)
