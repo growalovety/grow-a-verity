@@ -30,7 +30,7 @@ updateCash(); player:GetAttributeChangedSignal("Cash"):Connect(updateCash)
 local overlay=Instance.new("Frame"); overlay.Size=UDim2.fromScale(1,1); overlay.BackgroundColor3=Color3.fromRGB(5,8,12); overlay.BackgroundTransparency=.28; overlay.Visible=false; overlay.Parent=gui
 local panel=Instance.new("Frame"); panel.Size=UDim2.fromOffset(900,590); panel.Position=UDim2.new(.5,-450,.5,-295); panel.BackgroundColor3=BG; panel.Visible=false; panel.Parent=overlay; corner(panel,20); stroke(panel,ACCENT,.55,1.5)
 local title=label(panel,"CARD INDEX",UDim2.fromOffset(360,44),UDim2.fromOffset(24,18),TEXT,Enum.Font.GothamBlack)
-local progress=label(panel,"0 / 4 COLLECTED",UDim2.fromOffset(230,32),UDim2.fromOffset(24,58),MUTED,Enum.Font.GothamBold)
+local progress=label(panel,"0 / "..tostring(#order).." COLLECTED",UDim2.fromOffset(230,32),UDim2.fromOffset(24,58),MUTED,Enum.Font.GothamBold)
 local close=button(panel,"×",UDim2.fromOffset(42,42),UDim2.new(1,-58,0,18),PANEL2,TEXT)
 local search=Instance.new("TextBox"); search.Size=UDim2.fromOffset(250,38); search.Position=UDim2.new(1,-410,0,24); search.BackgroundColor3=PANEL; search.PlaceholderText="SEARCH"; search.Text=""; search.TextColor3=TEXT; search.PlaceholderColor3=MUTED; search.Font=Enum.Font.GothamBold; search.TextScaled=true; search.ClearTextOnFocus=false; search.Parent=panel; corner(search,9); stroke(search,Color3.fromRGB(90,112,139),.55,1)
 local sort=button(panel,"SORT: NAME",UDim2.fromOffset(135,38),UDim2.new(1,-150,0,24),PANEL2,TEXT)
@@ -43,7 +43,14 @@ local detailArt=Instance.new("ViewportFrame"); detailArt.Size=UDim2.fromOffset(1
 local detailText=label(detail,"",UDim2.new(1,-28,0,205),UDim2.fromOffset(14,220),MUTED,Enum.Font.GothamBold); detailText.TextWrapped=true; detailText.TextXAlignment=Enum.TextXAlignment.Left; detailText.TextYAlignment=Enum.TextYAlignment.Top; detailText.TextSize=17
 
 local mode="Cards"; local currentDeck={}; local searchText=""; local sortMode="Name"
-local order={"Verity","Falsity","Cruelty","Lovity"}
+local order={}
+for n in pairs(Variants) do table.insert(order,n) end
+table.sort(order,function(a,b)
+    local rank={Common=1,Uncommon=2,Rare=3,Epic=4,Legendary=5,Mythic=6}
+    local ra=rank[Variants[a].Rarity] or 99; local rb=rank[Variants[b].Rarity] or 99
+    if ra==rb then return a<b end
+    return ra<rb
+end)
 local rarityRank={Common=1,Uncommon=2,Rare=3,Epic=4,Legendary=5}
 local function owned(n) return player:GetAttribute("Variety_"..n)==true or player:GetAttribute("StarterVariety")==n end
 local function seedOwned(n) return player:GetAttribute("Seed_"..n)==true or (tonumber(player:GetAttribute("SeedCount_"..n)) or 0)>0 end
