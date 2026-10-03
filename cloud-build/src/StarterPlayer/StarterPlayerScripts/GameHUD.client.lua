@@ -17,6 +17,10 @@ local function label(p,txt,size,pos,color,font) local l=Instance.new("TextLabel"
 local function button(p,txt,size,pos,bg,tc) local b=Instance.new("TextButton"); b.Size=size; b.Position=pos; b.BackgroundColor3=bg or PANEL; b.TextColor3=tc or TEXT; b.Text=txt; b.Font=Enum.Font.GothamBold; b.TextScaled=true; b.AutoButtonColor=true; b.Parent=p; corner(b,10); stroke(b,Color3.fromRGB(90,112,139),.55,1); return b end
 
 local cash=button(gui,"$ 0",UDim2.fromOffset(132,46),UDim2.fromOffset(16,42),PANEL,GREEN); cash.Font=Enum.Font.GothamBlack; stroke(cash,Color3.fromRGB(76,199,139),.5,1.5)
+local levelBadge=label(gui,"LV 1",UDim2.fromOffset(82,32),UDim2.fromOffset(164,49),GOLD,Enum.Font.GothamBlack)
+local function updateProgressBadge() levelBadge.Text="LV "..tostring(player:GetAttribute("ProgressLevel") or 1) end
+updateProgressBadge()
+player:GetAttributeChangedSignal("ProgressLevel"):Connect(updateProgressBadge)
 local nav=Instance.new("Frame"); nav.Size=UDim2.fromOffset(500,50); nav.Position=UDim2.new(.5,-250,0,42); nav.BackgroundTransparency=1; nav.Parent=gui
 local garden=button(nav,"GARDEN",UDim2.fromOffset(96,42),UDim2.fromOffset(0,4),PANEL,TEXT)
 local explore=button(nav,"EXPLORE",UDim2.fromOffset(96,42),UDim2.fromOffset(102,4),PANEL,TEXT)
