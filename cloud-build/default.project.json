@@ -28,6 +28,7 @@
       "WorldNavigation": {"$path": "src/ServerScriptService/WorldNavigation.server.lua"},
       "GardenService": {"$path": "src/ServerScriptService/GardenService.server.lua"},
       "SeedWorldService": {"$path": "src/ServerScriptService/SeedWorldService.server.lua"},
+      "SeedInventoryService": {"$path": "src/ServerScriptService/SeedInventoryService.server.lua"},
       "SettingsService": {"$path": "src/ServerScriptService/SettingsService.server.lua"}
     }
   }
