@@ -41,31 +41,56 @@ local function portal(name,pos,accent,titleText)
 end
 
 local starter=Instance.new("Folder") starter.Name="StarterGrove" starter.Parent=world
-part("GroveGround",Vector3.new(170,1,180),Vector3.new(0,0,0),Color3.fromRGB(104,158,82),Enum.Material.Grass,starter)
-part("MainPath",Vector3.new(16,.2,150),Vector3.new(0,.6,0),Color3.fromRGB(220,187,112),Enum.Material.SmoothPlastic,starter)
-for _,x in ipairs({-20,20}) do
-    part("Conveyor",Vector3.new(7,.25,150),Vector3.new(x,.73,0),Color3.fromRGB(74,93,68),Enum.Material.SmoothPlastic,starter)
-    for z=-65,65,13 do part("ConveyorMarker",Vector3.new(3.2,.05,1.2),Vector3.new(x,.9,z),Color3.fromRGB(232,205,107),Enum.Material.Neon,starter).CanCollide=false end
+part("GroveGround",Vector3.new(220,1,220),Vector3.new(0,0,0),Color3.fromRGB(104,158,82),Enum.Material.Grass,starter)
+local borderColor=Color3.fromRGB(31,45,38)
+for name,size,pos in {
+    {"North",Vector3.new(228,18,8),Vector3.new(0,9,114)},
+    {"South",Vector3.new(228,18,8),Vector3.new(0,9,-114)},
+    {"West",Vector3.new(8,18,228),Vector3.new(-114,9,0)},
+    {"East",Vector3.new(8,18,228),Vector3.new(114,9,0)}
+} do
+    local b=part("MapBorder_"..name,size,pos,borderColor,Enum.Material.Slate,starter)
+    b:SetAttribute("AntiExploitBorder",true)
+end
+
+part("MainPath",Vector3.new(18,.2,190),Vector3.new(0,.6,0),Color3.fromRGB(220,187,112),Enum.Material.SmoothPlastic,starter)
+for _,x in ipairs({-24,24}) do
+    local belt=part("Conveyor",Vector3.new(8,.25,190),Vector3.new(x,.73,0),Color3.fromRGB(74,93,68),Enum.Material.SmoothPlastic,starter)
+    belt:SetAttribute("ConveyorDirection", x < 0 and 1 or -1)
+    belt:SetAttribute("ConveyorSpeed", 18)
+    for z=-88,88,11 do
+        local marker=part("ConveyorMarker",Vector3.new(4.2,.05,1.4),Vector3.new(x,.9,z),Color3.fromRGB(232,205,107),Enum.Material.Neon,starter)
+        marker.CanCollide=false
+    end
 end
 local spawn=workspace:FindFirstChild("SpawnLocation") if spawn then spawn:Destroy() end
-spawn=Instance.new("SpawnLocation") spawn.Name="SpawnLocation" spawn.Size=Vector3.new(7,1,7) spawn.Position=Vector3.new(0,1,-70)
+spawn=Instance.new("SpawnLocation") spawn.Name="SpawnLocation" spawn.Size=Vector3.new(12,1,12) spawn.Position=Vector3.new(0,1,-100)
 spawn.Anchored=true spawn.Neutral=true spawn.Material=Enum.Material.SmoothPlastic spawn.Color=Color3.fromRGB(255,221,45) spawn.Transparency=.05 spawn.Parent=starter
-local ta=part("TitleAnchor",Vector3.new(1,1,1),Vector3.new(0,4.5,-55),Color3.new(1,1,1),Enum.Material.SmoothPlastic,starter)
+local ta=part("TitleAnchor",Vector3.new(1,1,1),Vector3.new(0,4.5,-78),Color3.new(1,1,1),Enum.Material.SmoothPlastic,starter)
 ta.Transparency=1 ta.CanCollide=false label(ta,"GROW A VERITY",UDim2.fromOffset(270,52),Vector3.new(),Color3.new(1,1,1))
-local plotPositions={Vector3.new(-50,.55,-42),Vector3.new(50,.55,-42),Vector3.new(-50,.55,0),Vector3.new(50,.55,0),Vector3.new(-50,.55,42),Vector3.new(50,.55,42)}
+local plotPositions={Vector3.new(-62,.55,-52),Vector3.new(62,.55,-52),Vector3.new(-62,.55,0),Vector3.new(62,.55,0),Vector3.new(-62,.55,52),Vector3.new(62,.55,52)}
 for i,pos in ipairs(plotPositions) do
     local plot=Instance.new("Folder") plot.Name="Plot_"..i plot:SetAttribute("FreePlacement",true) plot.Parent=starter
-    part("GardenSurface",Vector3.new(28,.3,22),pos,Color3.fromRGB(126,91,56),Enum.Material.SmoothPlastic,plot)
-    part("GardenGrass",Vector3.new(25.5,.12,19.5),pos+Vector3.new(0,.22,0),Color3.fromRGB(121,177,91),Enum.Material.Grass,plot)
-    fence(plot,pos,30,24)
-    local m=part("PlotMarker",Vector3.new(1,1,1),pos+Vector3.new(0,2.8,-13),Color3.new(1,1,1),Enum.Material.SmoothPlastic,plot)
-    m.Transparency=1 m.CanCollide=false label(m,"GARDEN "..i,UDim2.fromOffset(130,28),Vector3.new(),Color3.fromRGB(255,240,190))
+    part("GardenSurface",Vector3.new(36,.3,30),pos,Color3.fromRGB(126,91,56),Enum.Material.SmoothPlastic,plot)
+    part("GardenGrass",Vector3.new(33,.12,27),pos+Vector3.new(0,.22,0),Color3.fromRGB(121,177,91),Enum.Material.Grass,plot)
+    fence(plot,pos,38,32)
+    local m=part("PlotMarker",Vector3.new(1,1,1),pos+Vector3.new(0,3.4,-17),Color3.new(1,1,1),Enum.Material.SmoothPlastic,plot)
+    m.Transparency=1 m.CanCollide=false label(m,"GARDEN "..i,UDim2.fromOffset(220,32),Vector3.new(),Color3.fromRGB(255,240,190))
 end
-portal("ExplorePortal",Vector3.new(0,.75,82),Color3.fromRGB(88,184,255),"EXPLORE")
+portal("ExplorePortal",Vector3.new(0,.75,108),Color3.fromRGB(88,184,255),"EXPLORE")
 
 local wilds=Instance.new("Folder") wilds.Name="GuardianWilds" wilds.Parent=world
 local o=Vector3.new(0,0,900)
-part("WildsGround",Vector3.new(220,1,190),o,Color3.fromRGB(106,161,84),Enum.Material.Grass,wilds)
+part("WildsGround",Vector3.new(260,1,220),o,Color3.fromRGB(106,161,84),Enum.Material.Grass,wilds)
+for name,size,pos in {
+    {"North",Vector3.new(268,18,8),o+Vector3.new(0,9,114)},
+    {"South",Vector3.new(268,18,8),o+Vector3.new(0,9,-114)},
+    {"West",Vector3.new(8,18,268),o+Vector3.new(-134,9,0)},
+    {"East",Vector3.new(8,18,268),o+Vector3.new(134,9,0)}
+} do
+    local b=part("MapBorder_"..name,size,pos,borderColor,Enum.Material.Slate,wilds)
+    b:SetAttribute("AntiExploitBorder",true)
+end
 for _,h in ipairs({{Vector3.new(-80,18,850),Vector3.new(45,36,55)},{Vector3.new(78,24,870),Vector3.new(55,48,60)},{Vector3.new(-82,14,965),Vector3.new(50,28,50)},{Vector3.new(82,18,970),Vector3.new(48,36,55)}}) do
     local p=part("LowPolyHill",h[2],h[1],Color3.fromRGB(87,139,76),Enum.Material.Grass,wilds) p.Shape=Enum.PartType.Wedge
 end
@@ -95,7 +120,7 @@ local function guardian(name,pos,scale)
 end
 guardian("Verity",o+Vector3.new(-18,3.8,0),1.1) guardian("Falsity",o+Vector3.new(0,3.8,0),1.1) guardian("Lovity",o+Vector3.new(18,3.8,0),1.1)
 local returnPos=o+Vector3.new(0,.75,72) portal("ReturnPortal",returnPos,Color3.fromRGB(255,221,45),"RETURN")
-local links={{Vector3.new(0,.75,82),o+Vector3.new(0,0,12)},{returnPos,Vector3.new(0,1,-70)}}
+local links={{Vector3.new(0,.75,108),o+Vector3.new(0,0,12)},{returnPos,Vector3.new(0,1,-100)}}
 for _,pr in ipairs(world:GetDescendants()) do
     if pr:IsA("ProximityPrompt") and pr.Name=="PortalPrompt" then
         pr.Triggered:Connect(function(player)
@@ -107,5 +132,5 @@ for _,pr in ipairs(world:GetDescendants()) do
     end
 end
 Lighting.ClockTime=14 Lighting.Brightness=3 Lighting.Ambient=Color3.fromRGB(205,215,190)
-Lighting.OutdoorAmbient=Color3.fromRGB(210,220,195) Lighting.FogColor=Color3.fromRGB(170,205,230) Lighting.FogEnd=520 Lighting.GlobalShadows=true
+Lighting.OutdoorAmbient=Color3.fromRGB(210,220,195) Lighting.FogColor=Color3.fromRGB(170,205,230) Lighting.FogEnd=620 Lighting.GlobalShadows=true
 local at=Lighting:FindFirstChildOfClass("Atmosphere") if at then at:Destroy() end
