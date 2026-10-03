@@ -2,6 +2,7 @@ local Players=game:GetService("Players")
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
 local TweenService=game:GetService("TweenService")
 local player=Players.LocalPlayer
+local pg=player:WaitForChild("PlayerGui")
 local gui=pg:WaitForChild("GameHUD",15)
 if not gui then
     warn("[GameHUD] GameHUD ScreenGui was not found in PlayerGui")
