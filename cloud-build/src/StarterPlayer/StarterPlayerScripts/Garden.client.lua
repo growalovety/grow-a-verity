@@ -11,6 +11,10 @@ local gardenHarvest=remotes:WaitForChild("GardenHarvest")
 local gardenRemove=remotes:WaitForChild("GardenRemove")
 local gardenUpgrade=remotes:WaitForChild("GardenUpgrade")
 local Variants=require(ReplicatedStorage:WaitForChild("VariantDefinitions"))
+local SoundService=game:GetService("SoundService")
+local function gardenSfx(id,vol)
+ local snd=Instance.new("Sound"); snd.SoundId=id; snd.Volume=vol or .25; snd.SoundGroup=SoundService:FindFirstChild("GrowAVeritySFX"); snd.Parent=SoundService; snd:Play(); game:GetService("Debris"):AddItem(snd,3)
+end
 
 local gui=Instance.new("ScreenGui"); gui.Name="GardenUI"; gui.IgnoreGuiInset=true; gui.ResetOnSpawn=false; gui.DisplayOrder=30; gui.Parent=player:WaitForChild("PlayerGui")
 local function corner(o,r) local c=Instance.new("UICorner"); c.CornerRadius=UDim.new(0,r); c.Parent=o end
@@ -100,7 +104,7 @@ harvest.Activated:Connect(function()
         local def=Variants[plant.Variety]
         if def and os.time()-plant.PlantedAt>=def.GrowthTime then gardenHarvest:FireServer(plant.Id); any=true end
     end
-    status.Text=any and "Harvesting..." or "Nothing ready yet."
+    if any then gardenSfx("rbxassetid://17403146731",.28) end; status.Text=any and "Harvesting..." or "Nothing ready yet."
 end)
 upgrade.Activated:Connect(function() gardenUpgrade:FireServer() end)
 close.Activated:Connect(function() panel.Visible=false; placing=false; marker.Transparency=1 end)
