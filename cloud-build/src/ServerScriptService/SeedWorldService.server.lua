@@ -5,6 +5,7 @@ local HttpService=game:GetService("HttpService")
 local Variants=require(ReplicatedStorage:WaitForChild("VariantDefinitions"))
 local remotes=ReplicatedStorage:FindFirstChild("GameRemotes") or Instance.new("Folder"); remotes.Name="GameRemotes"; remotes.Parent=ReplicatedStorage
 local seedCollected=remotes:FindFirstChild("SeedCollected") or Instance.new("RemoteEvent"); seedCollected.Name="SeedCollected"; seedCollected.Parent=remotes
+local exploreEvent=remotes:FindFirstChild("ExploreEvent") or Instance.new("RemoteEvent"); exploreEvent.Name="ExploreEvent"; exploreEvent.Parent=remotes
 local collectionStore=DataStoreService:GetDataStore("GrowAVerity_Collection_v1")
 local seedFolder=workspace:WaitForChild("World"):WaitForChild("GuardianWilds"):FindFirstChild("SeedSpawns") or Instance.new("Folder")
 seedFolder.Name="SeedSpawns"; seedFolder.Parent=workspace.World.GuardianWilds
@@ -62,5 +63,12 @@ task.spawn(function()
     while true do
         task.wait(12)
         for i=1,#pads do spawnAt(i) end
+    end
+end)
+task.spawn(function()
+    while true do
+        task.wait(90)
+        local rare={6,9,12}; local i=rare[math.random(1,#rare)]; if not live[i] then spawnAt(i) end
+        exploreEvent:FireAllClients("RARE SEED SURGE","A rare Guardian seed has appeared somewhere in the Wilds.")
     end
 end)
