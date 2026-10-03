@@ -27,7 +27,7 @@ local function hit(button, pos)
 end
 
 UserInputService.InputBegan:Connect(function(input, processed)
-    if processed or input.UserInputType~=Enum.UserInputType.MouseButton1 then return end
+    if input.UserInputType~=Enum.UserInputType.MouseButton1 then return end
     local mouse=UserInputService:GetMouseLocation()
     local gui=pg:FindFirstChild("GameHUD")
     local top=gui and gui:FindFirstChild("TopBar")
