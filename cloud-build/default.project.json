@@ -2,11 +2,17 @@
   "name": "Grow a Verity",
   "tree": {
     "$className": "DataModel",
-    "Workspace": {"$className": "Workspace"},
+    "Workspace": {
+      "$className": "Workspace"
+    },
     "ReplicatedStorage": {
       "$className": "ReplicatedStorage",
-      "VariantDefinitions": {"$path": "src/ReplicatedStorage/VariantDefinitions.lua"},
-      "BattleDefinitions": {"$path": "src/ReplicatedStorage/BattleDefinitions.lua"}
+      "VariantDefinitions": {
+        "$path": "src/ReplicatedStorage/VariantDefinitions.lua"
+      },
+      "BattleDefinitions": {
+        "$path": "src/ReplicatedStorage/BattleDefinitions.lua"
+      }
     },
     "StarterGui": {
       "$className": "StarterGui",
@@ -22,48 +28,482 @@
         "TopBar": {
           "$className": "Frame",
           "$properties": {
-            "Size": {"UDim2":[[1,0],[0,92]]},
-            "Position": {"UDim2":[[0,0],[0,0]]},
+            "Size": {
+              "UDim2": [
+                [
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  92
+                ]
+              ]
+            },
+            "Position": {
+              "UDim2": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0
+                ]
+              ]
+            },
             "BackgroundTransparency": 1,
             "ZIndex": 100
           },
-          "Cash": {"$className":"TextButton","$properties":{"Size":{"UDim2":[[0,132],[0,46]]},"Position":{"UDim2":[[0,16],[0,42]]},"BackgroundColor3":{"Color3":[0.298,0.780,0.545]},"Text":"$ 0","TextColor3":{"Color3":[1,1,1]},"TextScaled":true,"Font":"GothamBlack","ZIndex":101}},
-          "Level": {"$className":"TextLabel","$properties":{"Size":{"UDim2":[[0,82],[0,32]]},"Position":{"UDim2":[[0,164],[0,49]]},"BackgroundTransparency":1,"Text":"LV 1","TextColor3":{"Color3":[0.937,0.757,0.306]},"TextScaled":true,"Font":"GothamBlack","ZIndex":101}},
-          "Nav": {"$className":"Frame","$properties":{"Size":{"UDim2":[[0,500],[0,50]]},"Position":{"UDim2":[[0.5,-250],[0,42]]},"BackgroundTransparency":1,"ZIndex":101},
-            "Garden":{"$className":"TextButton","$properties":{"Size":{"UDim2":[[0,96],[0,42]]},"Position":{"UDim2":[[0,0],[0,4]]},"BackgroundColor3":{"Color3":[0.098,0.129,0.173]},"Text":"GARDEN","TextColor3":{"Color3":[0.933,0.957,0.988]},"TextScaled":true,"Font":"GothamBold"}},
-            "Explore":{"$className":"TextButton","$properties":{"Size":{"UDim2":[[0,96],[0,42]]},"Position":{"UDim2":[[0,102],[0,4]]},"BackgroundColor3":{"Color3":[0.098,0.129,0.173]},"Text":"EXPLORE","TextColor3":{"Color3":[0.933,0.957,0.988]},"TextScaled":true,"Font":"GothamBold"}},
-            "Cards":{"$className":"TextButton","$properties":{"Size":{"UDim2":[[0,88],[0,42]]},"Position":{"UDim2":[[0,204],[0,4]]},"BackgroundColor3":{"Color3":[0.098,0.129,0.173]},"Text":"CARDS","TextColor3":{"Color3":[0.933,0.957,0.988]},"TextScaled":true,"Font":"GothamBold"}},
-            "Seeds":{"$className":"TextButton","$properties":{"Size":{"UDim2":[[0,88],[0,42]]},"Position":{"UDim2":[[0,298],[0,4]]},"BackgroundColor3":{"Color3":[0.098,0.129,0.173]},"Text":"SEEDS","TextColor3":{"Color3":[0.933,0.957,0.988]},"TextScaled":true,"Font":"GothamBold"}},
-            "Deck":{"$className":"TextButton","$properties":{"Size":{"UDim2":[[0,88],[0,42]]},"Position":{"UDim2":[[0,392],[0,4]]},"BackgroundColor3":{"Color3":[0.098,0.129,0.173]},"Text":"DECK","TextColor3":{"Color3":[0.933,0.957,0.988]},"TextScaled":true,"Font":"GothamBold"}}
+          "Cash": {
+            "$className": "TextButton",
+            "$properties": {
+              "Size": {
+                "UDim2": [
+                  [
+                    0,
+                    132
+                  ],
+                  [
+                    0,
+                    46
+                  ]
+                ]
+              },
+              "Position": {
+                "UDim2": [
+                  [
+                    0,
+                    16
+                  ],
+                  [
+                    0,
+                    72
+                  ]
+                ]
+              },
+              "BackgroundColor3": {
+                "Color3": [
+                  0.298,
+                  0.78,
+                  0.545
+                ]
+              },
+              "Text": "$ 0",
+              "TextColor3": {
+                "Color3": [
+                  1,
+                  1,
+                  1
+                ]
+              },
+              "TextScaled": true,
+              "Font": "GothamBlack",
+              "ZIndex": 101
+            }
           },
-          "Settings":{"$className":"TextButton","$properties":{"Size":{"UDim2":[[0,46],[0,46]]},"Position":{"UDim2":[[1,-62],[0,42]]},"BackgroundTransparency":1,"Text":"⚙","TextColor3":{"Color3":[0.933,0.957,0.988]},"TextScaled":true,"Font":"GothamBold","ZIndex":200}}
+          "Level": {
+            "$className": "TextLabel",
+            "$properties": {
+              "Size": {
+                "UDim2": [
+                  [
+                    0,
+                    82
+                  ],
+                  [
+                    0,
+                    32
+                  ]
+                ]
+              },
+              "Position": {
+                "UDim2": [
+                  [
+                    0,
+                    164
+                  ],
+                  [
+                    0,
+                    79
+                  ]
+                ]
+              },
+              "BackgroundTransparency": 1,
+              "Text": "LV 1",
+              "TextColor3": {
+                "Color3": [
+                  0.937,
+                  0.757,
+                  0.306
+                ]
+              },
+              "TextScaled": true,
+              "Font": "GothamBlack",
+              "ZIndex": 101
+            }
+          },
+          "Nav": {
+            "$className": "Frame",
+            "$properties": {
+              "Size": {
+                "UDim2": [
+                  [
+                    0,
+                    500
+                  ],
+                  [
+                    0,
+                    50
+                  ]
+                ]
+              },
+              "Position": {
+                "UDim2": [
+                  [
+                    0.5,
+                    -250
+                  ],
+                  [
+                    0,
+                    72
+                  ]
+                ]
+              },
+              "BackgroundTransparency": 1,
+              "ZIndex": 101
+            },
+            "Garden": {
+              "$className": "TextButton",
+              "$properties": {
+                "Size": {
+                  "UDim2": [
+                    [
+                      0,
+                      96
+                    ],
+                    [
+                      0,
+                      42
+                    ]
+                  ]
+                },
+                "Position": {
+                  "UDim2": [
+                    [
+                      0,
+                      0
+                    ],
+                    [
+                      0,
+                      4
+                    ]
+                  ]
+                },
+                "BackgroundColor3": {
+                  "Color3": [
+                    0.098,
+                    0.129,
+                    0.173
+                  ]
+                },
+                "Text": "GARDEN",
+                "TextColor3": {
+                  "Color3": [
+                    0.933,
+                    0.957,
+                    0.988
+                  ]
+                },
+                "TextScaled": true,
+                "Font": "GothamBold"
+              }
+            },
+            "Explore": {
+              "$className": "TextButton",
+              "$properties": {
+                "Size": {
+                  "UDim2": [
+                    [
+                      0,
+                      96
+                    ],
+                    [
+                      0,
+                      42
+                    ]
+                  ]
+                },
+                "Position": {
+                  "UDim2": [
+                    [
+                      0,
+                      102
+                    ],
+                    [
+                      0,
+                      4
+                    ]
+                  ]
+                },
+                "BackgroundColor3": {
+                  "Color3": [
+                    0.098,
+                    0.129,
+                    0.173
+                  ]
+                },
+                "Text": "EXPLORE",
+                "TextColor3": {
+                  "Color3": [
+                    0.933,
+                    0.957,
+                    0.988
+                  ]
+                },
+                "TextScaled": true,
+                "Font": "GothamBold"
+              }
+            },
+            "Cards": {
+              "$className": "TextButton",
+              "$properties": {
+                "Size": {
+                  "UDim2": [
+                    [
+                      0,
+                      88
+                    ],
+                    [
+                      0,
+                      42
+                    ]
+                  ]
+                },
+                "Position": {
+                  "UDim2": [
+                    [
+                      0,
+                      204
+                    ],
+                    [
+                      0,
+                      4
+                    ]
+                  ]
+                },
+                "BackgroundColor3": {
+                  "Color3": [
+                    0.098,
+                    0.129,
+                    0.173
+                  ]
+                },
+                "Text": "CARDS",
+                "TextColor3": {
+                  "Color3": [
+                    0.933,
+                    0.957,
+                    0.988
+                  ]
+                },
+                "TextScaled": true,
+                "Font": "GothamBold"
+              }
+            },
+            "Seeds": {
+              "$className": "TextButton",
+              "$properties": {
+                "Size": {
+                  "UDim2": [
+                    [
+                      0,
+                      88
+                    ],
+                    [
+                      0,
+                      42
+                    ]
+                  ]
+                },
+                "Position": {
+                  "UDim2": [
+                    [
+                      0,
+                      298
+                    ],
+                    [
+                      0,
+                      4
+                    ]
+                  ]
+                },
+                "BackgroundColor3": {
+                  "Color3": [
+                    0.098,
+                    0.129,
+                    0.173
+                  ]
+                },
+                "Text": "SEEDS",
+                "TextColor3": {
+                  "Color3": [
+                    0.933,
+                    0.957,
+                    0.988
+                  ]
+                },
+                "TextScaled": true,
+                "Font": "GothamBold"
+              }
+            },
+            "Deck": {
+              "$className": "TextButton",
+              "$properties": {
+                "Size": {
+                  "UDim2": [
+                    [
+                      0,
+                      88
+                    ],
+                    [
+                      0,
+                      42
+                    ]
+                  ]
+                },
+                "Position": {
+                  "UDim2": [
+                    [
+                      0,
+                      392
+                    ],
+                    [
+                      0,
+                      4
+                    ]
+                  ]
+                },
+                "BackgroundColor3": {
+                  "Color3": [
+                    0.098,
+                    0.129,
+                    0.173
+                  ]
+                },
+                "Text": "DECK",
+                "TextColor3": {
+                  "Color3": [
+                    0.933,
+                    0.957,
+                    0.988
+                  ]
+                },
+                "TextScaled": true,
+                "Font": "GothamBold"
+              }
+            }
+          },
+          "Settings": {
+            "$className": "TextButton",
+            "$properties": {
+              "Size": {
+                "UDim2": [
+                  [
+                    0,
+                    46
+                  ],
+                  [
+                    0,
+                    46
+                  ]
+                ]
+              },
+              "Position": {
+                "UDim2": [
+                  [
+                    1,
+                    -62
+                  ],
+                  [
+                    0,
+                    72
+                  ]
+                ]
+              },
+              "BackgroundTransparency": 1,
+              "Text": "⚙",
+              "TextColor3": {
+                "Color3": [
+                  0.933,
+                  0.957,
+                  0.988
+                ]
+              },
+              "TextScaled": true,
+              "Font": "GothamBold",
+              "ZIndex": 200
+            }
+          }
+        },
+        "HUDController": {
+          "$path": "src/StarterPlayer/StarterPlayerScripts/GameHUD.client.lua"
         }
-      },
-      "HUDController": {"$path": "src/StarterPlayer/StarterPlayerScripts/GameHUD.client.lua"}
+      }
     },
     "StarterPlayer": {
       "$className": "StarterPlayer",
       "StarterPlayerScripts": {
         "$className": "StarterPlayerScripts",
-        "StarterSelection": {"$path": "src/StarterPlayer/StarterPlayerScripts/StarterSelection.client.lua"},
-        "GuardianBattle": {"$path": "src/StarterPlayer/StarterPlayerScripts/GuardianBattle.client.lua"},
-        "Garden": {"$path": "src/StarterPlayer/StarterPlayerScripts/Garden.client.lua"},
-        "ExploreEvents": {"$path": "src/StarterPlayer/StarterPlayerScripts/ExploreEvents.client.lua"},
-        "Settings": {"$path": "src/StarterPlayer/StarterPlayerScripts/Settings.client.lua"},
-        "MusicPlayer": {"$path": "src/StarterPlayer/StarterPlayerScripts/MusicPlayer.client.lua"}
+        "StarterSelection": {
+          "$path": "src/StarterPlayer/StarterPlayerScripts/StarterSelection.client.lua"
+        },
+        "GuardianBattle": {
+          "$path": "src/StarterPlayer/StarterPlayerScripts/GuardianBattle.client.lua"
+        },
+        "Garden": {
+          "$path": "src/StarterPlayer/StarterPlayerScripts/Garden.client.lua"
+        },
+        "ExploreEvents": {
+          "$path": "src/StarterPlayer/StarterPlayerScripts/ExploreEvents.client.lua"
+        },
+        "Settings": {
+          "$path": "src/StarterPlayer/StarterPlayerScripts/Settings.client.lua"
+        },
+        "MusicPlayer": {
+          "$path": "src/StarterPlayer/StarterPlayerScripts/MusicPlayer.client.lua"
+        }
       }
     },
     "ServerScriptService": {
       "$className": "ServerScriptService",
-      "WorldInit": {"$path": "src/ServerScriptService/WorldInit.server.lua"},
-      "StarterSelection": {"$path": "src/ServerScriptService/StarterSelection.server.lua"},
-      "GuardianBattle": {"$path": "src/ServerScriptService/GuardianBattle.server.lua"},
-      "WorldNavigation": {"$path": "src/ServerScriptService/WorldNavigation.server.lua"},
-      "GardenService": {"$path": "src/ServerScriptService/GardenService.server.lua"},
-      "ProgressionService": {"$path": "src/ServerScriptService/ProgressionService.server.lua"},
-      "SeedWorldService": {"$path": "src/ServerScriptService/SeedWorldService.server.lua"},
-      "SeedInventoryService": {"$path": "src/ServerScriptService/SeedInventoryService.server.lua"},
-      "SettingsService": {"$path": "src/ServerScriptService/SettingsService.server.lua"}
+      "WorldInit": {
+        "$path": "src/ServerScriptService/WorldInit.server.lua"
+      },
+      "StarterSelection": {
+        "$path": "src/ServerScriptService/StarterSelection.server.lua"
+      },
+      "GuardianBattle": {
+        "$path": "src/ServerScriptService/GuardianBattle.server.lua"
+      },
+      "WorldNavigation": {
+        "$path": "src/ServerScriptService/WorldNavigation.server.lua"
+      },
+      "GardenService": {
+        "$path": "src/ServerScriptService/GardenService.server.lua"
+      },
+      "ProgressionService": {
+        "$path": "src/ServerScriptService/ProgressionService.server.lua"
+      },
+      "SeedWorldService": {
+        "$path": "src/ServerScriptService/SeedWorldService.server.lua"
+      },
+      "SeedInventoryService": {
+        "$path": "src/ServerScriptService/SeedInventoryService.server.lua"
+      },
+      "SettingsService": {
+        "$path": "src/ServerScriptService/SettingsService.server.lua"
+      }
     }
   }
 }
