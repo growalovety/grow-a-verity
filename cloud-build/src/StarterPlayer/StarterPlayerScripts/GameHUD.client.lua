@@ -13,7 +13,7 @@ do
     if ok2 and type(b)=="table" then BattleDefinitions=b end
 end
 
-local gui=Instance.new("ScreenGui"); gui.Name="GameHUD"; gui.ResetOnSpawn=false; gui.IgnoreGuiInset=true; gui.DisplayOrder=100; gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling; gui.Parent=player:WaitForChild("PlayerGui"); pcall(function() gui.ScreenInsets=Enum.ScreenInsets.DeviceSafeInsets end); gui.Enabled=true
+local gui=Instance.new("ScreenGui"); gui.Name="GameHUD"; gui.ResetOnSpawn=false; gui.IgnoreGuiInset=true; gui.DisplayOrder=100; gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling; gui.Parent=player:WaitForChild("PlayerGui"); gui.Enabled=true
 gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling
 task.spawn(function()
     while gui.Parent do
