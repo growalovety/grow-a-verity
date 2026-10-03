@@ -44,12 +44,12 @@ local function label(p,txt,size,pos,color,font) local l=Instance.new("TextLabel"
 local function button(p,txt,size,pos,bg,tc) local b=Instance.new("TextButton"); b.Size=size; b.Position=pos; b.BackgroundColor3=bg or PANEL; b.TextColor3=tc or TEXT; b.Text=txt; b.Font=Enum.Font.GothamBold; b.TextScaled=true; b.AutoButtonColor=true; b.Parent=p; corner(b,10); stroke(b,Color3.fromRGB(90,112,139),.55,1); return b end
 
 local topbar=gui:WaitForChild("TopBar")
-topbar.Active=true
+topbar.Active=false
 local cash=topbar:WaitForChild("Cash")
 local levelBadge=topbar:WaitForChild("Level")
 local nav=topbar:WaitForChild("Nav")
 local garden=nav:WaitForChild("Garden")
-nav.Active=true
+nav.Active=false
 local explore=nav:WaitForChild("Explore")
 local cards=nav:WaitForChild("Cards")
 local seeds=nav:WaitForChild("Seeds")
