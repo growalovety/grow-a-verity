@@ -151,6 +151,32 @@ for _,pr in ipairs(world:GetDescendants()) do
         end)
     end
 end
+local biomes=Instance.new("Folder"); biomes.Name="Biomes"; biomes.Parent=wilds
+local function zone(name,pos,size,color)
+    local p=part(name.."Biome",size,pos,color,Enum.Material.Grass,biomes); p.Transparency=.12
+    p:SetAttribute("Biome",name); return p
+end
+zone("Meadow",o+Vector3.new(-82,.52,-55),Vector3.new(105,.25,88),Color3.fromRGB(117,177,91))
+zone("Bluewood",o+Vector3.new(78,.52,-48),Vector3.new(100,.25,86),Color3.fromRGB(91,157,121))
+zone("Redstone",o+Vector3.new(-72,.52,58),Vector3.new(110,.25,78),Color3.fromRGB(164,112,82))
+zone("LoveGarden",o+Vector3.new(70,.52,60),Vector3.new(105,.25,76),Color3.fromRGB(178,125,157))
+local explorePath=part("ExplorePath",Vector3.new(14,.22,190),o+Vector3.new(0,.7,0),Color3.fromRGB(188,166,117),Enum.Material.Ground,wilds)
+for _,tree in ipairs({Vector3.new(-108,4,855),Vector3.new(-95,4,925),Vector3.new(104,4,835),Vector3.new(112,4,930),Vector3.new(88,4,1000),Vector3.new(-100,4,1005)}) do
+    local trunk=part("TreeTrunk",Vector3.new(2.2,8,2.2),o+tree,Color3.fromRGB(101,71,49),Enum.Material.Wood,wilds)
+    local crown=part("TreeCrown",Vector3.new(9,7,9),trunk.Position+Vector3.new(0,5,0),Color3.fromRGB(67,128,72),Enum.Material.Grass,wilds); crown.Shape=Enum.PartType.Ball
+end
+local hidden=Instance.new("Folder"); hidden.Name="HiddenGrove"; hidden.Parent=wilds
+part("HiddenFloor",Vector3.new(48,.3,38),o+Vector3.new(90,.8,40),Color3.fromRGB(89,142,83),Enum.Material.Grass,hidden)
+for _,p in ipairs({o+Vector3.new(66,4,22),o+Vector3.new(114,4,22),o+Vector3.new(66,4,58),o+Vector3.new(114,4,58)}) do
+    part("HiddenRock",Vector3.new(7,8,7),p,Color3.fromRGB(104,105,92),Enum.Material.Rock,hidden)
+end
+local sign=part("ExploreSign",Vector3.new(1,1,1),o+Vector3.new(-116,3,885),Color3.new(1,1,1),Enum.Material.SmoothPlastic,wilds); sign.Transparency=1; sign.CanCollide=false
+label(sign,"MEADOW  •  BLUEWOOD  •  REDSTONE  •  LOVE GARDEN",UDim2.fromOffset(540,48),Vector3.new(),Color3.fromRGB(246,243,226))
+guardian("Cruelty",o+Vector3.new(-82,4.2,970),1.25)
+local elite=guardian("Cruelty",o+Vector3.new(82,4.2,970),1.55)
+local eliteModel=wilds:FindFirstChild("CrueltyGuardian")
+if eliteModel then eliteModel:SetAttribute("GuardianTier","Elite") end
+
 Lighting.ClockTime=14
 Lighting.Brightness=3
 Lighting.Ambient=Color3.fromRGB(205,215,190)
