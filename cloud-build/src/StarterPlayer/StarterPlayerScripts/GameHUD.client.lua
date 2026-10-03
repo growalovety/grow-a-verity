@@ -2,6 +2,19 @@ local Players=game:GetService("Players")
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
 local TweenService=game:GetService("TweenService")
 local player=Players.LocalPlayer
+local gui=script.Parent
+if not gui or not gui:IsA("ScreenGui") then
+    gui=Instance.new("ScreenGui")
+    gui.Name="GameHUD"
+    gui.Parent=player:WaitForChild("PlayerGui")
+end
+gui.Name="GameHUD"
+gui.ResetOnSpawn=false
+gui.IgnoreGuiInset=true
+gui.DisplayOrder=100
+gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling
+gui.Enabled=true
+
 local remotes=ReplicatedStorage:FindFirstChild("GameRemotes") or Instance.new("Folder")
 remotes.Name="GameRemotes"; remotes.Parent=ReplicatedStorage
 local deckUpdate=remotes:FindFirstChild("DeckUpdate")
@@ -14,9 +27,7 @@ do
     if ok2 and type(b)=="table" then BattleDefinitions=b end
 end
 
-local gui=Instance.new("ScreenGui"); gui.Name="GameHUD"; gui.ResetOnSpawn=false; gui.IgnoreGuiInset=true; gui.DisplayOrder=100; gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling; gui.Enabled=true
-local pg=player:WaitForChild("PlayerGui"); gui.Parent=pg
-gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling
+local pg=player:WaitForChild("PlayerGui")
 task.spawn(function()
     while player.Parent do
         local current=player:FindFirstChildOfClass("PlayerGui")
@@ -174,8 +185,12 @@ sort.Activated:Connect(function()
     sort.Text="SORT: "..string.upper(sortMode); rebuild()
 end)
 close.Activated:Connect(function() overlay.Visible=false; panel.Visible=false end)
-garden.Activated:Connect(function() remotes.WorldTeleport:FireServer("Garden"); if _G.GrowAVerityOpenGarden then task.delay(.2,_G.GrowAVerityOpenGarden) end end)
-explore.Activated:Connect(function() remotes.WorldTeleport:FireServer("Explore") end)
+local function fireTeleport(destination)
+    local r=remotes:FindFirstChild("WorldTeleport")
+    if r and r:IsA("RemoteEvent") then r:FireServer(destination) end
+end
+garden.Activated:Connect(function() fireTeleport("Garden"); if _G.GrowAVerityOpenGarden then task.delay(.2,_G.GrowAVerityOpenGarden) end end)
+explore.Activated:Connect(function() fireTeleport("Explore") end)
 cards.Activated:Connect(function() open("Cards") end)
 seeds.Activated:Connect(function() open("Seeds") end)
 deck.Activated:Connect(function() open("Deck") end)
