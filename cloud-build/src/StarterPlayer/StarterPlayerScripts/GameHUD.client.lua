@@ -77,7 +77,7 @@ local detailArt=Instance.new("ViewportFrame"); detailArt.Size=UDim2.fromOffset(1
 local detailText=label(detail,"",UDim2.new(1,-28,0,205),UDim2.fromOffset(14,220),MUTED,Enum.Font.GothamBold); detailText.TextWrapped=true; detailText.TextXAlignment=Enum.TextXAlignment.Left; detailText.TextYAlignment=Enum.TextYAlignment.Top; detailText.TextSize=17
 
 local mode="Cards"; local currentDeck={}; local searchText=""; local sortMode="Name"
-local function safeRebuild() local ok,err=pcall(rebuild); if not ok then warn("[GameHUD] rebuild error:",err); detailTitle.Text="ERROR"; detailText.Text="HUD error: "..tostring(err) end end
+local safeRebuild
 local order={}
 for n in pairs(Variants) do table.insert(order,n) end
 table.sort(order,function(a,b)
@@ -178,6 +178,7 @@ local function rebuild()
     listFrame.CanvasSize=UDim2.fromOffset(0,math.ceil(#arr/3)*200)
     if arr[1] then showDetail(arr[1]) else detailTitle.Text="EMPTY"; detailText.Text="No matching entries." end
 end
+safeRebuild=function() local ok,err=pcall(rebuild); if not ok then warn("[GameHUD] rebuild error:",err); detailTitle.Text="ERROR"; detailText.Text="HUD error: "..tostring(err) end end
 local function open(m)
     mode=m; title.Text=m=="Deck" and "BUILD DECK" or (m=="Seeds" and "SEED INDEX" or "CARD INDEX")
     search.Text=""; searchText=""; sortMode="Name"; sort.Text="SORT: NAME"; panel.Visible=true; overlay.Visible=true; safeRebuild()
