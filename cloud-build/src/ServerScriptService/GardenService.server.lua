@@ -9,6 +9,7 @@ local gardenState=remote("GardenState"); local gardenPlace=remote("GardenPlace")
 local store=DataStoreService:GetDataStore("GrowAVerity_Gardens_v2")
 local playerStore=DataStoreService:GetDataStore("GrowAVerity_Player_v1")
 local active={}
+local progression=ReplicatedStorage:FindFirstChild("ProgressionAward")
 
 local function getPlot(p)
     local grove=workspace.World:FindFirstChild("StarterGrove"); local idx=p:GetAttribute("GardenIndex")
@@ -48,7 +49,7 @@ local function harvestPlant(p,id)
     local i,plant=findPlant(s,id); if not i then return end
     if stageFor(plant.Variety,plant.PlantedAt,p)<3 then return end
     local d=Variants[plant.Variety]; local reward=math.floor(d.HarvestValue*(1+(s.Level-1)*.15))
-    setCash(p,(tonumber(p:GetAttribute("Cash")) or 0)+reward); table.remove(s.Plants,i); save(p); rebuild(p)
+    setCash(p,(tonumber(p:GetAttribute("Cash")) or 0)+reward); if progression then progression:Fire(p,"Harvest",plant.Variety) end; table.remove(s.Plants,i); save(p); rebuild(p)
     gardenState:FireClient(p,{Level=s.Level,Plants=s.Plants,MaxPlants=maxPlants(p),Harvest=reward})
 end
 
