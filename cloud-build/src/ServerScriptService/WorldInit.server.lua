@@ -4,7 +4,7 @@ local existing = workspace:FindFirstChild("World")
 if existing then existing:Destroy() end
 local world = Instance.new("Folder")
 world.Name = "World"
-world:SetAttribute("BuildId","cloud-live-32")
+world:SetAttribute("BuildId","cloud-live-33")
 world.Parent = workspace
 
 local function part(name,size,pos,color,material,parent)
@@ -15,9 +15,9 @@ local function part(name,size,pos,color,material,parent)
     return p
 end
 local function label(parent,text,size,offset,color)
-    local g=Instance.new("BillboardGui") g.Size=size g.StudsOffset=offset g.AlwaysOnTop=true g.MaxDistance=70 g.Parent=parent
+    local g=Instance.new("BillboardGui") g.Size=size g.StudsOffset=offset g.AlwaysOnTop=true g.MaxDistance=90 g.Parent=parent
     local t=Instance.new("TextLabel") t.Size=UDim2.fromScale(1,1) t.BackgroundTransparency=1 t.Text=text
-    t.TextColor3=color or Color3.new(1,1,1) t.TextStrokeTransparency=.55 t.Font=Enum.Font.GothamBold t.TextScaled=true t.Parent=g
+    t.TextColor3=color or Color3.new(1,1,1) t.TextStrokeTransparency=.35 t.Font=Enum.Font.GothamBlack t.TextScaled=true t.Parent=g
 end
 local function fence(plot,c,w,d)
     local wood=Color3.fromRGB(139,92,53) local rail=Color3.fromRGB(176,119,66)
@@ -39,6 +39,29 @@ local function portal(name,pos,accent,titleText)
     local pr=Instance.new("ProximityPrompt") pr.Name="PortalPrompt" pr.ActionText=titleText=="EXPLORE" and "Explore" or "Return"
     pr.ObjectText=titleText pr.KeyboardKeyCode=Enum.KeyCode.E pr.MaxActivationDistance=10 pr.RequiresLineOfSight=false pr.Parent=core
 end
+local function buildConveyor(parent,x,direction)
+    local model=Instance.new("Model") model.Name="ConveyorLane" model.Parent=parent
+    local base=part("Conveyor",Vector3.new(10,.45,194),Vector3.new(x,.72,0),Color3.fromRGB(46,50,46),Enum.Material.Metal,model)
+    base:SetAttribute("ConveyorDirection",direction)
+    base:SetAttribute("ConveyorSpeed",12)
+    part("BeltSurface",Vector3.new(8,.16,190),Vector3.new(x,.99,0),Color3.fromRGB(29,32,29),Enum.Material.SmoothPlastic,model).CanCollide=false
+    for _,sx in ipairs({-4.35,4.35}) do
+        part("SideRail",Vector3.new(.45,1.15,194),Vector3.new(x+sx,1.35,0),Color3.fromRGB(88,94,84),Enum.Material.Metal,model)
+    end
+    for z=-90,90,12 do
+        local roller=part("Roller",Vector3.new(8.3,.32,.65),Vector3.new(x,1.08,z),Color3.fromRGB(104,108,99),Enum.Material.Metal,model)
+        roller.CanCollide=false
+        for _,side in ipairs({-1,1}) do
+            local tread=part("Tread",Vector3.new(3.1,.06,1.6),Vector3.new(x+side*1.7,1.12,z),Color3.fromRGB(224,190,73),Enum.Material.Neon,model)
+            tread.CanCollide=false
+        end
+    end
+    for z=-82,82,20 do
+        local arrow=part("FlowMarker",Vector3.new(3.2,.06,5.5),Vector3.new(x,1.16,z),Color3.fromRGB(224,190,73),Enum.Material.Neon,model)
+        arrow.CanCollide=false
+        arrow.CFrame=arrow.CFrame*CFrame.Angles(0,0,direction<0 and math.rad(180) or 0)
+    end
+end
 
 local starter=Instance.new("Folder") starter.Name="StarterGrove" starter.Parent=world
 part("GroveGround",Vector3.new(220,1,220),Vector3.new(0,0,0),Color3.fromRGB(104,158,82),Enum.Material.Grass,starter)
@@ -53,30 +76,25 @@ for _,data in ipairs({
     local b=part("MapBorder_"..name,size,pos,borderColor,Enum.Material.Slate,starter)
     b:SetAttribute("AntiExploitBorder",true)
 end
-
 part("MainPath",Vector3.new(18,.2,190),Vector3.new(0,.6,0),Color3.fromRGB(220,187,112),Enum.Material.SmoothPlastic,starter)
-for _,x in ipairs({-24,24}) do
-    local belt=part("Conveyor",Vector3.new(8,.25,190),Vector3.new(x,.73,0),Color3.fromRGB(74,93,68),Enum.Material.SmoothPlastic,starter)
-    belt:SetAttribute("ConveyorDirection", x < 0 and 1 or -1)
-    belt:SetAttribute("ConveyorSpeed", 18)
-    for z=-88,88,11 do
-        local marker=part("ConveyorMarker",Vector3.new(4.2,.05,1.4),Vector3.new(x,.9,z),Color3.fromRGB(232,205,107),Enum.Material.Neon,starter)
-        marker.CanCollide=false
-    end
-end
+buildConveyor(starter,-24,1)
+buildConveyor(starter,24,-1)
+
 local spawn=workspace:FindFirstChild("SpawnLocation") if spawn then spawn:Destroy() end
-spawn=Instance.new("SpawnLocation") spawn.Name="SpawnLocation" spawn.Size=Vector3.new(12,1,12) spawn.Position=Vector3.new(0,1,-100)
+spawn=Instance.new("SpawnLocation") spawn.Name="SpawnLocation" spawn.Size=Vector3.new(14,1,14) spawn.Position=Vector3.new(0,1,-101)
 spawn.Anchored=true spawn.Neutral=true spawn.Material=Enum.Material.SmoothPlastic spawn.Color=Color3.fromRGB(255,221,45) spawn.Transparency=.05 spawn.Parent=starter
 local ta=part("TitleAnchor",Vector3.new(1,1,1),Vector3.new(0,4.5,-78),Color3.new(1,1,1),Enum.Material.SmoothPlastic,starter)
-ta.Transparency=1 ta.CanCollide=false label(ta,"GROW A VERITY",UDim2.fromOffset(270,52),Vector3.new(),Color3.new(1,1,1))
+ta.Transparency=1 ta.CanCollide=false label(ta,"GROW A VERITY",UDim2.fromOffset(320,58),Vector3.new(),Color3.new(1,1,1))
+
 local plotPositions={Vector3.new(-62,.55,-52),Vector3.new(62,.55,-52),Vector3.new(-62,.55,0),Vector3.new(62,.55,0),Vector3.new(-62,.55,52),Vector3.new(62,.55,52)}
 for i,pos in ipairs(plotPositions) do
     local plot=Instance.new("Folder") plot.Name="Plot_"..i plot:SetAttribute("FreePlacement",true) plot.Parent=starter
     part("GardenSurface",Vector3.new(36,.3,30),pos,Color3.fromRGB(126,91,56),Enum.Material.SmoothPlastic,plot)
     part("GardenGrass",Vector3.new(33,.12,27),pos+Vector3.new(0,.22,0),Color3.fromRGB(121,177,91),Enum.Material.Grass,plot)
     fence(plot,pos,38,32)
-    local m=part("PlotMarker",Vector3.new(1,1,1),pos+Vector3.new(0,3.4,-17),Color3.new(1,1,1),Enum.Material.SmoothPlastic,plot)
-    m.Transparency=1 m.CanCollide=false label(m,"GARDEN "..i,UDim2.fromOffset(220,32),Vector3.new(),Color3.fromRGB(255,240,190))
+    local m=part("PlotMarker",Vector3.new(1,1,1),pos+Vector3.new(0,4.6,-13),Color3.new(1,1,1),Enum.Material.SmoothPlastic,plot)
+    m.Transparency=1 m.CanCollide=false
+    label(m,"GARDEN "..i,UDim2.fromOffset(390,58),Vector3.new(),Color3.fromRGB(255,246,214))
 end
 portal("ExplorePortal",Vector3.new(0,.75,108),Color3.fromRGB(88,184,255),"EXPLORE")
 
@@ -133,6 +151,11 @@ for _,pr in ipairs(world:GetDescendants()) do
         end)
     end
 end
-Lighting.ClockTime=14 Lighting.Brightness=3 Lighting.Ambient=Color3.fromRGB(205,215,190)
-Lighting.OutdoorAmbient=Color3.fromRGB(210,220,195) Lighting.FogColor=Color3.fromRGB(170,205,230) Lighting.FogEnd=620 Lighting.GlobalShadows=true
+Lighting.ClockTime=14
+Lighting.Brightness=3
+Lighting.Ambient=Color3.fromRGB(205,215,190)
+Lighting.OutdoorAmbient=Color3.fromRGB(210,220,195)
+Lighting.FogColor=Color3.fromRGB(170,205,230)
+Lighting.FogEnd=620
+Lighting.GlobalShadows=true
 local at=Lighting:FindFirstChildOfClass("Atmosphere") if at then at:Destroy() end
