@@ -8,13 +8,16 @@
       "VariantDefinitions": {"$path": "src/ReplicatedStorage/VariantDefinitions.lua"},
       "BattleDefinitions": {"$path": "src/ReplicatedStorage/BattleDefinitions.lua"}
     },
+    "StarterGui": {
+      "$className": "StarterGui",
+      "GameHUD": {"$path": "src/StarterPlayer/StarterPlayerScripts/GameHUD.client.lua"}
+    },
     "StarterPlayer": {
       "$className": "StarterPlayer",
       "StarterPlayerScripts": {
         "$className": "StarterPlayerScripts",
         "StarterSelection": {"$path": "src/StarterPlayer/StarterPlayerScripts/StarterSelection.client.lua"},
         "GuardianBattle": {"$path": "src/StarterPlayer/StarterPlayerScripts/GuardianBattle.client.lua"},
-        "GameHUD": {"$path": "src/StarterPlayer/StarterPlayerScripts/GameHUD.client.lua"},
         "Garden": {"$path": "src/StarterPlayer/StarterPlayerScripts/Garden.client.lua"},
         "ExploreEvents": {"$path": "src/StarterPlayer/StarterPlayerScripts/ExploreEvents.client.lua"},
         "Settings": {"$path": "src/StarterPlayer/StarterPlayerScripts/Settings.client.lua"},
