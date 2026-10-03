@@ -9,7 +9,7 @@ local remotes=ReplicatedStorage:WaitForChild("GameRemotes")
 local startBattle=remotes:WaitForChild("StartBattle"); local battleAction=remotes:WaitForChild("BattleAction"); local battleUpdate=remotes:WaitForChild("BattleUpdate"); local battleEnd=remotes:WaitForChild("BattleEnd"); local switchCard=remotes:WaitForChild("SwitchBattleCard"); local cancelBattle=remotes:WaitForChild("CancelBattle"); local deckUpdate=remotes:WaitForChild("DeckUpdate")
 local sfxGroup=game:GetService("SoundService"):FindFirstChild("GrowAVeritySFX")
 local function playBattleSfx(kind)
- local ids={Hit="rbxassetid://97089699783241",Coin="rbxassetid://17403146731",Success="rbxassetid://1835270782"}
+ local ids={Hit="rbxassetid://97089699783241",Coin="rbxassetid://17403146731",Success="rbxassetid://1835270782",Fail="rbxassetid://5976093419"}
  local sound=Instance.new("Sound"); sound.SoundId=ids[kind] or ids.Hit; sound.Volume=kind=="Success" and .35 or .24; sound.SoundGroup=sfxGroup; sound.Parent=game:GetService("SoundService"); sound:Play(); game:GetService("Debris"):AddItem(sound,4)
 end
 local screen=Instance.new("ScreenGui"); screen.Name="BattleUI"; screen.IgnoreGuiInset=true; screen.ResetOnSpawn=false; screen.DisplayOrder=60; screen.Enabled=false; screen.Parent=pg
@@ -141,5 +141,5 @@ battleUpdate.OnClientEvent:Connect(function(s)
  cameraFor(s.EnemyName,(s.Phase=="EnemyAttack" and "enemy" or "player")); vfx(s.EnemyName,s.Phase,s.Damage)
  setActions(s.CanAct==true)
 end)
-battleEnd.OnClientEvent:Connect(function(won,enemy) if won then playBattleSfx("Success") end; setActions(false); showMessage(won and ("VICTORY  •  "..enemy.." CARD + SEED") or "DEFEATED",nil); turn.Text="BATTLE COMPLETE"; task.wait(1.5); exitCinematic() end)
+battleEnd.OnClientEvent:Connect(function(won,enemy) playBattleSfx(won and "Success" or "Fail"); setActions(false); showMessage(won and ("VICTORY  •  "..enemy.." CARD + SEED") or "DEFEATED",nil); turn.Text="BATTLE COMPLETE"; task.wait(1.5); exitCinematic() end)
 deckUpdate.OnClientEvent:Connect(function(d) if screen.Enabled then rebuildCards(d) end end)
