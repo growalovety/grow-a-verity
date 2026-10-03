@@ -44,18 +44,19 @@ local function stroke(o,c,t,w) local s=Instance.new("UIStroke"); s.Color=c; s.Tr
 local function label(p,txt,size,pos,color,font) local l=Instance.new("TextLabel"); l.Size=size; l.Position=pos; l.BackgroundTransparency=1; l.Text=txt; l.TextColor3=color; l.Font=font or Enum.Font.GothamBold; l.TextScaled=true; l.Parent=p; return l end
 local function button(p,txt,size,pos,bg,tc) local b=Instance.new("TextButton"); b.Size=size; b.Position=pos; b.BackgroundColor3=bg or PANEL; b.TextColor3=tc or TEXT; b.Text=txt; b.Font=Enum.Font.GothamBold; b.TextScaled=true; b.AutoButtonColor=true; b.Parent=p; corner(b,10); stroke(b,Color3.fromRGB(90,112,139),.55,1); return b end
 
-local cash=button(gui,"$ 0",UDim2.fromOffset(132,46),UDim2.fromOffset(16,42),PANEL,GREEN); cash.Font=Enum.Font.GothamBlack; stroke(cash,Color3.fromRGB(76,199,139),.5,1.5)
-local levelBadge=label(gui,"LV 1",UDim2.fromOffset(82,32),UDim2.fromOffset(164,49),GOLD,Enum.Font.GothamBlack)
+local topbar=gui:WaitForChild("TopBar")
+local cash=topbar:WaitForChild("Cash")
+local levelBadge=topbar:WaitForChild("Level")
+local nav=topbar:WaitForChild("Nav")
+local garden=nav:WaitForChild("Garden")
+local explore=nav:WaitForChild("Explore")
+local cards=nav:WaitForChild("Cards")
+local seeds=nav:WaitForChild("Seeds")
+local deck=nav:WaitForChild("Deck")
+local settings=topbar:WaitForChild("Settings")
 local function updateProgressBadge() levelBadge.Text="LV "..tostring(player:GetAttribute("ProgressLevel") or 1) end
 updateProgressBadge()
 player:GetAttributeChangedSignal("ProgressLevel"):Connect(updateProgressBadge)
-local nav=Instance.new("Frame"); nav.Size=UDim2.fromOffset(500,50); nav.Position=UDim2.new(.5,-250,0,42); nav.BackgroundTransparency=1; nav.Parent=gui
-local garden=button(nav,"GARDEN",UDim2.fromOffset(96,42),UDim2.fromOffset(0,4),PANEL,TEXT)
-local explore=button(nav,"EXPLORE",UDim2.fromOffset(96,42),UDim2.fromOffset(102,4),PANEL,TEXT)
-local cards=button(nav,"CARDS",UDim2.fromOffset(88,42),UDim2.fromOffset(204,4),PANEL,TEXT)
-local seeds=button(nav,"SEEDS",UDim2.fromOffset(88,42),UDim2.fromOffset(298,4),PANEL,TEXT)
-local deck=button(nav,"DECK",UDim2.fromOffset(88,42),UDim2.fromOffset(392,4),PANEL,TEXT)
-local settings=button(gui,"⚙",UDim2.fromOffset(46,46),UDim2.new(1,-62,0,42),Color3.fromRGB(17,23,31),TEXT); settings.BackgroundTransparency=1; settings.TextSize=28; settings.TextScaled=true; settings.ZIndex=200
 local function updateCash() cash.Text="$ "..tostring(player:GetAttribute("Cash") or 0) end
 updateCash(); player:GetAttributeChangedSignal("Cash"):Connect(updateCash)
 
