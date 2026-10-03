@@ -15,7 +15,7 @@ local function part(name,size,pos,color,material,parent)
     return p
 end
 local function label(parent,text,size,offset,color)
-    local g=Instance.new("BillboardGui") g.Size=size g.StudsOffset=offset g.AlwaysOnTop=true g.MaxDistance=90 g.Parent=parent
+    local g=Instance.new("BillboardGui") g.Size=size g.StudsOffset=offset g.AlwaysOnTop=false g.MaxDistance=70 g.LightInfluence=.15 g.Parent=parent
     local t=Instance.new("TextLabel") t.Size=UDim2.fromScale(1,1) t.BackgroundTransparency=1 t.Text=text
     t.TextColor3=color or Color3.new(1,1,1) t.TextStrokeTransparency=.35 t.Font=Enum.Font.GothamBlack t.TextScaled=true t.Parent=g
 end
