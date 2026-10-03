@@ -30,7 +30,7 @@ local function saveDeck(p)
  local d=decks[p] or {}
  pcall(function() deckStore:SetAsync("p_"..p.UserId,d) end)
 end
-Players.PlayerAdded:Connect(loadPlayer)
+Players.PlayerAdded:Connect(function(p) task.delay(.8,function() if p.Parent then loadPlayer(p) end end) end)
 Players.PlayerRemoving:Connect(function(p) active[p]=nil; saveCollection(p); saveDeck(p); decks[p]=nil end)
 
 local function owned(p,n) return p:GetAttribute("Variety_"..n)==true or p:GetAttribute("StarterVariety")==n end
