@@ -16,6 +16,7 @@
         "GuardianBattle": {"$path": "src/StarterPlayer/StarterPlayerScripts/GuardianBattle.client.lua"},
         "GameHUD": {"$path": "src/StarterPlayer/StarterPlayerScripts/GameHUD.client.lua"},
         "Garden": {"$path": "src/StarterPlayer/StarterPlayerScripts/Garden.client.lua"},
+        "ExploreEvents": {"$path": "src/StarterPlayer/StarterPlayerScripts/ExploreEvents.client.lua"},
         "Settings": {"$path": "src/StarterPlayer/StarterPlayerScripts/Settings.client.lua"},
         "MusicPlayer": {"$path": "src/StarterPlayer/StarterPlayerScripts/MusicPlayer.client.lua"}
       }
