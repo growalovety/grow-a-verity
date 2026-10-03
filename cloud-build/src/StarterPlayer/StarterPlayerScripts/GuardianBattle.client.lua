@@ -2,13 +2,21 @@ local Players=game:GetService("Players")
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
 local TweenService=game:GetService("TweenService")
 local Debris=game:GetService("Debris")
+local StarterGui=game:GetService("StarterGui")
 local player=Players.LocalPlayer
 local pg=player:WaitForChild("PlayerGui")
 local remotes=ReplicatedStorage:WaitForChild("GameRemotes")
 local startBattle=remotes:WaitForChild("StartBattle"); local battleAction=remotes:WaitForChild("BattleAction"); local battleUpdate=remotes:WaitForChild("BattleUpdate"); local battleEnd=remotes:WaitForChild("BattleEnd"); local switchCard=remotes:WaitForChild("SwitchBattleCard"); local cancelBattle=remotes:WaitForChild("CancelBattle"); local deckUpdate=remotes:WaitForChild("DeckUpdate")
 local screen=Instance.new("ScreenGui"); screen.Name="BattleUI"; screen.IgnoreGuiInset=true; screen.ResetOnSpawn=false; screen.DisplayOrder=60; screen.Enabled=false; screen.Parent=pg
+local gameHud=pg:FindFirstChild("GameHUD")
+local function setCoreHud(enabled)
+ for _,kind in ipairs({Enum.CoreGuiType.Chat,Enum.CoreGuiType.Backpack,Enum.CoreGuiType.PlayerList,Enum.CoreGuiType.EmotesMenu}) do pcall(function() StarterGui:SetCoreGuiEnabled(kind,enabled) end) end
+end
 local function corner(o,r) local c=Instance.new("UICorner"); c.CornerRadius=UDim.new(0,r); c.Parent=o end
-local dim=Instance.new("Frame"); dim.Size=UDim2.fromScale(1,1); dim.BackgroundColor3=Color3.fromRGB(40,60,48); dim.BackgroundTransparency=.72; dim.BorderSizePixel=0; dim.Parent=screen
+local dim=Instance.new("Frame"); dim.Size=UDim2.fromScale(1,1); dim.BackgroundColor3=Color3.fromRGB(18,24,20); dim.BackgroundTransparency=.82; dim.BorderSizePixel=0; dim.Parent=screen
+local topBar=Instance.new("Frame"); topBar.Size=UDim2.new(1,0,0,58); topBar.Position=UDim2.fromOffset(0,0); topBar.BackgroundColor3=Color3.fromRGB(10,12,10); topBar.BorderSizePixel=0; topBar.Parent=screen
+local bottomBar=topBar:Clone(); bottomBar.Size=UDim2.new(1,0,0,72); bottomBar.Position=UDim2.new(0,0,1,-72); bottomBar.Parent=screen
+local cinematicFade=Instance.new("Frame"); cinematicFade.Size=UDim2.fromScale(1,1); cinematicFade.BackgroundColor3=Color3.fromRGB(8,10,8); cinematicFade.BackgroundTransparency=1; cinematicFade.BorderSizePixel=0; cinematicFade.ZIndex=100; cinematicFade.Parent=screen
 local enemyCard=Instance.new("Frame"); enemyCard.Size=UDim2.fromOffset(300,92); enemyCard.Position=UDim2.new(1,-330,0,34); enemyCard.BackgroundColor3=Color3.fromRGB(245,241,218); enemyCard.Parent=screen; corner(enemyCard,18)
 local playerCard=enemyCard:Clone(); playerCard.Size=UDim2.fromOffset(330,105); playerCard.Position=UDim2.new(0,26,1,-285); playerCard.Parent=screen
 local function txt(parent,size,pos,color,font) local x=Instance.new("TextLabel"); x.Size=size; x.Position=pos; x.BackgroundTransparency=1; x.TextColor3=color; x.TextScaled=true; x.Font=font or Enum.Font.GothamBold; x.Parent=parent; return x end
@@ -39,6 +47,22 @@ local function cameraFor(enemyName,side)
  TweenService:Create(cam,TweenInfo.new(.55,Enum.EasingStyle.Quart,Enum.EasingDirection.InOut),{CFrame=CFrame.lookAt(base+offset,target)}):Play(); cam.CameraType=Enum.CameraType.Scriptable
 end
 local function restoreCamera() local cam=workspace.CurrentCamera; cam.CameraType=Enum.CameraType.Custom; local hum=player.Character and player.Character:FindFirstChildOfClass("Humanoid"); if hum then cam.CameraSubject=hum end end
+local function enterCinematic()
+ if gameHud then gameHud.Enabled=false end
+ setCoreHud(false)
+ screen.Enabled=true
+ cinematicFade.BackgroundTransparency=0
+ TweenService:Create(cinematicFade,TweenInfo.new(.45,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{BackgroundTransparency=1}):Play()
+end
+local function exitCinematic()
+ TweenService:Create(cinematicFade,TweenInfo.new(.2,Enum.EasingStyle.Quad),{BackgroundTransparency=0}):Play()
+ task.wait(.2)
+ screen.Enabled=false
+ if gameHud then gameHud.Enabled=true end
+ setCoreHud(true)
+ restoreCamera()
+ cinematicFade.BackgroundTransparency=1
+end
 local function setActions(on) busy=not on; for _,b in ipairs({attack,skill,guard}) do b.Active=on; b.AutoButtonColor=on end end
 local function vfx(enemyName,phase,damage,accent)
  local g=findGuardian(enemyName); local root=g and g.PrimaryPart
@@ -67,9 +91,9 @@ end
 attack.Activated:Connect(function() if not busy then setActions(false); battleAction:FireServer("Attack") end end)
 skill.Activated:Connect(function() if not busy then setActions(false); battleAction:FireServer("Skill") end end)
 guard.Activated:Connect(function() if not busy then setActions(false); battleAction:FireServer("Guard") end end)
-close.Activated:Connect(function() cancelBattle:FireServer(); screen.Enabled=false; restoreCamera() end)
+close.Activated:Connect(function() cancelBattle:FireServer(); exitCinematic() end)
 startBattle.OnClientEvent:Connect(function(enemy,starter,deck)
- screen.Enabled=true; currentCard=starter; enemyName.Text=enemy; playerName.Text=starter; message.Text=starter.." entered the battle!"; turn.Text="TURN 1  •  YOUR MOVE"; status.Text=""; rebuildCards(deck); setActions(false); cameraFor(enemy,"player"); task.wait(.6); if screen.Enabled then setActions(true) end
+ enterCinematic(); currentCard=starter; enemyName.Text=enemy; playerName.Text=starter; message.Text=starter.." entered the battle!"; turn.Text="TURN 1  •  YOUR MOVE"; status.Text=""; rebuildCards(deck); setActions(false); cameraFor(enemy,"player"); task.wait(.6); if screen.Enabled then setActions(true) end
 end)
 battleUpdate.OnClientEvent:Connect(function(s)
  enemyBar.Size=UDim2.fromScale(math.clamp(s.EnemyHP/s.EnemyMaxHP,0,1),1); playerBar.Size=UDim2.fromScale(math.clamp(s.PlayerHP/s.PlayerMaxHP,0,1),1)
@@ -82,5 +106,5 @@ battleUpdate.OnClientEvent:Connect(function(s)
  cameraFor(s.EnemyName,(s.Phase=="EnemyAttack" and "enemy" or "player")); vfx(s.EnemyName,s.Phase,s.Damage)
  setActions(s.CanAct==true)
 end)
-battleEnd.OnClientEvent:Connect(function(won,enemy) setActions(false); message.Text=won and ("VICTORY  •  "..enemy.." CARD + SEED") or "DEFEATED"; turn.Text="BATTLE COMPLETE"; task.wait(1.5); screen.Enabled=false; restoreCamera() end)
+battleEnd.OnClientEvent:Connect(function(won,enemy) setActions(false); message.Text=won and ("VICTORY  •  "..enemy.." CARD + SEED") or "DEFEATED"; turn.Text="BATTLE COMPLETE"; task.wait(1.5); exitCinematic() end)
 deckUpdate.OnClientEvent:Connect(function(d) if screen.Enabled then rebuildCards(d) end end)
