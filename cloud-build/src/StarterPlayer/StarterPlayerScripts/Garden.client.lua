@@ -71,9 +71,10 @@ end
 local function getLocalHit()
     local plot=gardenPlot(); if not plot then return end
     local hit=mouse.Hit.Position
-    local localPos=plot:GetPivot():PointToObjectSpace(hit)
+    local surface=plot:FindFirstChild("GardenSurface"); if not surface then return end
+    local localPos=hit-surface.Position
     local x=math.clamp(localPos.X,-14.5,14.5); local z=math.clamp(localPos.Z,-11.5,11.5)
-    return x,z,plot:GetPivot():PointToWorldSpace(Vector3.new(x,1.0,z))
+    return x,z,surface.Position+Vector3.new(x,1.0,z)
 end
 RunService.RenderStepped:Connect(function()
     if not placing then marker.Transparency=1; return end
