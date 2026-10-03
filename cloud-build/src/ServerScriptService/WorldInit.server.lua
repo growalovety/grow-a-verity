@@ -41,23 +41,23 @@ local function portal(name,pos,accent,titleText)
 end
 local function buildConveyor(parent,x,direction)
     local model=Instance.new("Model") model.Name="ConveyorLane" model.Parent=parent
-    local base=part("Conveyor",Vector3.new(10,.45,194),Vector3.new(x,.72,0),Color3.fromRGB(46,50,46),Enum.Material.Metal,model)
+    local base=part("Conveyor",Vector3.new(11,.5,194),Vector3.new(x,.72,0),Color3.fromRGB(55,60,55),Enum.Material.Metal,model)
     base:SetAttribute("ConveyorDirection",direction)
-    base:SetAttribute("ConveyorSpeed",12)
-    part("BeltSurface",Vector3.new(8,.16,190),Vector3.new(x,.99,0),Color3.fromRGB(29,32,29),Enum.Material.SmoothPlastic,model).CanCollide=false
-    for _,sx in ipairs({-4.35,4.35}) do
-        part("SideRail",Vector3.new(.45,1.15,194),Vector3.new(x+sx,1.35,0),Color3.fromRGB(88,94,84),Enum.Material.Metal,model)
+    base:SetAttribute("ConveyorSpeed",30)
+    part("BeltSurface",Vector3.new(9.2,.18,190),Vector3.new(x,1.0,0),Color3.fromRGB(35,38,35),Enum.Material.SmoothPlastic,model).CanCollide=false
+    for _,sx in ipairs({-5.0,5.0}) do
+        part("SideRail",Vector3.new(.35,.8,194),Vector3.new(x+sx,1.25,0),Color3.fromRGB(88,94,84),Enum.Material.Metal,model)
     end
-    for z=-90,90,12 do
-        local roller=part("Roller",Vector3.new(8.3,.32,.65),Vector3.new(x,1.08,z),Color3.fromRGB(104,108,99),Enum.Material.Metal,model)
+    for z=-90,90,8 do
+        local roller=part("Roller",Vector3.new(9.0,.24,.5),Vector3.new(x,1.08,z),Color3.fromRGB(125,130,122),Enum.Material.Metal,model)
         roller.CanCollide=false
         for _,side in ipairs({-1,1}) do
-            local tread=part("Tread",Vector3.new(3.1,.06,1.6),Vector3.new(x+side*1.7,1.12,z),Color3.fromRGB(224,190,73),Enum.Material.Neon,model)
+            local tread=part("Tread",Vector3.new(3.1,.06,1.6),Vector3.new(x+side*1.7,1.12,z),Color3.fromRGB(238,199,76),Enum.Material.Neon,model)
             tread.CanCollide=false
         end
     end
-    for z=-82,82,20 do
-        local arrow=part("FlowMarker",Vector3.new(3.2,.06,5.5),Vector3.new(x,1.16,z),Color3.fromRGB(224,190,73),Enum.Material.Neon,model)
+    for z=-82,82,28 do
+        local arrow=part("FlowMarker",Vector3.new(2.4,.05,4.5),Vector3.new(x,1.16,z),Color3.fromRGB(224,190,73),Enum.Material.Neon,model)
         arrow.CanCollide=false
         arrow.CFrame=arrow.CFrame*CFrame.Angles(0,0,direction<0 and math.rad(180) or 0)
     end
