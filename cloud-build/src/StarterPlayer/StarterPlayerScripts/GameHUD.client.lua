@@ -1,170 +1,153 @@
 local Players=game:GetService("Players")
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
-local player=Players.LocalPlayer\nlocal GuiService=game:GetService("GuiService")
+local TweenService=game:GetService("TweenService")
+local player=Players.LocalPlayer
 local remotes=ReplicatedStorage:WaitForChild("GameRemotes")
 local deckUpdate=remotes:WaitForChild("DeckUpdate")
-local gui=Instance.new("ScreenGui")
-gui.Name="GameHUD"
-gui.ResetOnSpawn=false
-gui.IgnoreGuiInset=true
-gui.DisplayOrder=20
-gui.Parent=player:WaitForChild("PlayerGui")
+local Variants=require(ReplicatedStorage:WaitForChild("VariantDefinitions"))
+local BattleDefinitions=require(ReplicatedStorage:WaitForChild("BattleDefinitions"))
 
-local BG=Color3.fromRGB(247,242,220)
-local PANEL=Color3.fromRGB(255,250,235)
-local PANEL2=Color3.fromRGB(238,231,204)
-local GREEN=Color3.fromRGB(67,137,79)
-local GREEN_DARK=Color3.fromRGB(42,91,50)
-local TEXT=Color3.fromRGB(43,58,42)
-local MUTED=Color3.fromRGB(108,116,94)
-local GOLD=Color3.fromRGB(220,175,64)
-local LINE=Color3.fromRGB(183,161,108)
-
+local gui=Instance.new("ScreenGui"); gui.Name="GameHUD"; gui.ResetOnSpawn=false; gui.IgnoreGuiInset=true; gui.DisplayOrder=20; gui.Parent=player:WaitForChild("PlayerGui")
+local BG=Color3.fromRGB(17,23,31); local PANEL=Color3.fromRGB(25,33,44); local PANEL2=Color3.fromRGB(34,44,58)
+local TEXT=Color3.fromRGB(238,244,252); local MUTED=Color3.fromRGB(154,170,193); local ACCENT=Color3.fromRGB(88,180,239); local GREEN=Color3.fromRGB(76,199,139)
+local GOLD=Color3.fromRGB(239,193,78)
 local function corner(o,r) local c=Instance.new("UICorner"); c.CornerRadius=UDim.new(0,r); c.Parent=o end
 local function stroke(o,c,t,w) local s=Instance.new("UIStroke"); s.Color=c; s.Transparency=t or 0; s.Thickness=w or 1; s.Parent=o end
-local function label(parent,text,size,pos,color,font)
- local l=Instance.new("TextLabel"); l.Size=size; l.Position=pos; l.BackgroundTransparency=1; l.Text=text; l.TextColor3=color; l.Font=font or Enum.Font.GothamBold; l.TextScaled=true; l.Parent=parent; return l
-end
-local function button(parent,text,size,pos,bg,txt)
- local b=Instance.new("TextButton"); b.Size=size; b.Position=pos; b.BackgroundColor3=bg or PANEL; b.TextColor3=txt or TEXT; b.Text=text; b.Font=Enum.Font.GothamBold; b.TextScaled=true; b.AutoButtonColor=true; b.Parent=parent; corner(b,11); stroke(b,LINE,.12,1); return b
-end
+local function label(p,txt,size,pos,color,font) local l=Instance.new("TextLabel"); l.Size=size; l.Position=pos; l.BackgroundTransparency=1; l.Text=txt; l.TextColor3=color; l.Font=font or Enum.Font.GothamBold; l.TextScaled=true; l.Parent=p; return l end
+local function button(p,txt,size,pos,bg,tc) local b=Instance.new("TextButton"); b.Size=size; b.Position=pos; b.BackgroundColor3=bg or PANEL; b.TextColor3=tc or TEXT; b.Text=txt; b.Font=Enum.Font.GothamBold; b.TextScaled=true; b.AutoButtonColor=true; b.Parent=p; corner(b,10); stroke(b,Color3.fromRGB(90,112,139),.55,1); return b end
 
--- Viral-game style: separate chunky navigation buttons instead of one large HUD container.
-local cash=button(gui,"$ 0",UDim2.fromOffset(150,48),UDim2.fromOffset(18,16),GREEN,Color3.new(1,1,1))
-cash.Font=Enum.Font.GothamBlack\ncash.Position=UDim2.fromOffset(18,42)
-stroke(cash,Color3.fromRGB(38,88,45),.05,2)
+local cash=button(gui,"$ 0",UDim2.fromOffset(142,46),UDim2.fromOffset(16,42),PANEL,GREEN); cash.Font=Enum.Font.GothamBlack; stroke(cash,Color3.fromRGB(76,199,139),.5,1.5)
+local nav=Instance.new("Frame"); nav.Size=UDim2.fromOffset(590,50); nav.Position=UDim2.new(.5,-295,0,42); nav.BackgroundTransparency=1; nav.Parent=gui
+local garden=button(nav,"GARDEN",UDim2.fromOffset(96,42),UDim2.fromOffset(0,4),PANEL,TEXT)
+local explore=button(nav,"EXPLORE",UDim2.fromOffset(96,42),UDim2.fromOffset(102,4),PANEL,TEXT)
+local cards=button(nav,"CARDS",UDim2.fromOffset(88,42),UDim2.fromOffset(204,4),PANEL,TEXT)
+local seeds=button(nav,"SEEDS",UDim2.fromOffset(88,42),UDim2.fromOffset(298,4),PANEL,TEXT)
+local deck=button(nav,"DECK",UDim2.fromOffset(88,42),UDim2.fromOffset(392,4),PANEL,TEXT)
+local settings=button(gui,"⚙",UDim2.fromOffset(46,46),UDim2.new(1,-62,0,42),Color3.fromRGB(17,23,31),TEXT); settings.BackgroundTransparency=1; settings.TextSize=28; settings.TextScaled=true
+local function updateCash() cash.Text="$ "..tostring(player:GetAttribute("Cash") or 0) end
+updateCash(); player:GetAttributeChangedSignal("Cash"):Connect(updateCash)
 
-local nav=Instance.new("Frame")
-nav.Size=UDim2.fromOffset(560,54)
-nav.Position=UDim2.new(.5,-280,0,40)
-nav.BackgroundTransparency=1
-nav.Parent=gui
-
-local home=button(nav,"GARDEN",UDim2.fromOffset(105,44),UDim2.fromOffset(0,5),PANEL,GREEN_DARK)
-local explore=button(nav,"EXPLORE",UDim2.fromOffset(105,44),UDim2.fromOffset(113,5),PANEL,GREEN_DARK)
-local cards=button(nav,"CARDS",UDim2.fromOffset(95,44),UDim2.fromOffset(226,5),PANEL,GREEN_DARK)
-local seeds=button(nav,"SEEDS",UDim2.fromOffset(95,44),UDim2.fromOffset(329,5),PANEL,GREEN_DARK)
-local deck=button(nav,"DECK",UDim2.fromOffset(95,44),UDim2.fromOffset(432,5),PANEL,GREEN_DARK)
-
-local settingsButton=button(gui,"⚙",UDim2.fromOffset(50,50),UDim2.new(1,-68,0,42),Color3.new(1,1,1),TEXT)\nsettingsButton.BackgroundTransparency=1\nlocal gearStroke=settingsButton:FindFirstChildOfClass("UIStroke") if gearStroke then gearStroke:Destroy() end
-settingsButton.Font=Enum.Font.GothamBlack\nsettingsButton.TextSize=30
-settingsButton.TextScaled=true
-stroke(settingsButton,Color3.fromRGB(38,88,45),.05,2)
-
-local panel=Instance.new("Frame")
-panel.Size=UDim2.fromOffset(760,510)
-panel.Position=UDim2.new(.5,-380,.5,-255)
-panel.BackgroundColor3=BG
-panel.Visible=false
-panel.Parent=gui
-corner(panel,18)
-stroke(panel,GREEN,.12,2)
-
-local panelTitle=label(panel,"CARD INDEX",UDim2.new(.65,0,0,46),UDim2.fromOffset(24,18),TEXT,Enum.Font.GothamBlack)
+local overlay=Instance.new("Frame"); overlay.Size=UDim2.fromScale(1,1); overlay.BackgroundColor3=Color3.fromRGB(5,8,12); overlay.BackgroundTransparency=.28; overlay.Visible=false; overlay.Parent=gui
+local panel=Instance.new("Frame"); panel.Size=UDim2.fromOffset(900,590); panel.Position=UDim2.new(.5,-450,.5,-295); panel.BackgroundColor3=BG; panel.Visible=false; panel.Parent=overlay; corner(panel,20); stroke(panel,ACCENT,.55,1.5)
+local title=label(panel,"CARD INDEX",UDim2.fromOffset(360,44),UDim2.fromOffset(24,18),TEXT,Enum.Font.GothamBlack)
+local progress=label(panel,"0 / 4 COLLECTED",UDim2.fromOffset(230,32),UDim2.fromOffset(24,58),MUTED,Enum.Font.GothamBold)
 local close=button(panel,"×",UDim2.fromOffset(42,42),UDim2.new(1,-58,0,18),PANEL2,TEXT)
-local left=Instance.new("Frame")
-left.Size=UDim2.fromOffset(245,385)
-left.Position=UDim2.fromOffset(20,78)
-left.BackgroundColor3=PANEL
-left.BorderSizePixel=0
-left.Parent=panel
-corner(left,14)
-stroke(left,LINE,.3,1)
+local search=Instance.new("TextBox"); search.Size=UDim2.fromOffset(250,38); search.Position=UDim2.new(1,-410,0,24); search.BackgroundColor3=PANEL; search.PlaceholderText="SEARCH"; search.Text=""; search.TextColor3=TEXT; search.PlaceholderColor3=MUTED; search.Font=Enum.Font.GothamBold; search.TextScaled=true; search.ClearTextOnFocus=false; search.Parent=panel; corner(search,9); stroke(search,Color3.fromRGB(90,112,139),.55,1)
+local sort=button(panel,"SORT: NAME",UDim2.fromOffset(135,38),UDim2.new(1,-150,0,24),PANEL2,TEXT)
 
-local right=Instance.new("Frame")
-right.Size=UDim2.fromOffset(470,385)
-right.Position=UDim2.fromOffset(275,78)
-right.BackgroundColor3=PANEL
-right.BorderSizePixel=0
-right.Parent=panel
-corner(right,14)
-stroke(right,LINE,.3,1)
+local listFrame=Instance.new("ScrollingFrame"); listFrame.Size=UDim2.fromOffset(500,445); listFrame.Position=UDim2.fromOffset(20,105); listFrame.BackgroundColor3=PANEL; listFrame.BorderSizePixel=0; listFrame.ScrollBarThickness=5; listFrame.Parent=panel; corner(listFrame,14)
+local grid=Instance.new("UIGridLayout"); grid.CellSize=UDim2.fromOffset(150,190); grid.CellPadding=UDim2.fromOffset(10,10); grid.Parent=listFrame
+local detail=Instance.new("Frame"); detail.Size=UDim2.fromOffset(350,445); detail.Position=UDim2.fromOffset(535,105); detail.BackgroundColor3=PANEL; detail.BorderSizePixel=0; detail.Parent=panel; corner(detail,14)
+local detailTitle=label(detail,"",UDim2.new(1,-28,0,38),UDim2.fromOffset(14,12),TEXT,Enum.Font.GothamBlack)
+local detailArt=Instance.new("ViewportFrame"); detailArt.Size=UDim2.fromOffset(150,150); detailArt.Position=UDim2.fromOffset(100,55); detailArt.BackgroundTransparency=1; detailArt.Parent=detail
+local detailText=label(detail,"",UDim2.new(1,-28,0,205),UDim2.fromOffset(14,220),MUTED,Enum.Font.GothamBold); detailText.TextWrapped=true; detailText.TextXAlignment=Enum.TextXAlignment.Left; detailText.TextYAlignment=Enum.TextYAlignment.Top; detailText.TextSize=17
 
-local detailTitle=label(right,"Select an entry",UDim2.new(.86,0,0,38),UDim2.fromOffset(22,16),TEXT,Enum.Font.GothamBlack)
-local detail=label(right,"",UDim2.new(.86,0,.78,0),UDim2.fromOffset(22,62),MUTED,Enum.Font.GothamBold)
-detail.TextXAlignment=Enum.TextXAlignment.Left
-detail.TextYAlignment=Enum.TextYAlignment.Top
-detail.TextWrapped=true
-detail.TextSize=19
-
-local BattleDefinitions=require(ReplicatedStorage:WaitForChild("BattleDefinitions"))
-local VariantDefinitions=require(ReplicatedStorage:WaitForChild("VariantDefinitions"))
-local names={"Verity","Falsity","Cruelty","Lovity"}
-local mode="Cards"
-local currentDeck={}
-local function owned(n) return player:GetAttribute("Variety_"..n) or player:GetAttribute("StarterVariety")==n end
-local function clear() for _,v in ipairs(left:GetChildren()) do if v:IsA("TextButton") then v:Destroy() end end end
-
-local function showEntry(n)
- local v=VariantDefinitions[n] or {}
- local b=BattleDefinitions[n]
- local has=owned(n)
- if mode=="Deck" then
-  detailTitle.Text="DECK  "..#currentDeck.."/6"
-  detail.Text="Choose up to 6 owned cards.\\n\\nSelected cards:\\n"..(#currentDeck>0 and table.concat(currentDeck,", ") or "None").."\\n\\nClick a card to add/remove it."
-  return
- end
- local seed=mode=="Seeds"
- if not (seed and player:GetAttribute("Seed_"..n) or (not seed and has)) then
-  detailTitle.Text="???"
-  detail.Text="LOCKED\\n\\nThis entry has not been collected yet."
-  return
- end
- detailTitle.Text=seed and n.." Seed" or n
- if seed then
-  detail.Text="Rarity: "..tostring(v.Rarity).."\\nSource: "..n.." Guardian\\nStatus: COLLECTED\\n\\nPlantable: YES\\n\\nGrowth and harvest stats will appear when the Garden system is implemented."
- elseif b then
-  detail.Text="Rarity: "..b.Rarity.."\\nRole: "..b.Role.."\\n\\nHP: "..b.HP.."\\nAttack: "..b.Attack.."\\nDefense: "..b.Defense.."\\nEnergy: "..b.Energy.."\\n\\nTags: "..table.concat(b.Tags,", ").."\\n\\nMoves\\n• "..b.AttackName.."\\n• "..b.SkillName.."\\n• "..b.GuardName.."\\n\\n"..b.SkillDescription
- end
+local mode="Cards"; local currentDeck={}; local searchText=""; local sortMode="Name"
+local order={"Verity","Falsity","Cruelty","Lovity"}
+local rarityRank={Common=1,Uncommon=2,Rare=3,Epic=4,Legendary=5}
+local function owned(n) return player:GetAttribute("Variety_"..n)==true or player:GetAttribute("StarterVariety")==n end
+local function seedOwned(n) return player:GetAttribute("Seed_"..n)==true or (tonumber(player:GetAttribute("SeedCount_"..n)) or 0)>0 end
+local function clear(parent) for _,c in ipairs(parent:GetChildren()) do if not c:IsA("UIGridLayout") then c:Destroy() end end end
+local function makeModel(viewport,n,scale)
+    viewport:ClearAllChildren()
+    local def=BattleDefinitions[n]; if not def then return end
+    local world=Instance.new("WorldModel"); world.Parent=viewport
+    local m=Instance.new("Model"); m.Parent=world
+    local body=Instance.new("Part"); body.Shape=Enum.PartType.Ball; body.Size=Vector3.new(4,4,4)*scale; body.Position=Vector3.new(0,0,0); body.Anchored=true; body.CanCollide=false; body.Material=Enum.Material.SmoothPlastic; body.Color=def.Accent; body.Parent=m
+    local function f(size,pos,color,shape) local p=Instance.new("Part"); p.Size=size*scale; p.Position=pos*scale; p.Shape=shape or Enum.PartType.Ball; p.Anchored=true; p.CanCollide=false; p.Material=Enum.Material.SmoothPlastic; p.Color=color; p.Parent=m end
+    f(Vector3.new(.5,.5,.5),Vector3.new(-.8,.3,-1.75),Color3.fromRGB(20,23,28)); f(Vector3.new(.5,.5,.5),Vector3.new(.8,.3,-1.75),Color3.fromRGB(20,23,28))
+    if n=="Verity" then f(Vector3.new(1.5,2.3,.45),Vector3.new(0,.1,1.8),def.Accent,Enum.PartType.Block)
+    elseif n=="Falsity" then f(Vector3.new(1.1,.55,1.7),Vector3.new(-1.8,.1,0),def.Accent,Enum.PartType.Wedge); f(Vector3.new(1.1,.55,1.7),Vector3.new(1.8,.1,0),def.Accent,Enum.PartType.Wedge)
+    elseif n=="Cruelty" then f(Vector3.new(.65,2,.65),Vector3.new(-1.35,1.4,0),def.Accent,Enum.PartType.Wedge); f(Vector3.new(.65,2,.65),Vector3.new(1.35,1.4,0),def.Accent,Enum.PartType.Wedge)
+    else f(Vector3.new(1.25,1.25,1.25),Vector3.new(-1.15,1.6,0),def.Accent); f(Vector3.new(1.25,1.25,1.25),Vector3.new(1.15,1.6,0),def.Accent) end
+    local cam=Instance.new("Camera"); cam.CFrame=CFrame.new(Vector3.new(0,1,9*scale),Vector3.new(0,.4,0)); cam.Parent=viewport; viewport.CurrentCamera=cam
 end
-
-local function inDeck(n) for i,v in ipairs(currentDeck) do if v==n then return i end end end
-local function build(modeIn)
- mode=modeIn
- panelTitle.Text=mode=="Deck" and "BUILD YOUR DECK" or (mode=="Cards" and "CARD INDEX" or "SEED INDEX")
- clear()
- if mode=="Deck" then
-  local y=12
-  for _,n in ipairs(names) do
-   if owned(n) then
-    local selected=inDeck(n)
-    local b=button(left,(selected and "✓  " or "+  ")..n,UDim2.new(1,-24,0,52),UDim2.fromOffset(12,y),selected and Color3.fromRGB(206,232,208) or PANEL2,GREEN_DARK)
-    b.Activated:Connect(function()
-     local i=inDeck(n)
-     if i then table.remove(currentDeck,i) elseif #currentDeck<6 then table.insert(currentDeck,n) end
-     build("Deck")
+local function seedIcon(viewport,n)
+    viewport:ClearAllChildren(); local v=Variants[n]; if not v then return end
+    local world=Instance.new("WorldModel"); world.Parent=viewport
+    local p=Instance.new("Part"); p.Shape=Enum.PartType.Ball; p.Size=Vector3.new(1.5,1.5,1.5); p.Position=Vector3.new(0,0,0); p.Anchored=true; p.CanCollide=false; p.Material=Enum.Material.Neon; p.Color=v.Color; p.Parent=world
+    local leaf=Instance.new("Part"); leaf.Size=Vector3.new(.3,1.3,.65); leaf.Position=Vector3.new(.65,.7,0); leaf.Orientation=Vector3.new(0,0,-35); leaf.Anchored=true; leaf.CanCollide=false; leaf.Material=Enum.Material.Grass; leaf.Color=Color3.fromRGB(79,157,76); leaf.Parent=world
+    local cam=Instance.new("Camera"); cam.CFrame=CFrame.new(Vector3.new(0,1,6),Vector3.new(0,.2,0)); cam.Parent=viewport; viewport.CurrentCamera=cam
+end
+local function matches(n)
+    return searchText=="" or string.find(string.lower(n),string.lower(searchText),1,true)~=nil or string.find(string.lower(Variants[n].Rarity),string.lower(searchText),1,true)~=nil
+end
+local function sortedNames()
+    local a={}; for _,n in ipairs(order) do if matches(n) then table.insert(a,n) end end
+    table.sort(a,function(x,y)
+        if sortMode=="Rarity" then
+            local rx=rarityRank[Variants[x].Rarity] or 9; local ry=rarityRank[Variants[y].Rarity] or 9
+            if rx==ry then return x<y end; return rx<ry
+        elseif sortMode=="Collected" then
+            if owned(x)~=owned(y) then return owned(x) end
+            return x<y
+        end
+        return x<y
     end)
-    y+=61
-   end
-  end
-  detailTitle.Text="DECK  "..#currentDeck.."/6"
-  detail.Text="Select 1–6 owned cards.\\n\\n"..(#currentDeck>0 and table.concat(currentDeck,"\\n") or "No cards selected.").."\\n\\nChanges are saved automatically."
-  panel.Visible=true
-  deckUpdate:FireServer(currentDeck)
-  return
- end
- local y=12
- for _,n in ipairs(names) do
-  local has=(mode=="Cards" and owned(n)) or (mode=="Seeds" and player:GetAttribute("Seed_"..n))
-  local b=button(left,(has and "●  " or "???  ")..n,UDim2.new(1,-24,0,52),UDim2.fromOffset(12,y),has and Color3.fromRGB(221,239,220) or Color3.fromRGB(231,226,207),has and GREEN_DARK or MUTED)
-  b.Activated:Connect(function() showEntry(n) end)
-  y+=61
- end
- showEntry(names[1])
- panel.Visible=true
+    return a
 end
-
-local function updateCash() cash.Text="$  "..tostring(player:GetAttribute("Cash") or 0) end
-updateCash()
-player:GetAttributeChangedSignal("Cash"):Connect(updateCash)
-
-home.Activated:Connect(function() panel.Visible=false; remotes.WorldTeleport:FireServer("Garden") end)
-explore.Activated:Connect(function() panel.Visible=false; remotes.WorldTeleport:FireServer("Explore") end)
-cards.Activated:Connect(function() build("Cards") end)
-seeds.Activated:Connect(function() build("Seeds") end)
-deck.Activated:Connect(function() build("Deck") end)
-close.Activated:Connect(function() panel.Visible=false end)
-settingsButton.Activated:Connect(function()
- if _G.GrowAVerityOpenSettings then _G.GrowAVerityOpenSettings() end
+local function showDetail(n)
+    local v=Variants[n]; local b=BattleDefinitions[n]
+    detailTitle.Text=n
+    detailArt.Visible=true
+    if mode=="Seeds" then
+        seedIcon(detailArt,n)
+        local c=tonumber(player:GetAttribute("SeedCount_"..n)) or (seedOwned(n) and 1 or 0)
+        detailText.Text="SEED • "..v.Rarity.."\n\nSource: "..v.SeedSource.."\nOwned: "..c.."\nGrowth: "..v.GrowthTime.."s\nHarvest: +"..v.HarvestValue.." Cash\nProduction cycle: "..v.ProductionTime.."s\n\nTags: "..table.concat(v.Tags,", ")
+    elseif mode=="Deck" then
+        makeModel(detailArt,n,1.15)
+        detailText.Text=v.Rarity.." • "..v.Role.."\n\nHP "..b.HP.."   ATK "..b.Attack.."   DEF "..b.Defense.."\nEnergy "..b.Energy.."/"..b.MaxEnergy.."\n\nTAGS\n"..table.concat(b.Tags,"  •  ").."\n\nSKILLS\n"..b.AttackName.."\n"..b.SkillName.." — "..b.SkillDescription.."\n"..b.GuardName
+    else
+        makeModel(detailArt,n,1.15)
+        detailText.Text=v.Rarity.." • "..b.Role.."\n\nHP "..b.HP.."   ATK "..b.Attack.."   DEF "..b.Defense.."\nEnergy "..b.Energy.."/"..b.MaxEnergy.."\n\nTAGS\n"..table.concat(b.Tags,"  •  ").."\n\nSKILLS\n"..b.AttackName.."\n"..b.SkillName.." — "..b.SkillDescription.."\n"..b.GuardName
+    end
+end
+local function rebuild()
+    clear(listFrame)
+    local arr=sortedNames()
+    local collected=0
+    for _,n in ipairs(order) do if owned(n) then collected+=1 end end
+    progress.Text=collected.." / "..#order.." CARDS • "..math.floor(collected/#order*100).."%"
+    for _,n in ipairs(arr) do
+        local v=Variants[n]; local b=BattleDefinitions[n]
+        local has=mode=="Seeds" and seedOwned(n) or owned(n)
+        local card=Instance.new("TextButton"); card.Name=n; card.BackgroundColor3=has and PANEL2 or Color3.fromRGB(29,35,43); card.Text=""; card.AutoButtonColor=true; card.Parent=listFrame; corner(card,12); stroke(card,has and v.Color or Color3.fromRGB(76,86,101),.35,1)
+        local art=Instance.new("ViewportFrame"); art.Size=UDim2.fromOffset(110,105); art.Position=UDim2.fromOffset(20,8); art.BackgroundTransparency=1; art.Parent=card
+        if mode=="Seeds" then seedIcon(art,n) else makeModel(art,n,.72) end
+        local name=label(card,has and n or "???",UDim2.new(1,-14,0,24),UDim2.fromOffset(7,116),has and TEXT or MUTED,Enum.Font.GothamBlack)
+        local sub=label(card,has and v.Rarity or "LOCKED",UDim2.new(1,-14,0,20),UDim2.fromOffset(7,143),has and v.Color or MUTED,Enum.Font.GothamBold)
+        if mode=="Deck" and has then
+            local selected=false; for _,d in ipairs(currentDeck) do if d==n then selected=true end end
+            card.BackgroundColor3=selected and Color3.fromRGB(48,76,58) or PANEL2
+            sub.Text=(selected and "IN DECK  " or "ADD  ")..#currentDeck.."/6
+        end
+        card.Activated:Connect(function()
+            if not has then return end
+            if mode=="Deck" then
+                local idx; for i,d in ipairs(currentDeck) do if d==n then idx=i break end end
+                if idx then table.remove(currentDeck,idx) elseif #currentDeck<6 then table.insert(currentDeck,n) end
+                deckUpdate:FireServer(currentDeck); rebuild()
+            end
+            showDetail(n)
+        end)
+    end
+    listFrame.CanvasSize=UDim2.fromOffset(0,math.ceil(#arr/3)*200)
+    if arr[1] then showDetail(arr[1]) else detailTitle.Text="EMPTY"; detailText.Text="No matching entries." end
+end
+local function open(m)
+    mode=m; title.Text=m=="Deck" and "BUILD DECK" or (m=="Seeds" and "SEED INDEX" or "CARD INDEX")
+    search.Text=""; searchText=""; sortMode="Name"; sort.Text="SORT: NAME"; panel.Visible=true; overlay.Visible=true; rebuild()
+end
+search:GetPropertyChangedSignal("Text"):Connect(function() searchText=search.Text; rebuild() end)
+sort.Activated:Connect(function()
+    sortMode=sortMode=="Name" and "Rarity" or (sortMode=="Rarity" and "Collected" or "Name")
+    sort.Text="SORT: "..string.upper(sortMode); rebuild()
 end)
-deckUpdate.OnClientEvent:Connect(function(d) if type(d)=="table" and mode~="Deck" then currentDeck=d end end)
+close.Activated:Connect(function() overlay.Visible=false; panel.Visible=false end)
+garden.Activated:Connect(function() if _G.GrowAVerityOpenGarden then _G.GrowAVerityOpenGarden() end end)
+explore.Activated:Connect(function() remotes.WorldTeleport:FireServer("Explore") end)
+cards.Activated:Connect(function() open("Cards") end)
+seeds.Activated:Connect(function() open("Seeds") end)
+deck.Activated:Connect(function() open("Deck") end)
+settings.Activated:Connect(function() if _G.GrowAVerityOpenSettings then _G.GrowAVerityOpenSettings() end end)
+deckUpdate.OnClientEvent:Connect(function(d) if type(d)=="table" then currentDeck=d; if mode=="Deck" then rebuild() end end end)
