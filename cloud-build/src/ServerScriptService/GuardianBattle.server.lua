@@ -76,6 +76,7 @@ end
 local function begin(p,g)
  if active[p] or not p:GetAttribute("StarterChosen") or not distanceOk(p,g) then return end
  local n=g:GetAttribute("VarietyName"); local e=n and GuardianStats[n]; local starter=p:GetAttribute("StarterVariety"); local d=BattleDefinitions[starter]
+ if e and g:GetAttribute("GuardianTier")=="Elite" then e={HP=math.floor(e.HP*1.45),Attack=math.floor(e.Attack*1.3),Defense=e.Defense+5} end
  if not e or not d then return end
  local deck=decks[p] or {starter}; if #deck==0 then deck={starter} end
  active[p]={EnemyName=n,EnemyHP=e.HP,EnemyHPMax=e.HP,EnemyAttack=e.Attack,EnemyDefense=e.Defense,EnemyStatus="",EnemyStatusTurns=0,CanAct=false,Deck=deck,ActiveIndex=findIndex(deck,starter) or 1,Turn=1,TurnOwner="Player"}
