@@ -11,6 +11,7 @@ local award=ReplicatedStorage:FindFirstChild("ProgressionAward")
 if not award then award=Instance.new("BindableEvent"); award.Name="ProgressionAward"; award.Parent=ReplicatedStorage end
 
 local store=DataStoreService:GetDataStore("GrowAVerity_Progression_v1")
+local playerStore=DataStoreService:GetDataStore("GrowAVerity_Player_v1")
 local active={}
 
 local function levelForXP(xp)
@@ -64,7 +65,9 @@ local function awardXP(p,amount,source)
     snapshot(p)
     if s.Level>before then
         local bonus=100*(s.Level-before)
-        p:SetAttribute("Cash",(tonumber(p:GetAttribute("Cash")) or 0)+bonus)
+        local newCash=(tonumber(p:GetAttribute("Cash")) or 0)+bonus
+        p:SetAttribute("Cash",newCash)
+        pcall(function() playerStore:UpdateAsync("p_"..p.UserId,function(old) old=type(old)=="table" and old or {}; old.Cash=newCash; return old end) end)
         progressUpdate:FireClient(p,{LevelUp=true,Level=s.Level,BonusCash=bonus,Source=source})
     end
     task.spawn(function() save(p) end)
