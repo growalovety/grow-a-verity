@@ -4,10 +4,26 @@ local TweenService=game:GetService("TweenService")
 local player=Players.LocalPlayer
 local remotes=ReplicatedStorage:WaitForChild("GameRemotes")
 local deckUpdate=remotes:FindFirstChild("DeckUpdate")
-local Variants=require(ReplicatedStorage:WaitForChild("VariantDefinitions"))
-local BattleDefinitions=require(ReplicatedStorage:WaitForChild("BattleDefinitions"))
+local Variants={}
+local BattleDefinitions={}
+task.spawn(function()
+    local ok,v=pcall(function() return require(ReplicatedStorage:WaitForChild("VariantDefinitions",10)) end)
+    if ok and type(v)=="table" then Variants=v end
+    local ok2,b=pcall(function() return require(ReplicatedStorage:WaitForChild("BattleDefinitions",10)) end)
+    if ok2 and type(b)=="table" then BattleDefinitions=b end
+end)
 
 local gui=Instance.new("ScreenGui"); gui.Name="GameHUD"; gui.ResetOnSpawn=false; gui.IgnoreGuiInset=true; gui.DisplayOrder=100; gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling; gui.Parent=player:WaitForChild("PlayerGui"); pcall(function() gui.ScreenInsets=Enum.ScreenInsets.DeviceSafeInsets end); gui.Enabled=true
+gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling
+task.spawn(function()
+    while gui.Parent do
+        if gui.Parent~=player:FindFirstChild("PlayerGui") then
+            gui.Parent=player:FindFirstChild("PlayerGui")
+        end
+        gui.Enabled=true
+        task.wait(1)
+    end
+end)
 local BG=Color3.fromRGB(17,23,31); local PANEL=Color3.fromRGB(25,33,44); local PANEL2=Color3.fromRGB(34,44,58)
 local TEXT=Color3.fromRGB(238,244,252); local MUTED=Color3.fromRGB(154,170,193); local ACCENT=Color3.fromRGB(88,180,239); local GREEN=Color3.fromRGB(76,199,139)
 local GOLD=Color3.fromRGB(239,193,78)
