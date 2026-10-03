@@ -15,7 +15,7 @@ local function part(name,size,pos,color,material,parent)
     return p
 end
 local function label(parent,text,size,offset,color)
-    local g=Instance.new("BillboardGui") g.Size=size g.StudsOffset=offset g.AlwaysOnTop=false g.MaxDistance=70 g.LightInfluence=.15 g.Parent=parent
+    local g=Instance.new("BillboardGui") g.Size=size g.StudsOffset=offset g.AlwaysOnTop=false g.MaxDistance=45 g.LightInfluence=.15 g.Parent=parent
     local t=Instance.new("TextLabel") t.Size=UDim2.fromScale(1,1) t.BackgroundTransparency=1 t.Text=text
     t.TextColor3=color or Color3.new(1,1,1) t.TextStrokeTransparency=.35 t.Font=Enum.Font.GothamBlack t.TextScaled=true t.Parent=g
 end
@@ -135,7 +135,7 @@ local function guardian(name,pos,scale)
     if name=="Verity" then f(Vector3.new(1.5,2.2,.45),Vector3.new(0,0,1.95),def.Accent,Enum.PartType.Block)
     elseif name=="Falsity" then f(Vector3.new(1.2,.5,1.8),Vector3.new(-2,.1,0),def.Accent,Enum.PartType.Wedge) f(Vector3.new(1.2,.5,1.8),Vector3.new(2,.1,0),def.Accent,Enum.PartType.Wedge)
     else f(Vector3.new(1.35,1.35,1.35),Vector3.new(-1.25,1.8,0),def.Accent) f(Vector3.new(1.35,1.35,1.35),Vector3.new(1.25,1.8,0),def.Accent) end
-    local pr=Instance.new("ProximityPrompt") pr.Name="BattlePrompt" pr.ActionText="Battle" pr.ObjectText=name.." Guardian" pr.KeyboardKeyCode=Enum.KeyCode.E pr.MaxActivationDistance=12 pr.RequiresLineOfSight=false pr.Parent=root
+    local pr=Instance.new("ProximityPrompt") pr.Name="BattlePrompt" pr.ActionText="Battle" pr.ObjectText=name.." Guardian" pr.KeyboardKeyCode=Enum.KeyCode.E pr.MaxActivationDistance=12 pr.RequiresLineOfSight=true pr.Parent=root
     label(root,name,UDim2.fromOffset(140,30),Vector3.new(0,3,0),Color3.new(1,1,1))
 end
 guardian("Verity",o+Vector3.new(-18,3.8,0),1.1) guardian("Falsity",o+Vector3.new(0,3.8,0),1.1) guardian("Lovity",o+Vector3.new(18,3.8,0),1.1)
