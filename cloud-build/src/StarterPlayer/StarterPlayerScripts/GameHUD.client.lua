@@ -44,10 +44,12 @@ local function label(p,txt,size,pos,color,font) local l=Instance.new("TextLabel"
 local function button(p,txt,size,pos,bg,tc) local b=Instance.new("TextButton"); b.Size=size; b.Position=pos; b.BackgroundColor3=bg or PANEL; b.TextColor3=tc or TEXT; b.Text=txt; b.Font=Enum.Font.GothamBold; b.TextScaled=true; b.AutoButtonColor=true; b.Parent=p; corner(b,10); stroke(b,Color3.fromRGB(90,112,139),.55,1); return b end
 
 local topbar=gui:WaitForChild("TopBar")
+topbar.Active=true
 local cash=topbar:WaitForChild("Cash")
 local levelBadge=topbar:WaitForChild("Level")
 local nav=topbar:WaitForChild("Nav")
 local garden=nav:WaitForChild("Garden")
+nav.Active=true
 local explore=nav:WaitForChild("Explore")
 local cards=nav:WaitForChild("Cards")
 local seeds=nav:WaitForChild("Seeds")
@@ -162,7 +164,7 @@ local function rebuild()
             card.BackgroundColor3=selected and Color3.fromRGB(48,76,58) or PANEL2
             sub.Text=(selected and "IN DECK  " or "ADD  ")..#currentDeck.."/6
         end
-        card.Activated:Connect(function()
+        card.MouseButton1Click:Connect(function()
             if not has then return end
             if mode=="Deck" then
                 local idx; for i,d in ipairs(currentDeck) do if d==n then idx=i break end end
@@ -180,21 +182,21 @@ local function open(m)
     search.Text=""; searchText=""; sortMode="Name"; sort.Text="SORT: NAME"; panel.Visible=true; overlay.Visible=true; rebuild()
 end
 search:GetPropertyChangedSignal("Text"):Connect(function() searchText=search.Text; rebuild() end)
-sort.Activated:Connect(function()
+sort.MouseButton1Click:Connect(function()
     sortMode=sortMode=="Name" and "Rarity" or (sortMode=="Rarity" and "Collected" or "Name")
     sort.Text="SORT: "..string.upper(sortMode); rebuild()
 end)
-close.Activated:Connect(function() overlay.Visible=false; panel.Visible=false end)
+close.MouseButton1Click:Connect(function() overlay.Visible=false; panel.Visible=false end)
 local function fireTeleport(destination)
     local r=remotes:FindFirstChild("WorldTeleport")
     if r and r:IsA("RemoteEvent") then r:FireServer(destination) end
 end
-garden.Activated:Connect(function() fireTeleport("Garden"); if _G.GrowAVerityOpenGarden then task.delay(.2,_G.GrowAVerityOpenGarden) end end)
-explore.Activated:Connect(function() fireTeleport("Explore") end)
-cards.Activated:Connect(function() open("Cards") end)
-seeds.Activated:Connect(function() open("Seeds") end)
-deck.Activated:Connect(function() open("Deck") end)
-settings.Activated:Connect(function() if _G.GrowAVerityOpenSettings then _G.GrowAVerityOpenSettings() end end)
+garden.MouseButton1Click:Connect(function() fireTeleport("Garden"); if _G.GrowAVerityOpenGarden then task.delay(.2,_G.GrowAVerityOpenGarden) end end)
+explore.MouseButton1Click:Connect(function() fireTeleport("Explore") end)
+cards.MouseButton1Click:Connect(function() open("Cards") end)
+seeds.MouseButton1Click:Connect(function() open("Seeds") end)
+deck.MouseButton1Click:Connect(function() open("Deck") end)
+settings.MouseButton1Click:Connect(function() if _G.GrowAVerityOpenSettings then _G.GrowAVerityOpenSettings() end end)
 local function bindDeckRemote(r)
     deckUpdate=r
     r.OnClientEvent:Connect(function(d)
