@@ -41,13 +41,13 @@ local energyFill=Instance.new("Frame"); energyFill.Size=UDim2.fromScale(1,1); en
 local energyText=txt(playerCard,UDim2.fromScale(.88,.12),UDim2.fromScale(.06,.82),UI_MUTED,Enum.Font.GothamBold)
 local turn=txt(screen,UDim2.fromScale(.24,.065),UDim2.fromScale(.38,.035),Color3.fromRGB(255,255,255),Enum.Font.GothamBlack); turn.BackgroundColor3=UI_PANEL2; turn.BackgroundTransparency=.04; corner(turn,14); stroke(turn,UI_ACCENT,.45,1)
 local status=txt(screen,UDim2.fromScale(.42,.045),UDim2.fromScale(.29,.405),UI_MUTED,Enum.Font.GothamBold)
-local message=txt(screen,UDim2.fromScale(.58,.075),UDim2.fromScale(.21,.49),UI_TEXT,Enum.Font.GothamBlack); message.BackgroundColor3=UI_PANEL2; message.BackgroundTransparency=.06; corner(message,16); stroke(message,UI_ACCENT,.5,1); message.ZIndex=5
+local message=txt(screen,UDim2.fromScale(.58,.075),UDim2.fromScale(.21,.49),UI_TEXT,Enum.Font.GothamBlack); message.Visible=false; message.BackgroundColor3=UI_PANEL2; message.BackgroundTransparency=.06; corner(message,16); stroke(message,UI_ACCENT,.5,1); message.ZIndex=5
 local close=Instance.new("TextButton"); close.Size=UDim2.fromOffset(48,48); close.Position=UDim2.new(1,-62,0,10); close.Text="×"; close.TextScaled=true; close.Font=Enum.Font.GothamBlack; close.TextColor3=UI_TEXT; close.BackgroundColor3=UI_PANEL2; stroke(close,UI_TEXT,.75,1); close.Parent=screen; corner(close,14)
 local actionBox=Instance.new("Frame"); actionBox.Size=UDim2.fromOffset(540,92); actionBox.Position=UDim2.new(.5,-270,1,-112); actionBox.BackgroundColor3=UI_PANEL; actionBox.BackgroundTransparency=.04; stroke(actionBox,UI_ACCENT,.62,1); actionBox.Parent=screen; corner(actionBox,20)
 local layout=Instance.new("UIListLayout"); layout.FillDirection=Enum.FillDirection.Horizontal; layout.HorizontalAlignment=Enum.HorizontalAlignment.Center; layout.VerticalAlignment=Enum.VerticalAlignment.Center; layout.Padding=UDim.new(0,10); layout.Parent=actionBox
 local function actionButton(bg) local b=Instance.new("TextButton"); b.Size=UDim2.fromOffset(165,58); b.BackgroundColor3=bg; b.TextColor3=UI_TEXT; b.TextScaled=true; b.Font=Enum.Font.GothamBlack; b.AutoButtonColor=false; b.Parent=actionBox; stroke(b,UI_TEXT,.82,1); corner(b,14); return b end
 local attack=actionButton(Color3.fromRGB(210,73,88)); local skill=actionButton(Color3.fromRGB(58,132,218)); local guard=actionButton(Color3.fromRGB(70,105,99))
-local cards=Instance.new("Frame"); cards.Size=UDim2.new(1,-60,0,68); cards.Position=UDim2.new(0,30,1,-190); cards.BackgroundColor3=UI_PANEL; cards.BackgroundTransparency=.12; stroke(cards,UI_ACCENT,.82,1); corner(cards,16); cards.Parent=screen
+local cards=Instance.new("Frame"); cards.Visible=false; cards.Size=UDim2.new(1,-60,0,68); cards.Position=UDim2.new(0,30,1,-190); cards.BackgroundColor3=UI_PANEL; cards.BackgroundTransparency=.12; stroke(cards,UI_ACCENT,.82,1); corner(cards,16); cards.Parent=screen
 local cardLayout=Instance.new("UIListLayout"); cardLayout.FillDirection=Enum.FillDirection.Horizontal; cardLayout.HorizontalAlignment=Enum.HorizontalAlignment.Left; cardLayout.VerticalAlignment=Enum.VerticalAlignment.Center; cardLayout.Padding=UDim.new(0,8); cardLayout.Parent=cards
 local cardButtons={}; local currentCard=""; local busy=true
 local function findGuardian(name) for _,m in ipairs(workspace:GetDescendants()) do if m:IsA("Model") and m:GetAttribute("VarietyName")==name and m.PrimaryPart then return m end end end
@@ -109,12 +109,15 @@ local function showMessage(textValue,duration)
  messageToken+=1
  local token=messageToken
  message.Text=textValue
+ if textValue=="" then message.Visible=false return end
+ message.Visible=true
  message.TextTransparency=0
  message.BackgroundTransparency=.06
  if duration then
   task.delay(duration,function()
    if token==messageToken and screen.Enabled then
     TweenService:Create(message,TweenInfo.new(.45,Enum.EasingStyle.Quad),{TextTransparency=1,BackgroundTransparency=1}):Play()
+    task.delay(.46,function() if token==messageToken then message.Visible=false end end)
    end
   end)
  end
@@ -133,5 +136,5 @@ battleUpdate.OnClientEvent:Connect(function(s)
  cameraFor(s.EnemyName,(s.Phase=="EnemyAttack" and "enemy" or "player")); vfx(s.EnemyName,s.Phase,s.Damage)
  setActions(s.CanAct==true)
 end)
-battleEnd.OnClientEvent:Connect(function(won,enemy) setActions(false); message.Text=won and ("VICTORY  •  "..enemy.." CARD + SEED") or "DEFEATED"; turn.Text="BATTLE COMPLETE"; task.wait(1.5); exitCinematic() end)
+battleEnd.OnClientEvent:Connect(function(won,enemy) setActions(false); showMessage(won and ("VICTORY  •  "..enemy.." CARD + SEED") or "DEFEATED",nil); turn.Text="BATTLE COMPLETE"; task.wait(1.5); exitCinematic() end)
 deckUpdate.OnClientEvent:Connect(function(d) if screen.Enabled then rebuildCards(d) end end)
