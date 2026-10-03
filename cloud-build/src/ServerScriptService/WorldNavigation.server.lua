@@ -94,8 +94,8 @@ local function onConveyor(root)
         local bp=belt.Position
         if math.abs(p.X-bp.X)<(belt.Size.X/2+2) and p.Z>bp.Z-belt.Size.Z/2 and p.Z<bp.Z+belt.Size.Z/2 and p.Y>bp.Y-.5 and p.Y<bp.Y+5 then
             local dir=belt:GetAttribute("ConveyorDirection") or 1
-            local speed=belt:GetAttribute("ConveyorSpeed") or 18
-            root.AssemblyLinearVelocity=Vector3.new(root.AssemblyLinearVelocity.X,root.AssemblyLinearVelocity.Y,dir*speed)
+            local speed=belt:GetAttribute("ConveyorSpeed") or 30
+            local current=root.AssemblyLinearVelocity\n            local playerZ=current.Z\n            local targetZ=dir*speed\n            if math.abs(playerZ)<speed or playerZ*dir<0 then\n                root.AssemblyLinearVelocity=Vector3.new(current.X,current.Y,targetZ)\n            else\n                root.AssemblyLinearVelocity=Vector3.new(current.X,current.Y,math.max(math.abs(playerZ),speed)*dir)\n            end
             return true
         end
     end
@@ -104,8 +104,8 @@ end
 
 local function safeClamp(player,root)
     local p=root.Position
-    local inMain=math.abs(p.X)<=108 and p.Z>=-108 and p.Z<=108
-    local inWild=math.abs(p.X)<=128 and p.Z>=786 and p.Z<=1014
+    local inMain=math.abs(p.X)<=123 and p.Z>=-123 and p.Z<=123
+    local inWild=math.abs(p.X)<=143 and p.Z>=771 and p.Z<=1029
     if p.Y < -8 or p.Y > 85 or (not inMain and not inWild) then
         local idx=player:GetAttribute("GardenIndex")
         local target=idx and plots[idx] or Vector3.new(0,3,-100)
