@@ -2,7 +2,8 @@ local Players=game:GetService("Players")
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
 local TweenService=game:GetService("TweenService")
 local player=Players.LocalPlayer
-local remotes=ReplicatedStorage:WaitForChild("GameRemotes")
+local remotes=ReplicatedStorage:FindFirstChild("GameRemotes") or Instance.new("Folder")
+remotes.Name="GameRemotes"; remotes.Parent=ReplicatedStorage
 local deckUpdate=remotes:FindFirstChild("DeckUpdate")
 local Variants={}
 local BattleDefinitions={}
@@ -13,15 +14,15 @@ do
     if ok2 and type(b)=="table" then BattleDefinitions=b end
 end
 
-local gui=Instance.new("ScreenGui"); gui.Name="GameHUD"; gui.ResetOnSpawn=false; gui.IgnoreGuiInset=true; gui.DisplayOrder=100; gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling; gui.Parent=player:WaitForChild("PlayerGui"); gui.Enabled=true
+local gui=Instance.new("ScreenGui"); gui.Name="GameHUD"; gui.ResetOnSpawn=false; gui.IgnoreGuiInset=true; gui.DisplayOrder=100; gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling; gui.Enabled=true
+local pg=player:WaitForChild("PlayerGui"); gui.Parent=pg
 gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling
 task.spawn(function()
-    while gui.Parent do
-        if gui.Parent~=player:FindFirstChild("PlayerGui") then
-            gui.Parent=player:FindFirstChild("PlayerGui")
-        end
+    while player.Parent do
+        local current=player:FindFirstChildOfClass("PlayerGui")
+        if current and gui.Parent~=current then gui.Parent=current end
         gui.Enabled=true
-        task.wait(1)
+        task.wait(.5)
     end
 end)
 local BG=Color3.fromRGB(17,23,31); local PANEL=Color3.fromRGB(25,33,44); local PANEL2=Color3.fromRGB(34,44,58)
