@@ -17,6 +17,20 @@ local BattleDefinitions = {
         AttackName="Heart Tap", SkillName="Love Bloom", GuardName="Warm Embrace",
         SkillDescription="Restore health and cleanse one negative status.", SkillCost=2, SkillType="HEAL", Status="REGEN",
     },
+    Hopeity = {
+        Name="Hopeity", Rarity="Legendary", Role="Buffer", HP=108, Attack=24, Defense=21, Energy=6, MaxEnergy=6,
+        Tags={"SUPPORT","BUFF"}, Accent=Color3.fromRGB(155,105,255),
+        AttackName="Hope Ray", SkillName="Hope Pulse", GuardName="Radiant Guard",
+        SkillDescription="Restore health and gain a stronger next attack.", SkillCost=3,
+        SkillType="HOPE", Status="REGEN",
+    },
+    Nullity = {
+        Name="Nullity", Rarity="Mythic", Role="Disruptor", HP=115, Attack=28, Defense=18, Energy=6, MaxEnergy=6,
+        Tags={"CONTROL","DRAIN"}, Accent=Color3.fromRGB(55,40,75),
+        AttackName="Null Bite", SkillName="Null Field", GuardName="Void Guard",
+        SkillDescription="Heavy hit that drains enemy energy and applies Daze.", SkillCost=3,
+        SkillType="DRAIN", Status="DAZE",
+    },
     Cruelty = {
         Name="Cruelty", Rarity="Rare", Role="Damage", HP=92, Attack=26, Defense=15, Energy=5, MaxEnergy=5,
         Tags={"ATTACKER","DOT"}, Accent=Color3.fromRGB(220,55,55),
