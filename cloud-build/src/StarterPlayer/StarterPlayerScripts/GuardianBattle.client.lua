@@ -118,7 +118,6 @@ local function showMessage(textValue,duration)
    end
   end)
  end
- end
 end
 startBattle.OnClientEvent:Connect(function(enemy,starter,deck)
  enterCinematic(); currentCard=starter; enemyName.Text=enemy; playerName.Text=starter; showMessage(starter.." entered the battle!",1.8); turn.Text="TURN 1  •  YOUR MOVE"; status.Text=""; rebuildCards(deck); setActions(false); cameraFor(enemy,"player"); task.wait(.6); if screen.Enabled then setActions(true) end
