@@ -122,7 +122,7 @@ part("ArenaFloor",Vector3.new(66,.4,54),o+Vector3.new(0,.7,0),Color3.fromRGB(184
 part("ArenaRing",Vector3.new(54,.25,42),o+Vector3.new(0,1.05,0),Color3.fromRGB(238,204,98),Enum.Material.Neon,arena)
 local defs=require(ReplicatedStorage:WaitForChild("BattleDefinitions"))
 local function guardian(name,pos,scale)
-    local def=defs[name] local m=Instance.new("Model") m.Name=name.."Guardian" m:SetAttribute("VarietyName",name) m.Parent=arena
+    local def=defs[name] local m=Instance.new("Model") m.Name=name.."Guardian" m:SetAttribute("VarietyName",name) m:SetAttribute("GuardianTier",scale>=1.4 and "Elite" or "Normal") m.Parent=arena
     local root=Instance.new("Part") root.Name="Body" root.Shape=Enum.PartType.Ball root.Size=Vector3.new(4,4,4)*scale root.Position=pos
     root.Anchored=true root.CanCollide=false root.Material=Enum.Material.SmoothPlastic root.Color=def.Accent root.Parent=m m.PrimaryPart=root
     local function f(size,off,color,shape)
@@ -173,9 +173,7 @@ end
 local sign=part("ExploreSign",Vector3.new(1,1,1),o+Vector3.new(-116,3,885),Color3.new(1,1,1),Enum.Material.SmoothPlastic,wilds); sign.Transparency=1; sign.CanCollide=false
 label(sign,"MEADOW  •  BLUEWOOD  •  REDSTONE  •  LOVE GARDEN",UDim2.fromOffset(540,48),Vector3.new(),Color3.fromRGB(246,243,226))
 guardian("Cruelty",o+Vector3.new(-82,4.2,970),1.25)
-local elite=guardian("Cruelty",o+Vector3.new(82,4.2,970),1.55)
-local eliteModel=wilds:FindFirstChild("CrueltyGuardian")
-if eliteModel then eliteModel:SetAttribute("GuardianTier","Elite") end
+guardian("Cruelty",o+Vector3.new(82,4.2,970),1.55)
 
 Lighting.ClockTime=14
 Lighting.Brightness=3
