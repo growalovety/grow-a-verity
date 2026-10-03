@@ -15,6 +15,7 @@
         "StarterSelection": {"$path": "src/StarterPlayer/StarterPlayerScripts/StarterSelection.client.lua"},
         "GuardianBattle": {"$path": "src/StarterPlayer/StarterPlayerScripts/GuardianBattle.client.lua"},
         "GameHUD": {"$path": "src/StarterPlayer/StarterPlayerScripts/GameHUD.client.lua"},
+        "Garden": {"$path": "src/StarterPlayer/StarterPlayerScripts/Garden.client.lua"},
         "Settings": {"$path": "src/StarterPlayer/StarterPlayerScripts/Settings.client.lua"},
         "MusicPlayer": {"$path": "src/StarterPlayer/StarterPlayerScripts/MusicPlayer.client.lua"}
       }
@@ -25,6 +26,8 @@
       "StarterSelection": {"$path": "src/ServerScriptService/StarterSelection.server.lua"},
       "GuardianBattle": {"$path": "src/ServerScriptService/GuardianBattle.server.lua"},
       "WorldNavigation": {"$path": "src/ServerScriptService/WorldNavigation.server.lua"},
+      "GardenService": {"$path": "src/ServerScriptService/GardenService.server.lua"},
+      "SeedWorldService": {"$path": "src/ServerScriptService/SeedWorldService.server.lua"},
       "SettingsService": {"$path": "src/ServerScriptService/SettingsService.server.lua"}
     }
   }
