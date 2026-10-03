@@ -22,8 +22,8 @@
         "TopBar": {
           "$className": "Frame",
           "$properties": {
-            "Size": {"UDim2": [1, 0, 0, 92]},
-            "Position": {"UDim2": [0, 0, 0, 0]},
+            "Size": {"UDim2":[[1,0],[0,92]]},
+            "Position": {"UDim2":[[0,0],[0,0]]},
             "BackgroundTransparency": 1,
             "ZIndex": 100
           },
