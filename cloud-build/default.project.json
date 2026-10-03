@@ -472,6 +472,9 @@
         },
         "HUDController": {
           "$path": "src/StarterPlayer/StarterPlayerScripts/GameHUD.client.lua"
+        },
+        "HUDClickBridge": {
+          "$path": "src/StarterPlayer/StarterPlayerScripts/HUDClickBridge.client.lua"
         }
       }
     },
