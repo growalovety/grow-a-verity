@@ -7,6 +7,11 @@ local player=Players.LocalPlayer
 local pg=player:WaitForChild("PlayerGui")
 local remotes=ReplicatedStorage:WaitForChild("GameRemotes")
 local startBattle=remotes:WaitForChild("StartBattle"); local battleAction=remotes:WaitForChild("BattleAction"); local battleUpdate=remotes:WaitForChild("BattleUpdate"); local battleEnd=remotes:WaitForChild("BattleEnd"); local switchCard=remotes:WaitForChild("SwitchBattleCard"); local cancelBattle=remotes:WaitForChild("CancelBattle"); local deckUpdate=remotes:WaitForChild("DeckUpdate")
+local sfxGroup=game:GetService("SoundService"):FindFirstChild("GrowAVeritySFX")
+local function playBattleSfx(kind)
+ local ids={Hit="rbxassetid://97089699783241",Coin="rbxassetid://17403146731",Success="rbxassetid://1835270782"}
+ local sound=Instance.new("Sound"); sound.SoundId=ids[kind] or ids.Hit; sound.Volume=kind=="Success" and .35 or .24; sound.SoundGroup=sfxGroup; sound.Parent=game:GetService("SoundService"); sound:Play(); game:GetService("Debris"):AddItem(sound,4)
+end
 local screen=Instance.new("ScreenGui"); screen.Name="BattleUI"; screen.IgnoreGuiInset=true; screen.ResetOnSpawn=false; screen.DisplayOrder=60; screen.Enabled=false; screen.Parent=pg
 local gameHud=pg:FindFirstChild("GameHUD")
 local function setCoreHud(enabled)
@@ -131,10 +136,10 @@ battleUpdate.OnClientEvent:Connect(function(s)
  energyFill.Size=UDim2.fromScale(math.clamp((s.Energy or 0)/(s.MaxEnergy or 5),0,1),1); energyText.Text="ENERGY  "..tostring(s.Energy or 0).."/"..tostring(s.MaxEnergy or 5)
  currentCard=s.PlayerName; rebuildCards(s.Deck or {})
  attack.Text=s.PlayerAttackName or "Attack"; skill.Text=(s.PlayerSkillName or "Skill").."  ["..tostring(s.SkillCost or 2).."]"; guard.Text=s.PlayerGuardName or "Guard"
- showMessage(s.Message or "",1.8); turn.Text=(s.TurnOwner=="Enemy" and "TURN "..tostring(s.Turn or 1).."  •  GUARDIAN MOVE" or "TURN "..tostring(s.Turn or 1).."  •  YOUR MOVE")
+ showMessage(s.Message or "",1.8); if s.Phase=="PlayerAttack" or s.Phase=="EnemyAttack" then playBattleSfx("Hit") end; turn.Text=(s.TurnOwner=="Enemy" and "TURN "..tostring(s.Turn or 1).."  •  GUARDIAN MOVE" or "TURN "..tostring(s.Turn or 1).."  •  YOUR MOVE")
  status.Text=(s.Status~="" and "STATUS: "..s.Status or "")..((s.EnemyStatus~="" and "     ENEMY: "..s.EnemyStatus) or "")
  cameraFor(s.EnemyName,(s.Phase=="EnemyAttack" and "enemy" or "player")); vfx(s.EnemyName,s.Phase,s.Damage)
  setActions(s.CanAct==true)
 end)
-battleEnd.OnClientEvent:Connect(function(won,enemy) setActions(false); showMessage(won and ("VICTORY  •  "..enemy.." CARD + SEED") or "DEFEATED",nil); turn.Text="BATTLE COMPLETE"; task.wait(1.5); exitCinematic() end)
+battleEnd.OnClientEvent:Connect(function(won,enemy) if won then playBattleSfx("Success") end; setActions(false); showMessage(won and ("VICTORY  •  "..enemy.." CARD + SEED") or "DEFEATED",nil); turn.Text="BATTLE COMPLETE"; task.wait(1.5); exitCinematic() end)
 deckUpdate.OnClientEvent:Connect(function(d) if screen.Enabled then rebuildCards(d) end end)
