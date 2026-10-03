@@ -6,12 +6,12 @@ local remotes=ReplicatedStorage:WaitForChild("GameRemotes")
 local deckUpdate=remotes:FindFirstChild("DeckUpdate")
 local Variants={}
 local BattleDefinitions={}
-task.spawn(function()
+do
     local ok,v=pcall(function() return require(ReplicatedStorage:WaitForChild("VariantDefinitions",10)) end)
     if ok and type(v)=="table" then Variants=v end
     local ok2,b=pcall(function() return require(ReplicatedStorage:WaitForChild("BattleDefinitions",10)) end)
     if ok2 and type(b)=="table" then BattleDefinitions=b end
-end)
+end
 
 local gui=Instance.new("ScreenGui"); gui.Name="GameHUD"; gui.ResetOnSpawn=false; gui.IgnoreGuiInset=true; gui.DisplayOrder=100; gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling; gui.Parent=player:WaitForChild("PlayerGui"); pcall(function() gui.ScreenInsets=Enum.ScreenInsets.DeviceSafeInsets end); gui.Enabled=true
 gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling
