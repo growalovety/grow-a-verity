@@ -120,3 +120,9 @@ end)
 _G.GrowAVerityOpenGarden=function()
     panel.Visible=true; refresh()
 end
+
+local seedCollected=remotes:WaitForChild("SeedCollected")
+seedCollected.OnClientEvent:Connect(function(ok,msg)
+    status.Text=msg or ""
+    if ok then gardenSfx("rbxassetid://17403146731",.22) end
+end)
