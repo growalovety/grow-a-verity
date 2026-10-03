@@ -32,7 +32,10 @@ end
 local function portal(name,pos,accent,titleText)
     local m=Instance.new("Model") m.Name=name m.Parent=world
     part("Base",Vector3.new(12,.5,8),pos+Vector3.new(0,.25,0),Color3.fromRGB(72,112,70),Enum.Material.SmoothPlastic,m)
-    
+    -- Portal frame posts: these belong to the portals, not the guardians.
+    for _,x in ipairs({-4.5,4.5}) do
+        part("Post",Vector3.new(1,6,1),pos+Vector3.new(x,3.25,0),accent,Enum.Material.SmoothPlastic,m)
+    end
     part("Top",Vector3.new(10,1,1),pos+Vector3.new(0,6,0),accent,Enum.Material.SmoothPlastic,m)
     local core=part("Core",Vector3.new(7,4.5,.5),pos+Vector3.new(0,3,0),accent,Enum.Material.Neon,m)
     core.Transparency=.35 core.CanCollide=false
@@ -140,12 +143,6 @@ local function guardian(name,pos,scale)
     label(root,name,UDim2.fromOffset(140,30),Vector3.new(0,3,0),Color3.new(1,1,1))
 end
 guardian("Verity",o+Vector3.new(-18,3.8,0),1.1) guardian("Falsity",o+Vector3.new(0,3.8,0),1.1) guardian("Lovity",o+Vector3.new(18,3.8,0),1.1)
--- Remove any legacy thin antenna/pole parts from guardian models.
-for _,obj in ipairs(arena:GetDescendants()) do
-    if obj:IsA("BasePart") and obj.Name~="Body" and obj.Size.Y>4 and obj.Size.X<1 and obj.Size.Z<1 then
-        obj:Destroy()
-    end
-end
 local returnPos=o+Vector3.new(0,.75,72) portal("ReturnPortal",returnPos,Color3.fromRGB(255,221,45),"RETURN")
 local links={{Vector3.new(0,.75,108),o+Vector3.new(0,0,12)},{returnPos,Vector3.new(0,1,-100)}}
 for _,pr in ipairs(world:GetDescendants()) do
@@ -183,6 +180,18 @@ guardian("Cruelty",o+Vector3.new(-82,4.2,970),1.25)
 guardian("Cruelty",o+Vector3.new(82,4.2,970),1.55)
 guardian("Hopeity",o+Vector3.new(92,4.2,925),1.35)
 guardian("Nullity",o+Vector3.new(92,4.8,1000),1.75)
+
+-- Final guardian-only cleanup. The old game generated thin poles inside the
+-- guardian models; remove only those parts, never portal posts.
+for _,guardianModel in ipairs(arena:GetChildren()) do
+    if guardianModel:IsA("Model") and guardianModel:GetAttribute("VarietyName") then
+        for _,obj in ipairs(guardianModel:GetDescendants()) do
+            if obj:IsA("BasePart") and obj.Name~="Body" and obj.Size.Y>4 and obj.Size.X<1 and obj.Size.Z<1 then
+                obj:Destroy()
+            end
+        end
+    end
+end
 
 Lighting.ClockTime=14
 Lighting.Brightness=3
