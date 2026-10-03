@@ -13,7 +13,7 @@ local function playBattleSfx(kind)
  local sound=Instance.new("Sound"); sound.SoundId=ids[kind] or ids.Hit; sound.Volume=kind=="Success" and .35 or .24; sound.SoundGroup=sfxGroup; sound.Parent=game:GetService("SoundService"); sound:Play(); game:GetService("Debris"):AddItem(sound,4)
 end
 local screen=Instance.new("ScreenGui"); screen.Name="BattleUI"; screen.IgnoreGuiInset=true; screen.ResetOnSpawn=false; screen.DisplayOrder=60; screen.Enabled=false; screen.Parent=pg
-local gameHud=pg:FindFirstChild("GameHUD")
+local function getGameHud() return pg:FindFirstChild("GameHUD") end
 local function setCoreHud(enabled)
  for _,kind in ipairs({Enum.CoreGuiType.Chat,Enum.CoreGuiType.Backpack,Enum.CoreGuiType.PlayerList,Enum.CoreGuiType.EmotesMenu}) do pcall(function() StarterGui:SetCoreGuiEnabled(kind,enabled) end) end
 end
@@ -65,7 +65,7 @@ local function cameraFor(enemyName,side)
 end
 local function restoreCamera() local cam=workspace.CurrentCamera; cam.CameraType=Enum.CameraType.Custom; local hum=player.Character and player.Character:FindFirstChildOfClass("Humanoid"); if hum then cam.CameraSubject=hum end end
 local function enterCinematic()
- if gameHud then gameHud.Enabled=false end
+ local gameHud=getGameHud(); if gameHud then gameHud.Enabled=false end
  setCoreHud(false)
  screen.Enabled=true
  cinematicFade.BackgroundTransparency=0
@@ -75,7 +75,7 @@ local function exitCinematic()
  TweenService:Create(cinematicFade,TweenInfo.new(.2,Enum.EasingStyle.Quad),{BackgroundTransparency=0}):Play()
  task.wait(.2)
  screen.Enabled=false
- if gameHud then gameHud.Enabled=true end
+ local gameHud=getGameHud(); if gameHud then gameHud.Enabled=true end
  setCoreHud(true)
  restoreCamera()
  cinematicFade.BackgroundTransparency=1
