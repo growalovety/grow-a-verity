@@ -2,50 +2,30 @@
   "name": "Grow a Verity",
   "tree": {
     "$className": "DataModel",
-    "Workspace": {
-      "$className": "Workspace"
-    },
+    "Workspace": {"$className": "Workspace"},
     "ReplicatedStorage": {
       "$className": "ReplicatedStorage",
-      "VariantDefinitions": {
-        "$path": "src/ReplicatedStorage/VariantDefinitions.lua"
-      },
-      "BattleDefinitions": {
-        "$path": "src/ReplicatedStorage/BattleDefinitions.lua"
-      }
+      "VariantDefinitions": {"$path": "src/ReplicatedStorage/VariantDefinitions.lua"},
+      "BattleDefinitions": {"$path": "src/ReplicatedStorage/BattleDefinitions.lua"}
     },
     "StarterPlayer": {
       "$className": "StarterPlayer",
       "StarterPlayerScripts": {
         "$className": "StarterPlayerScripts",
-        "StarterSelection": {
-          "$path": "src/StarterPlayer/StarterPlayerScripts/StarterSelection.client.lua"
-        },
-        "GuardianBattle": {
-          "$path": "src/StarterPlayer/StarterPlayerScripts/GuardianBattle.client.lua"
-        },
-        "GameHUD": {
-          "$path": "src/StarterPlayer/StarterPlayerScripts/GameHUD.client.lua"
-        },
-        "MusicPlayer": {
-          "$path": "src/StarterPlayer/StarterPlayerScripts/MusicPlayer.client.lua"
-        }
+        "StarterSelection": {"$path": "src/StarterPlayer/StarterPlayerScripts/StarterSelection.client.lua"},
+        "GuardianBattle": {"$path": "src/StarterPlayer/StarterPlayerScripts/GuardianBattle.client.lua"},
+        "GameHUD": {"$path": "src/StarterPlayer/StarterPlayerScripts/GameHUD.client.lua"},
+        "Settings": {"$path": "src/StarterPlayer/StarterPlayerScripts/Settings.client.lua"},
+        "MusicPlayer": {"$path": "src/StarterPlayer/StarterPlayerScripts/MusicPlayer.client.lua"}
       }
     },
     "ServerScriptService": {
       "$className": "ServerScriptService",
-      "WorldInit": {
-        "$path": "src/ServerScriptService/WorldInit.server.lua"
-      },
-      "StarterSelection": {
-        "$path": "src/ServerScriptService/StarterSelection.server.lua"
-      },
-      "GuardianBattle": {
-        "$path": "src/ServerScriptService/GuardianBattle.server.lua"
-      },
-      "WorldNavigation": {
-        "$path": "src/ServerScriptService/WorldNavigation.server.lua"
-      }
+      "WorldInit": {"$path": "src/ServerScriptService/WorldInit.server.lua"},
+      "StarterSelection": {"$path": "src/ServerScriptService/StarterSelection.server.lua"},
+      "GuardianBattle": {"$path": "src/ServerScriptService/GuardianBattle.server.lua"},
+      "WorldNavigation": {"$path": "src/ServerScriptService/WorldNavigation.server.lua"},
+      "SettingsService": {"$path": "src/ServerScriptService/SettingsService.server.lua"}
     }
   }
 }
