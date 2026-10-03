@@ -32,7 +32,7 @@ end
 local function portal(name,pos,accent,titleText)
     local m=Instance.new("Model") m.Name=name m.Parent=world
     part("Base",Vector3.new(12,.5,8),pos+Vector3.new(0,.25,0),Color3.fromRGB(72,112,70),Enum.Material.SmoothPlastic,m)
-    for _,x in ipairs({-4.5,4.5}) do part("Post",Vector3.new(1,6,1),pos+Vector3.new(x,3.25,0),accent,Enum.Material.SmoothPlastic,m) end
+    
     part("Top",Vector3.new(10,1,1),pos+Vector3.new(0,6,0),accent,Enum.Material.SmoothPlastic,m)
     local core=part("Core",Vector3.new(7,4.5,.5),pos+Vector3.new(0,3,0),accent,Enum.Material.Neon,m)
     core.Transparency=.35 core.CanCollide=false
