@@ -14,7 +14,7 @@ local GuardianStats={Verity={HP=105,Attack=18,Defense=18},Falsity={HP=105,Attack
 
 local function loadPlayer(p)
  local ok,data=pcall(function() return collectionStore:GetAsync("p_"..p.UserId) end)
- if ok and type(data)=="table" then for n,v in pairs(data) do if v==true and BattleDefinitions[n] then p:SetAttribute("Variety_"..n,true); p:SetAttribute("Seed_"..n,true) end end end
+ if ok and type(data)=="table" then for n,v in pairs(data) do if v==true and BattleDefinitions[n] then p:SetAttribute("Variety_"..n,true); p:SetAttribute("Seed_"..n,true); if p:GetAttribute("SeedCount_"..n)==nil then p:SetAttribute("SeedCount_"..n,1) end end end end
  local ok2,d=pcall(function() return deckStore:GetAsync("p_"..p.UserId) end)
  local deck={}
  if ok2 and type(d)=="table" then for _,n in ipairs(d) do if type(n)=="string" and BattleDefinitions[n] and p:GetAttribute("Variety_"..n) then table.insert(deck,n) end end end
@@ -34,6 +34,10 @@ Players.PlayerAdded:Connect(loadPlayer)
 Players.PlayerRemoving:Connect(function(p) active[p]=nil; saveCollection(p); saveDeck(p); decks[p]=nil end)
 
 local function owned(p,n) return p:GetAttribute("Variety_"..n)==true or p:GetAttribute("StarterVariety")==n end
+local function addSeed(p,n,amount)
+ local c=tonumber(p:GetAttribute("SeedCount_"..n)) or (p:GetAttribute("Seed_"..n) and 1 or 0)
+ p:SetAttribute("SeedCount_"..n,math.max(0,c+amount)); p:SetAttribute("Seed_"..n,true)
+end
 local function validDeck(p,d)
  if type(d)~="table" or #d<1 or #d>6 then return false end
  local seen={}
@@ -62,7 +66,7 @@ local function send(p,phase,msg,damage)
 end
 local function endBattle(p,won)
  local s=active[p]; if not s then return end; active[p]=nil
- if won then local n=s.EnemyName; p:SetAttribute("Variety_"..n,true); p:SetAttribute("Seed_"..n,true); task.spawn(function() saveCollection(p) end) end
+ if won then local n=s.EnemyName; p:SetAttribute("Variety_"..n,true); addSeed(p,n,1); task.spawn(function() saveCollection(p) end) end
  battleEnd:FireClient(p,won,s.EnemyName)
 end
 local function setup(s,n)
@@ -101,7 +105,7 @@ local function enemyTurn(p,s)
  s.CanAct=true; send(p,"Player",s.CardName.." is ready!",0); return true
 end
 switchCard.OnServerEvent:Connect(function(p,name)
- local s=active[p]; if not s or not s.CanAct or not validDeck(p,{name}) then return end
+ local s=active[p]; if not s or not s.CanAct or type(name)~="string" then return end
  local idx=findIndex(s.Deck,name); if not idx or idx==s.ActiveIndex then return end
  s.ActiveIndex=idx; setup(s,name); s.CanAct=false; s.TurnOwner="Enemy"; send(p,"Switch",p.Name.." switched to "..name.."!",0); task.wait(.55); if active[p]~=s then return end; enemyTurn(p,s)
 end)
