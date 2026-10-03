@@ -10,7 +10,12 @@ local startBattle=remote("StartBattle"); local battleAction=remote("BattleAction
 local collectionStore=DataStoreService:GetDataStore("GrowAVerity_Collection_v1")
 local deckStore=DataStoreService:GetDataStore("GrowAVerity_Deck_v1")
 local active={}; local decks={}
-local GuardianStats={Verity={HP=105,Attack=18,Defense=18},Falsity={HP=105,Attack=21,Defense=15},Lovity={HP=110,Attack=17,Defense=19},Cruelty={HP=125,Attack=24,Defense=17}}
+local progression=ReplicatedStorage:FindFirstChild("ProgressionAward")
+local GuardianStats={
+ Verity={HP=105,Attack=18,Defense=18}, Falsity={HP=105,Attack=21,Defense=15},
+ Lovity={HP=110,Attack=17,Defense=19}, Cruelty={HP=125,Attack=24,Defense=17},
+ Hopeity={HP=145,Attack=27,Defense=20}, Nullity={HP=170,Attack=31,Defense=22}
+}
 
 local function loadPlayer(p)
  local ok,data=pcall(function() return collectionStore:GetAsync("p_"..p.UserId) end)
@@ -66,7 +71,13 @@ local function send(p,phase,msg,damage)
 end
 local function endBattle(p,won)
  local s=active[p]; if not s then return end; active[p]=nil
- if won then local n=s.EnemyName; p:SetAttribute("Variety_"..n,true); addSeed(p,n,1); task.spawn(function() saveCollection(p) end) end
+ if won then
+  local n=s.EnemyName
+  p:SetAttribute("Variety_"..n,true)
+  addSeed(p,n,1)
+  if progression then progression:Fire(p,"Battle",n) end
+  task.spawn(function() saveCollection(p) end)
+end
  battleEnd:FireClient(p,won,s.EnemyName)
 end
 local function setup(s,n)
@@ -122,7 +133,9 @@ battleAction.OnServerEvent:Connect(function(p,action)
   if d.SkillType=="BARRIER" then s.Guard=true; send(p,"PlayerAttack",s.CardName.." used "..d.SkillName.."! Barrier up.",0)
   elseif d.SkillType=="CONTROL" then damage=math.max(8,math.floor(s.PlayerAttack+10-s.EnemyDefense*.25)); s.EnemyHP=math.max(0,s.EnemyHP-damage); s.EnemyStatus="DAZE"; s.EnemyStatusTurns=1; send(p,"PlayerAttack",s.CardName.." used "..d.SkillName.."! "..s.EnemyName.." is Dazed.",damage)
   elseif d.SkillType=="HEAL" then s.PlayerHP=math.min(s.PlayerMaxHP,s.PlayerHP+26); s.Status=""; s.StatusTurns=0; send(p,"PlayerAttack",s.CardName.." used "..d.SkillName.."! +26 HP.",0)
-  elseif d.SkillType=="DOT" then damage=math.max(10,math.floor(s.PlayerAttack+5-s.EnemyDefense*.2)); s.EnemyHP=math.max(0,s.EnemyHP-damage); s.EnemyStatus="BLEED"; s.EnemyStatusTurns=3; send(p,"PlayerAttack",s.CardName.." used "..d.SkillName.."! Bleed applied.",damage) end
+  elseif d.SkillType=="DOT" then damage=math.max(10,math.floor(s.PlayerAttack+5-s.EnemyDefense*.2)); s.EnemyHP=math.max(0,s.EnemyHP-damage); s.EnemyStatus="BLEED"; s.EnemyStatusTurns=3; send(p,"PlayerAttack",s.CardName.." used "..d.SkillName.."! Bleed applied.",damage)
+  elseif d.SkillType=="HOPE" then s.PlayerHP=math.min(s.PlayerMaxHP,s.PlayerHP+32); s.PlayerAttack=s.PlayerAttack+6; send(p,"PlayerAttack",s.CardName.." used "..d.SkillName.."! +32 HP and +6 ATK.",0)
+  elseif d.SkillType=="DRAIN" then damage=math.max(12,math.floor(s.PlayerAttack+8-s.EnemyDefense*.2)); s.EnemyHP=math.max(0,s.EnemyHP-damage); s.EnemyStatus="DAZE"; s.EnemyStatusTurns=2; send(p,"PlayerAttack",s.CardName.." used "..d.SkillName.."! Energy drained.",damage) end
  elseif action=="Guard" then s.Guard=true; send(p,"PlayerAttack",s.CardName.." used "..d.GuardName.."!",0) end
  if s.EnemyHP<=0 then task.wait(.65); endBattle(p,true); return end
  task.wait(.75); if active[p]~=s then return end
