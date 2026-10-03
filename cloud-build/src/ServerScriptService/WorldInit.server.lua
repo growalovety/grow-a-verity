@@ -175,6 +175,8 @@ local sign=part("ExploreSign",Vector3.new(1,1,1),o+Vector3.new(-116,3,885),Color
 label(sign,"MEADOW  •  BLUEWOOD  •  REDSTONE  •  LOVE GARDEN",UDim2.fromOffset(540,48),Vector3.new(),Color3.fromRGB(246,243,226))
 guardian("Cruelty",o+Vector3.new(-82,4.2,970),1.25)
 guardian("Cruelty",o+Vector3.new(82,4.2,970),1.55)
+guardian("Hopeity",o+Vector3.new(92,4.2,925),1.35)
+guardian("Nullity",o+Vector3.new(92,4.8,1000),1.75)
 
 Lighting.ClockTime=14
 Lighting.Brightness=3
