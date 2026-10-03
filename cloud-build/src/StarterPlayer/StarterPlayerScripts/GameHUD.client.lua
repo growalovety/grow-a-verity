@@ -7,7 +7,7 @@ local deckUpdate=remotes:FindFirstChild("DeckUpdate")
 local Variants=require(ReplicatedStorage:WaitForChild("VariantDefinitions"))
 local BattleDefinitions=require(ReplicatedStorage:WaitForChild("BattleDefinitions"))
 
-local gui=Instance.new("ScreenGui"); gui.Name="GameHUD"; gui.ResetOnSpawn=false; gui.IgnoreGuiInset=false; gui.DisplayOrder=100; gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling; gui.Parent=player:WaitForChild("PlayerGui"); pcall(function() gui.ScreenInsets=Enum.ScreenInsets.CoreUISafeInsets end)
+local gui=Instance.new("ScreenGui"); gui.Name="GameHUD"; gui.ResetOnSpawn=false; gui.IgnoreGuiInset=true; gui.DisplayOrder=100; gui.ZIndexBehavior=Enum.ZIndexBehavior.Sibling; gui.Parent=player:WaitForChild("PlayerGui"); pcall(function() gui.ScreenInsets=Enum.ScreenInsets.DeviceSafeInsets end); gui.Enabled=true
 local BG=Color3.fromRGB(17,23,31); local PANEL=Color3.fromRGB(25,33,44); local PANEL2=Color3.fromRGB(34,44,58)
 local TEXT=Color3.fromRGB(238,244,252); local MUTED=Color3.fromRGB(154,170,193); local ACCENT=Color3.fromRGB(88,180,239); local GREEN=Color3.fromRGB(76,199,139)
 local GOLD=Color3.fromRGB(239,193,78)
@@ -23,7 +23,7 @@ local explore=button(nav,"EXPLORE",UDim2.fromOffset(96,42),UDim2.fromOffset(102,
 local cards=button(nav,"CARDS",UDim2.fromOffset(88,42),UDim2.fromOffset(204,4),PANEL,TEXT)
 local seeds=button(nav,"SEEDS",UDim2.fromOffset(88,42),UDim2.fromOffset(298,4),PANEL,TEXT)
 local deck=button(nav,"DECK",UDim2.fromOffset(88,42),UDim2.fromOffset(392,4),PANEL,TEXT)
-local settings=button(gui,"⚙",UDim2.fromOffset(46,46),UDim2.new(1,-62,0,10),Color3.fromRGB(17,23,31),TEXT); settings.BackgroundTransparency=1; settings.TextSize=28; settings.TextScaled=true; settings.ZIndex=20
+local settings=button(gui,"⚙",UDim2.fromOffset(46,46),UDim2.new(1,-62,0,42),Color3.fromRGB(17,23,31),TEXT); settings.BackgroundTransparency=1; settings.TextSize=28; settings.TextScaled=true; settings.ZIndex=200
 local function updateCash() cash.Text="$ "..tostring(player:GetAttribute("Cash") or 0) end
 updateCash(); player:GetAttributeChangedSignal("Cash"):Connect(updateCash)
 
@@ -165,12 +165,11 @@ else
         if child.Name=="DeckUpdate" and child:IsA("RemoteEvent") and not deckUpdate then bindDeckRemote(child) end
     end)
 end
+player.CharacterAdded:Connect(function() task.defer(function() gui.Enabled=true end) end)
 task.spawn(function()
     while gui.Parent do
         task.wait(1)
         local battleGui=player.PlayerGui:FindFirstChild("BattleUI")
-        if not battleGui or not battleGui.Enabled then
-            gui.Enabled=true
-        end
+        gui.Enabled=true
     end
 end)
