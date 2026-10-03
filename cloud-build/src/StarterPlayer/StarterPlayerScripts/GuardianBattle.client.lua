@@ -13,29 +13,41 @@ local function setCoreHud(enabled)
  for _,kind in ipairs({Enum.CoreGuiType.Chat,Enum.CoreGuiType.Backpack,Enum.CoreGuiType.PlayerList,Enum.CoreGuiType.EmotesMenu}) do pcall(function() StarterGui:SetCoreGuiEnabled(kind,enabled) end) end
 end
 local function corner(o,r) local c=Instance.new("UICorner"); c.CornerRadius=UDim.new(0,r); c.Parent=o end
-local dim=Instance.new("Frame"); dim.Size=UDim2.fromScale(1,1); dim.BackgroundColor3=Color3.fromRGB(18,24,20); dim.BackgroundTransparency=.82; dim.BorderSizePixel=0; dim.Parent=screen
-local topBar=Instance.new("Frame"); topBar.Size=UDim2.new(1,0,0,58); topBar.Position=UDim2.fromOffset(0,0); topBar.BackgroundColor3=Color3.fromRGB(10,12,10); topBar.BorderSizePixel=0; topBar.Parent=screen
+local function stroke(o,color,transparency,thickness)
+ local s=Instance.new("UIStroke"); s.Color=color; s.Transparency=transparency or 0; s.Thickness=thickness or 1; s.Parent=o; return s
+end
+local UI_BG=Color3.fromRGB(19,24,34)
+local UI_PANEL=Color3.fromRGB(27,34,48)
+local UI_PANEL2=Color3.fromRGB(34,42,59)
+local UI_TEXT=Color3.fromRGB(238,244,255)
+local UI_MUTED=Color3.fromRGB(160,176,202)
+local UI_ACCENT=Color3.fromRGB(87,180,255)
+local UI_GREEN=Color3.fromRGB(84,215,157)
+local UI_RED=Color3.fromRGB(245,103,112)
+local dim=Instance.new("Frame"); dim.Size=UDim2.fromScale(1,1); dim.BackgroundColor3=Color3.fromRGB(7,10,17); dim.BackgroundTransparency=.82; dim.BorderSizePixel=0; dim.Parent=screen
+local topBar=Instance.new("Frame"); topBar.Size=UDim2.new(1,0,0,58); topBar.Position=UDim2.fromOffset(0,0); topBar.BackgroundColor3=Color3.fromRGB(8,11,18); topBar.BorderSizePixel=0; topBar.Parent=screen
 local bottomBar=topBar:Clone(); bottomBar.Size=UDim2.new(1,0,0,72); bottomBar.Position=UDim2.new(0,0,1,-72); bottomBar.Parent=screen
+stroke(topBar,UI_ACCENT,.72,1); stroke(bottomBar,UI_ACCENT,.85,1)
 local cinematicFade=Instance.new("Frame"); cinematicFade.Size=UDim2.fromScale(1,1); cinematicFade.BackgroundColor3=Color3.fromRGB(8,10,8); cinematicFade.BackgroundTransparency=1; cinematicFade.BorderSizePixel=0; cinematicFade.ZIndex=100; cinematicFade.Parent=screen
-local enemyCard=Instance.new("Frame"); enemyCard.Size=UDim2.fromOffset(300,92); enemyCard.Position=UDim2.new(1,-330,0,34); enemyCard.BackgroundColor3=Color3.fromRGB(245,241,218); enemyCard.Parent=screen; corner(enemyCard,18)
+local enemyCard=Instance.new("Frame"); enemyCard.Size=UDim2.fromOffset(300,92); enemyCard.Position=UDim2.new(1,-330,0,34); enemyCard.BackgroundColor3=UI_PANEL; enemyCard.BackgroundTransparency=.08; stroke(enemyCard,Color3.fromRGB(245,103,112),.35,2) enemyCard.Parent=screen; corner(enemyCard,18)
 local playerCard=enemyCard:Clone(); playerCard.Size=UDim2.fromOffset(330,105); playerCard.Position=UDim2.new(0,26,1,-285); playerCard.Parent=screen
 local function txt(parent,size,pos,color,font) local x=Instance.new("TextLabel"); x.Size=size; x.Position=pos; x.BackgroundTransparency=1; x.TextColor3=color; x.TextScaled=true; x.Font=font or Enum.Font.GothamBold; x.Parent=parent; return x end
-local enemyName=txt(enemyCard,UDim2.fromScale(.88,.3),UDim2.fromScale(.06,.06),Color3.fromRGB(45,52,40),Enum.Font.GothamBlack)
+local enemyName=txt(enemyCard,UDim2.fromScale(.88,.3),UDim2.fromScale(.06,.06),UI_TEXT,Enum.Font.GothamBlack)
 local playerName=txt(playerCard,UDim2.fromScale(.88,.28),UDim2.fromScale(.06,.05),Color3.fromRGB(45,52,40),Enum.Font.GothamBlack)
-local function bar(parent,y) local t=Instance.new("Frame"); t.Size=UDim2.fromScale(.88,.14); t.Position=UDim2.fromScale(.06,y); t.BackgroundColor3=Color3.fromRGB(55,61,50); t.BorderSizePixel=0; t.Parent=parent; corner(t,8); local f=Instance.new("Frame"); f.Size=UDim2.fromScale(1,1); f.BackgroundColor3=Color3.fromRGB(101,205,116); f.BorderSizePixel=0; f.Parent=t; corner(f,8); return f end
+local function bar(parent,y) local t=Instance.new("Frame"); t.Size=UDim2.fromScale(.88,.14); t.Position=UDim2.fromScale(.06,y); t.BackgroundColor3=Color3.fromRGB(8,12,20); t.BorderSizePixel=0; t.Parent=parent; corner(t,8); local f=Instance.new("Frame"); f.Size=UDim2.fromScale(1,1); f.BackgroundColor3=UI_GREEN; f.BorderSizePixel=0; f.Parent=t; corner(f,8); return f end
 local enemyBar=bar(enemyCard,.55); local playerBar=bar(playerCard,.47)
-local energyBack=Instance.new("Frame"); energyBack.Size=UDim2.fromScale(.88,.12); energyBack.Position=UDim2.fromScale(.06,.68); energyBack.BackgroundColor3=Color3.fromRGB(55,61,50); energyBack.BorderSizePixel=0; energyBack.Parent=playerCard; corner(energyBack,8)
-local energyFill=Instance.new("Frame"); energyFill.Size=UDim2.fromScale(1,1); energyFill.BackgroundColor3=Color3.fromRGB(72,150,235); energyFill.BorderSizePixel=0; energyFill.Parent=energyBack; corner(energyFill,8)
-local energyText=txt(playerCard,UDim2.fromScale(.88,.12),UDim2.fromScale(.06,.82),Color3.fromRGB(45,52,40),Enum.Font.GothamBold)
-local turn=txt(screen,UDim2.fromScale(.24,.065),UDim2.fromScale(.38,.035),Color3.fromRGB(255,255,255),Enum.Font.GothamBlack); turn.BackgroundColor3=Color3.fromRGB(55,75,60); turn.BackgroundTransparency=.08; corner(turn,14)
-local status=txt(screen,UDim2.fromScale(.32,.05),UDim2.fromScale(.34,.41),Color3.fromRGB(255,255,255),Enum.Font.GothamBold)
+local energyBack=Instance.new("Frame"); energyBack.Size=UDim2.fromScale(.88,.12); energyBack.Position=UDim2.fromScale(.06,.68); energyBack.BackgroundColor3=Color3.fromRGB(8,12,20); energyBack.BorderSizePixel=0; energyBack.Parent=playerCard; corner(energyBack,8)
+local energyFill=Instance.new("Frame"); energyFill.Size=UDim2.fromScale(1,1); energyFill.BackgroundColor3=UI_ACCENT; energyFill.BorderSizePixel=0; energyFill.Parent=energyBack; corner(energyFill,8)
+local energyText=txt(playerCard,UDim2.fromScale(.88,.12),UDim2.fromScale(.06,.82),UI_MUTED,Enum.Font.GothamBold)
+local turn=txt(screen,UDim2.fromScale(.24,.065),UDim2.fromScale(.38,.035),Color3.fromRGB(255,255,255),Enum.Font.GothamBlack); turn.BackgroundColor3=UI_PANEL2; turn.BackgroundTransparency=.04; corner(turn,14); stroke(turn,UI_ACCENT,.45,1)
+local status=txt(screen,UDim2.fromScale(.42,.045),UDim2.fromScale(.29,.405),UI_MUTED,Enum.Font.GothamBold)
 local message=txt(screen,UDim2.fromScale(.62,.1),UDim2.fromScale(.19,.49),Color3.fromRGB(47,53,42),Enum.Font.GothamBlack); message.BackgroundColor3=Color3.fromRGB(245,241,218); message.BackgroundTransparency=.04; corner(message,16)
-local close=Instance.new("TextButton"); close.Size=UDim2.fromOffset(48,48); close.Position=UDim2.new(1,-62,0,10); close.Text="×"; close.TextScaled=true; close.Font=Enum.Font.GothamBlack; close.TextColor3=Color3.fromRGB(50,54,40); close.BackgroundColor3=Color3.fromRGB(245,241,218); close.Parent=screen; corner(close,14)
-local actionBox=Instance.new("Frame"); actionBox.Size=UDim2.fromOffset(540,92); actionBox.Position=UDim2.new(.5,-270,1,-112); actionBox.BackgroundColor3=Color3.fromRGB(245,241,218); actionBox.Parent=screen; corner(actionBox,20)
+local close=Instance.new("TextButton"); close.Size=UDim2.fromOffset(48,48); close.Position=UDim2.new(1,-62,0,10); close.Text="×"; close.TextScaled=true; close.Font=Enum.Font.GothamBlack; close.TextColor3=UI_TEXT; close.BackgroundColor3=UI_PANEL2; stroke(close,UI_TEXT,.75,1); close.Parent=screen; corner(close,14)
+local actionBox=Instance.new("Frame"); actionBox.Size=UDim2.fromOffset(540,92); actionBox.Position=UDim2.new(.5,-270,1,-112); actionBox.BackgroundColor3=UI_PANEL; actionBox.BackgroundTransparency=.04; stroke(actionBox,UI_ACCENT,.62,1) actionBox.Parent=screen; corner(actionBox,20)
 local layout=Instance.new("UIListLayout"); layout.FillDirection=Enum.FillDirection.Horizontal; layout.HorizontalAlignment=Enum.HorizontalAlignment.Center; layout.VerticalAlignment=Enum.VerticalAlignment.Center; layout.Padding=UDim.new(0,10); layout.Parent=actionBox
-local function actionButton(bg) local b=Instance.new("TextButton"); b.Size=UDim2.fromOffset(165,58); b.BackgroundColor3=bg; b.TextColor3=Color3.fromRGB(28,31,26); b.TextScaled=true; b.Font=Enum.Font.GothamBlack; b.AutoButtonColor=false; b.Parent=actionBox; corner(b,14); return b end
-local attack=actionButton(Color3.fromRGB(244,114,86)); local skill=actionButton(Color3.fromRGB(86,157,235)); local guard=actionButton(Color3.fromRGB(160,176,154))
-local cards=Instance.new("Frame"); cards.Size=UDim2.new(1,-60,0,68); cards.Position=UDim2.new(0,30,1,-190); cards.BackgroundTransparency=1; cards.Parent=screen
+local function actionButton(bg) local b=Instance.new("TextButton"); b.Size=UDim2.fromOffset(165,58); b.BackgroundColor3=bg; b.TextColor3=UI_TEXT; b.TextScaled=true; b.Font=Enum.Font.GothamBlack; b.AutoButtonColor=false; b.Parent=actionBox; stroke(b,UI_TEXT,.82,1); corner(b,14); return b end
+local attack=actionButton(Color3.fromRGB(210,73,88)); local skill=actionButton(Color3.fromRGB(58,132,218)); local guard=actionButton(Color3.fromRGB(70,105,99))
+local cards=Instance.new("Frame"); cards.Size=UDim2.new(1,-60,0,68); cards.Position=UDim2.new(0,30,1,-190); cards.BackgroundColor3=UI_PANEL; cards.BackgroundTransparency=.12; stroke(cards,UI_ACCENT,.82,1); corner(cards,16); cards.Parent=screen
 local cardLayout=Instance.new("UIListLayout"); cardLayout.FillDirection=Enum.FillDirection.Horizontal; cardLayout.HorizontalAlignment=Enum.HorizontalAlignment.Left; cardLayout.VerticalAlignment=Enum.VerticalAlignment.Center; cardLayout.Padding=UDim.new(0,8); cardLayout.Parent=cards
 local cardButtons={}; local currentCard=""; local busy=true
 local function findGuardian(name) for _,m in ipairs(workspace:GetDescendants()) do if m:IsA("Model") and m:GetAttribute("VarietyName")==name and m.PrimaryPart then return m end end end
@@ -77,14 +89,14 @@ local function vfx(enemyName,phase,damage,accent)
   end
  end
  if damage and damage>0 then
-  local d=txt(screen,UDim2.fromOffset(180,70),UDim2.new(.5,-90,.42,0),Color3.fromRGB(255,90,70),Enum.Font.GothamBlack); d.BackgroundTransparency=1; d.Text="-"..damage; d.TextStrokeTransparency=.35
+  local d=txt(screen,UDim2.fromOffset(180,70),UDim2.new(.5,-90,.42,0),UI_RED,Enum.Font.GothamBlack); d.BackgroundTransparency=1; d.Text="-"..damage; d.ZIndex=20; d.TextStrokeTransparency=.35
   TweenService:Create(d,TweenInfo.new(.65,Enum.EasingStyle.Back),{Position=UDim2.new(.5,-90,.32,0),TextTransparency=1}):Play(); Debris:AddItem(d,.7)
  end
 end
 local function rebuildCards(deck)
  for _,b in ipairs(cardButtons) do b:Destroy() end; cardButtons={}
  for i,n in ipairs(deck or {}) do
-  local b=Instance.new("TextButton"); b.Size=UDim2.fromOffset(112,58); b.Text=n; b.TextScaled=true; b.Font=Enum.Font.GothamBlack; b.TextColor3=Color3.fromRGB(40,45,36); b.BackgroundColor3=(n==currentCard and Color3.fromRGB(255,221,45) or Color3.fromRGB(245,241,218)); b.Parent=cards; corner(b,14)
+  local b=Instance.new("TextButton"); b.Size=UDim2.fromOffset(112,58); b.Text=n; b.TextScaled=true; b.Font=Enum.Font.GothamBlack; b.TextColor3=UI_TEXT; b.BackgroundColor3=(n==currentCard and Color3.fromRGB(57,133,210) or UI_PANEL2); b.Parent=cards; corner(b,14); stroke(b,UI_TEXT,.82,1)
   b.Activated:Connect(function() if not busy and n~=currentCard then setActions(false); switchCard:FireServer(n) end end); table.insert(cardButtons,b)
  end
 end
@@ -92,8 +104,24 @@ attack.Activated:Connect(function() if not busy then setActions(false); battleAc
 skill.Activated:Connect(function() if not busy then setActions(false); battleAction:FireServer("Skill") end end)
 guard.Activated:Connect(function() if not busy then setActions(false); battleAction:FireServer("Guard") end end)
 close.Activated:Connect(function() cancelBattle:FireServer(); exitCinematic() end)
+local messageToken=0
+local function showMessage(textValue,duration)
+ messageToken+=1
+ local token=messageToken
+ message.Text=textValue
+ message.TextTransparency=0
+ message.BackgroundTransparency=.06
+ if duration then
+  task.delay(duration,function()
+   if token==messageToken and screen.Enabled then
+    TweenService:Create(message,TweenInfo.new(.45,Enum.EasingStyle.Quad),{TextTransparency=1,BackgroundTransparency=1}):Play()
+   end
+  end)
+ end
+ end
+end
 startBattle.OnClientEvent:Connect(function(enemy,starter,deck)
- enterCinematic(); currentCard=starter; enemyName.Text=enemy; playerName.Text=starter; message.Text=starter.." entered the battle!"; turn.Text="TURN 1  •  YOUR MOVE"; status.Text=""; rebuildCards(deck); setActions(false); cameraFor(enemy,"player"); task.wait(.6); if screen.Enabled then setActions(true) end
+ enterCinematic(); currentCard=starter; enemyName.Text=enemy; playerName.Text=starter; showMessage(starter.." entered the battle!",1.8); turn.Text="TURN 1  •  YOUR MOVE"; status.Text=""; rebuildCards(deck); setActions(false); cameraFor(enemy,"player"); task.wait(.6); if screen.Enabled then setActions(true) end
 end)
 battleUpdate.OnClientEvent:Connect(function(s)
  enemyBar.Size=UDim2.fromScale(math.clamp(s.EnemyHP/s.EnemyMaxHP,0,1),1); playerBar.Size=UDim2.fromScale(math.clamp(s.PlayerHP/s.PlayerMaxHP,0,1),1)
@@ -101,7 +129,7 @@ battleUpdate.OnClientEvent:Connect(function(s)
  energyFill.Size=UDim2.fromScale(math.clamp((s.Energy or 0)/(s.MaxEnergy or 5),0,1),1); energyText.Text="ENERGY  "..tostring(s.Energy or 0).."/"..tostring(s.MaxEnergy or 5)
  currentCard=s.PlayerName; rebuildCards(s.Deck or {})
  attack.Text=s.PlayerAttackName or "Attack"; skill.Text=(s.PlayerSkillName or "Skill").."  ["..tostring(s.SkillCost or 2).."]"; guard.Text=s.PlayerGuardName or "Guard"
- message.Text=s.Message or ""; turn.Text=(s.TurnOwner=="Enemy" and "TURN "..tostring(s.Turn or 1).."  •  GUARDIAN MOVE" or "TURN "..tostring(s.Turn or 1).."  •  YOUR MOVE")
+ showMessage(s.Message or "",1.8); turn.Text=(s.TurnOwner=="Enemy" and "TURN "..tostring(s.Turn or 1).."  •  GUARDIAN MOVE" or "TURN "..tostring(s.Turn or 1).."  •  YOUR MOVE")
  status.Text=(s.Status~="" and "STATUS: "..s.Status or "")..((s.EnemyStatus~="" and "     ENEMY: "..s.EnemyStatus) or "")
  cameraFor(s.EnemyName,(s.Phase=="EnemyAttack" and "enemy" or "player")); vfx(s.EnemyName,s.Phase,s.Damage)
  setActions(s.CanAct==true)
