@@ -26,7 +26,6 @@ do
     if ok2 and type(b)=="table" then BattleDefinitions=b end
 end
 
-local pg=player:WaitForChild("PlayerGui")
 task.spawn(function()
     while player.Parent do
         local current=player:FindFirstChildOfClass("PlayerGui")
