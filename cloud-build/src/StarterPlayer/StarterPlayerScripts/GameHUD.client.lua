@@ -1,6 +1,6 @@
 local Players=game:GetService("Players")
 local ReplicatedStorage=game:GetService("ReplicatedStorage")
-local player=Players.LocalPlayer
+local player=Players.LocalPlayer\nlocal GuiService=game:GetService("GuiService")
 local remotes=ReplicatedStorage:WaitForChild("GameRemotes")
 local deckUpdate=remotes:WaitForChild("DeckUpdate")
 local gui=Instance.new("ScreenGui")
@@ -31,12 +31,12 @@ end
 
 -- Viral-game style: separate chunky navigation buttons instead of one large HUD container.
 local cash=button(gui,"$ 0",UDim2.fromOffset(150,48),UDim2.fromOffset(18,16),GREEN,Color3.new(1,1,1))
-cash.Font=Enum.Font.GothamBlack
+cash.Font=Enum.Font.GothamBlack\ncash.Position=UDim2.fromOffset(18,42)
 stroke(cash,Color3.fromRGB(38,88,45),.05,2)
 
 local nav=Instance.new("Frame")
 nav.Size=UDim2.fromOffset(560,54)
-nav.Position=UDim2.new(.5,-280,0,13)
+nav.Position=UDim2.new(.5,-280,0,40)
 nav.BackgroundTransparency=1
 nav.Parent=gui
 
@@ -46,8 +46,8 @@ local cards=button(nav,"CARDS",UDim2.fromOffset(95,44),UDim2.fromOffset(226,5),P
 local seeds=button(nav,"SEEDS",UDim2.fromOffset(95,44),UDim2.fromOffset(329,5),PANEL,GREEN_DARK)
 local deck=button(nav,"DECK",UDim2.fromOffset(95,44),UDim2.fromOffset(432,5),PANEL,GREEN_DARK)
 
-local settingsButton=button(gui,"⚙",UDim2.fromOffset(50,50),UDim2.new(1,-68,0,14),GREEN,Color3.new(1,1,1))
-settingsButton.Font=Enum.Font.GothamBlack
+local settingsButton=button(gui,"⚙",UDim2.fromOffset(50,50),UDim2.new(1,-68,0,42),Color3.new(1,1,1),TEXT)\nsettingsButton.BackgroundTransparency=1\nlocal gearStroke=settingsButton:FindFirstChildOfClass("UIStroke") if gearStroke then gearStroke:Destroy() end
+settingsButton.Font=Enum.Font.GothamBlack\nsettingsButton.TextSize=30
 settingsButton.TextScaled=true
 stroke(settingsButton,Color3.fromRGB(38,88,45),.05,2)
 
