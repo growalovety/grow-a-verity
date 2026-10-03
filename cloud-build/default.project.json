@@ -448,7 +448,6 @@
         }
       }
     },
-,
     "StarterPlayer": {
       "$className": "StarterPlayer",
       "StarterPlayerScripts": {
