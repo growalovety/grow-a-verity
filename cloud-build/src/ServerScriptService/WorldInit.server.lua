@@ -114,12 +114,13 @@ end
 for _,h in ipairs({{Vector3.new(-80,18,850),Vector3.new(45,36,55)},{Vector3.new(78,24,870),Vector3.new(55,48,60)},{Vector3.new(-82,14,965),Vector3.new(50,28,50)},{Vector3.new(82,18,970),Vector3.new(48,36,55)}}) do
     local p=part("LowPolyHill",h[2],h[1],Color3.fromRGB(87,139,76),Enum.Material.Grass,wilds) p.Shape=Enum.PartType.Wedge
 end
-for _,p in ipairs({Vector3.new(-60,5,850),Vector3.new(65,5,850),Vector3.new(-72,5,970),Vector3.new(70,5,970)}) do
-    part("Rock",Vector3.new(9,9,9),p,Color3.fromRGB(126,124,103),Enum.Material.Rock,wilds)
-end
 local arena=Instance.new("Folder") arena.Name="GuardianArena" arena.Parent=wilds
-part("ArenaFloor",Vector3.new(66,.4,54),o+Vector3.new(0,.7,0),Color3.fromRGB(184,145,75),Enum.Material.SmoothPlastic,arena)
-part("ArenaRing",Vector3.new(54,.25,42),o+Vector3.new(0,1.05,0),Color3.fromRGB(238,204,98),Enum.Material.Neon,arena)
+local arenaBase=part("ArenaFloor",Vector3.new(72,.7,72),o+Vector3.new(0,.55,0),Color3.fromRGB(69,78,68),Enum.Material.Slate,arena); arenaBase.Shape=Enum.PartType.Cylinder; arenaBase.Orientation=Vector3.new(0,0,90)
+local arenaTop=part("ArenaPlatform",Vector3.new(66,.5,66),o+Vector3.new(0,1.05,0),Color3.fromRGB(185,148,78),Enum.Material.SmoothPlastic,arena); arenaTop.Shape=Enum.PartType.Cylinder; arenaTop.Orientation=Vector3.new(0,0,90)
+local arenaRing=part("ArenaRing",Vector3.new(58,.18,58),o+Vector3.new(0,1.36,0),Color3.fromRGB(238,204,98),Enum.Material.Neon,arena); arenaRing.Shape=Enum.PartType.Cylinder; arenaRing.Orientation=Vector3.new(0,0,90)
+for _,x in ipairs({-18,0,18}) do
+    local pad=part("BossPad",Vector3.new(15,.35,15),o+Vector3.new(x,1.48,0),Color3.fromRGB(52,62,56),Enum.Material.SmoothPlastic,arena); pad.Shape=Enum.PartType.Cylinder; pad.Orientation=Vector3.new(0,0,90)
+end
 local defs=require(ReplicatedStorage:WaitForChild("BattleDefinitions"))
 local function guardian(name,pos,scale)
     local def=defs[name] local m=Instance.new("Model") m.Name=name.."Guardian" m:SetAttribute("VarietyName",name) m:SetAttribute("GuardianTier",scale>=1.4 and "Elite" or "Normal") m.Parent=arena
