@@ -9,7 +9,8 @@ local gardenState=remote("GardenState"); local gardenPlace=remote("GardenPlace")
 local store=DataStoreService:GetDataStore("GrowAVerity_Gardens_v2")
 local playerStore=DataStoreService:GetDataStore("GrowAVerity_Player_v1")
 local active={}
-local progression=ReplicatedStorage:FindFirstChild("ProgressionAward")
+local progression=ReplicatedStorage:FindFirstChild("ProgressionAward") or Instance.new("BindableEvent")
+progression.Name="ProgressionAward"; progression.Parent=ReplicatedStorage
 
 local function getPlot(p)
     local grove=workspace.World:FindFirstChild("StarterGrove"); local idx=p:GetAttribute("GardenIndex")
