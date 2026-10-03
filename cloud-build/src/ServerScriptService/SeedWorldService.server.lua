@@ -48,7 +48,7 @@ local function spawnAt(i)
 end
 local padsFolder=workspace.World.GuardianWilds:FindFirstChild("SeedSpawnPads") or Instance.new("Folder"); padsFolder.Name="SeedSpawnPads"; padsFolder.Parent=workspace.World.GuardianWilds
 for i,data in ipairs(pads) do
-    local p=padsFolder:FindFirstChild("Pad_"..i) or Instance.new("Part"); p.Name="Pad_"..i; p.Size=Vector3.new(5,.2,5); p.Position=data[1]; p.Anchored=true; p.CanCollide=false; p.Transparency=.65; p.Material=Enum.Material.Grass; p.Color=Variants[data[2]].Color; p.Parent=padsFolder
+    local p=padsFolder:FindFirstChild("Pad_"..i) or Instance.new("Part"); p.Name="Pad_"..i; p.Size=Vector3.new(5,.2,5); p.Position=data[1]; p.Anchored=true; p.CanCollide=false; p.Transparency=1; p.Material=Enum.Material.Grass; p.Color=Variants[data[2]].Color; p.Parent=padsFolder
 end
 task.spawn(function()
     while true do
