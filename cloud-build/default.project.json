@@ -448,6 +448,49 @@
         }
       }
     },
+      "HUDInputOverlay": {
+        "$className": "ScreenGui",
+        "$properties": {
+          "ResetOnSpawn": false,
+          "IgnoreGuiInset": true,
+          "DisplayOrder": 10000,
+          "ZIndexBehavior": "Global",
+          "Enabled": true
+        },
+        "Cards": {
+          "$className": "TextButton",
+          "$properties": {
+            "Size": {"UDim2": [[0,88],[0,42]]},
+            "Position": {"UDim2": [[0.5,-46],[0,76]]},
+            "BackgroundTransparency": 1,
+            "Text": "",
+            "AutoButtonColor": false,
+            "ZIndex": 10000
+          }
+        },
+        "Seeds": {
+          "$className": "TextButton",
+          "$properties": {
+            "Size": {"UDim2": [[0,88],[0,42]]},
+            "Position": {"UDim2": [[0.5,48],[0,76]]},
+            "BackgroundTransparency": 1,
+            "Text": "",
+            "AutoButtonColor": false,
+            "ZIndex": 10000
+          }
+        },
+        "Deck": {
+          "$className": "TextButton",
+          "$properties": {
+            "Size": {"UDim2": [[0,88],[0,42]]},
+            "Position": {"UDim2": [[0.5,142],[0,76]]},
+            "BackgroundTransparency": 1,
+            "Text": "",
+            "AutoButtonColor": false,
+            "ZIndex": 10000
+          }
+        }
+      },
     "StarterPlayer": {
       "$className": "StarterPlayer",
       "StarterPlayerScripts": {
